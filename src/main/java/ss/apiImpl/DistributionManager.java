@@ -32,20 +32,20 @@ public class DistributionManager {
 		return instance;
 	}
 
-	public long getLastingDaysForBackendIssue(int programmersQty) {
+	public int getLastingDaysForBackendIssue(int programmersQty) {
 		int qty = (programmersQty <= 3) ? programmersQty : 3;
 		String str = (String) simulatorProperties.get("back_" + qty);
 		String[] parameters = str.split(",");
-		return RandomGenerator.triangular(Double.parseDouble(parameters[0]),
+		return (int)RandomGenerator.triangular(Double.parseDouble(parameters[0]),
 				Double.parseDouble(parameters[2]),
 				Double.parseDouble(parameters[1]));
 	}
 	
-	public long getLastingDaysForFrontendIssue(int programmersQty) {
+	public int getLastingDaysForFrontendIssue(int programmersQty) {
 		int qty = (programmersQty <= 3) ? programmersQty : 3;
 		String str = (String) simulatorProperties.get("front_" + qty);
 		String[] parameters = str.split(",");
-		return RandomGenerator.triangular(Double.parseDouble(parameters[0]),
+		return (int)RandomGenerator.triangular(Double.parseDouble(parameters[0]),
 				Double.parseDouble(parameters[2]),
 				Double.parseDouble(parameters[1]));
 	}

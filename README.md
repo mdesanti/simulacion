@@ -1,4 +1,1 @@
-simulacion
-==========
-
-Simulación De Sistemas
+Simulador: Distribución de programadores en una Software Factory.
