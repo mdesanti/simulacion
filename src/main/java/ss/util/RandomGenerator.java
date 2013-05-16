@@ -1,5 +1,6 @@
 package ss.util;
 
+import net.sf.doodleproject.numerics4j.random.NormalRandomVariable;
 import net.sf.doodleproject.numerics4j.random.RNG;
 import net.sf.doodleproject.numerics4j.random.RandomRNG;
 import net.sf.doodleproject.numerics4j.random.UniformRandomVariable;
@@ -15,6 +16,11 @@ public class RandomGenerator {
 			return Math.round(a + Math.sqrt(U * (b - a) * (c - a)));
 		else
 			return Math.round(b - Math.sqrt((1 - U) * (b - a) * (b - c)));
+	}
+	
+	public static double gaussian(double mean, double standardDeviation) {
+		return NormalRandomVariable.nextRandomVariable(mean, standardDeviation,
+				rng);
 	}
 
 }

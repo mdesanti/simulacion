@@ -1,0 +1,40 @@
+<configuration>
+	<programmersQty>10</programmersQty>
+	<simulationTime>50</simulationTime>
+	<strategy>full</strategy>
+	<projects length="3">
+		<project>
+			<maxCost>3</maxCost>
+			<iterations length="3">
+				<iteration number="1">
+					<duration>10</duration>
+				</iteration>
+				<iteration number="2">
+					<duration>14</duration>
+				</iteration>
+				<iteration number="3">
+					<duration>20</duration>
+				</iteration>
+			</iterations>
+		</project>
+		<project>
+			<maxCost>3</maxCost>
+			<iterations length="2">
+				<iteration number="1">
+					<duration>10</duration>
+				</iteration>
+				<iteration number="2">
+					<duration>14</duration>
+				</iteration>
+			</iterations>
+		</project>
+		<project>
+			<maxCost>3</maxCost>
+			<iterations length="1">
+				<iteration number="1">
+					<duration>10</duration>
+				</iteration>
+			</iterations>
+		</project>
+	</projects>
+</configuration>

@@ -12,5 +12,14 @@ public interface Project {
 	 * Gets the issue being developed
 	 * @return
 	 */
-	Issue getCurrentIssue();
+	Iteration getCurrentIteration();
+	
+	void addIteration(Iteration iteration);
+	
+	Integer getMaxCost();
+	
+	Integer getDuration();
+	
+	Integer getProgrammersWorking();
+	
 }

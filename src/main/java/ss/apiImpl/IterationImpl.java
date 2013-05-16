@@ -1,0 +1,64 @@
+package ss.apiImpl;
+
+import ss.api.Issue;
+import ss.api.Iteration;
+import ss.apiImpl.issues.BackendIssue;
+import ss.apiImpl.issues.FrontendIssue;
+
+public class IterationImpl implements Iteration {
+	
+	private Issue backendIssue;
+	
+	private Issue frontendIssue;
+	
+	private int duration;
+	
+	private int estimate = Integer.MAX_VALUE;
+	
+	public IterationImpl(Issue backendIssue, Issue frontendIssue, int duration) {
+		this.backendIssue = backendIssue;
+		this.frontendIssue = frontendIssue;
+		this.duration = duration;
+	}
+	
+	@Override
+	public int getEstimate() {
+		return estimate;
+	}
+	
+	@Override
+	public void setEstimate(int estimate) {
+		this.estimate = estimate;
+	}
+	
+	public int getDuration() {
+		return duration;
+	}
+
+	@Override
+	public Issue getBackendIssue() {
+		return backendIssue;
+	}
+
+	@Override
+	public Issue getFrontendIssue() {
+		return frontendIssue;
+	}
+
+	@Override
+	public Issue getCurrentIssue() {
+		return null;
+	}
+
+	@Override
+	public Issue getNextIssue(int programmersQty) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public boolean isDelayed() {
+		return getEstimate() > getDuration();
+	}
+
+}

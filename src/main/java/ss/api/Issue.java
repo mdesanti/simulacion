@@ -7,5 +7,9 @@ public interface Issue {
 	 * @return
 	 */
 	long getLastingDays();
+	
+	boolean isBackend();
+	
+	boolean isFrontend();
 
 }
