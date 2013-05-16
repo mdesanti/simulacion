@@ -11,12 +11,12 @@ import ss.api.Simulator;
 
 public class SimulatorImpl implements Simulator {
 
-	private long simulationDays;
+	private int simulationDays;
 	private List<Project> projects;
 	private int idleProgrammers;
 	private ReasignationStrategy strategy;
 
-	public SimulatorImpl(long simulationDays, List<Project> projects,
+	public SimulatorImpl(int simulationDays, List<Project> projects,
 			int programmersQty, ReasignationStrategy strategy) {
 		this.simulationDays = simulationDays;
 		this.projects = projects;
@@ -28,15 +28,28 @@ public class SimulatorImpl implements Simulator {
 	}
 
 	public void start() {
-		long today = 1;
-		while (today < simulationDays) {
+		int today = 1;
+		int projectsFinished = 0;
+		boolean finished = false;
+		while (today < simulationDays && !finished) {
 			Collections.sort(projects, new ProjectComparator());
 			for (Project project : projects) {
-				Iteration iteration = project.getCurrentIteration();
-				if (iteration.isDelayed()) {
-					idleProgrammers -= strategy.reasing(project, projects,
-							idleProgrammers);
+				if (!project.finished()) {
+					Iteration iteration = project.getCurrentIteration();
+					if (iteration.isDelayed()) {
+						idleProgrammers -= strategy.reasing(project, projects,
+								idleProgrammers);
+					} else if (iteration.finished()) {
+						project.nextIteration();
+					}
+					iteration.decreaseLastingDays();
+				} else {
+					projectsFinished++;
 				}
+			}
+			today++;
+			if (projectsFinished == projects.size()) {
+				finished = true;
 			}
 		}
 

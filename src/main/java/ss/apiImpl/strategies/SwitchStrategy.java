@@ -22,6 +22,7 @@ public class SwitchStrategy implements ReasignationStrategy {
 		int newBackEstimation = 0;
 		int newFrontEstimation = 0;
 		int newIterationEstimation = 0;
+
 		// Iterates from minor priority to mayor
 		while (delayed && !finished) {
 			programmersAvailable = 0;
@@ -54,10 +55,12 @@ public class SwitchStrategy implements ReasignationStrategy {
 				}
 			}
 
-			if (programmersAvailable == 0 && newProgrammers > 0) {
+			if (programmersAvailable == 0) {
 				finished = true;
-				iteration.addProgrammer(newEstimateProgrammers);
-				iteration.setEstimate(newIterationEstimation);
+				if (newProgrammers > 0) {
+					iteration.addProgrammer(newEstimateProgrammers);
+					iteration.setEstimate(newIterationEstimation);
+				}
 			}
 		}
 		return 0;

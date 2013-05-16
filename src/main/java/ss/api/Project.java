@@ -3,11 +3,9 @@ package ss.api;
 public interface Project {
 
 	/**
-	 * Gets the issue that will be developed next
-	 * 
-	 * @return
+	 * Project moves to next iteration available
 	 */
-	Issue getNextIssue();
+	void nextIteration();
 
 	/**
 	 * Gets the iteration original duration
@@ -22,5 +20,6 @@ public interface Project {
 
 	void decreaseCost(int qty);
 
+	boolean finished();
 
 }

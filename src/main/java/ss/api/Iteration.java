@@ -38,4 +38,13 @@ public interface Iteration {
 
 	void removeProgrammer();
 
+	/**
+	 * Returns true if the iterations finished.
+	 * 
+	 * @return
+	 */
+	boolean finished();
+	
+	void decreaseLastingDays();
+
 }

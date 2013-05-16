@@ -1,9 +1,9 @@
 package ss.apiImpl;
 
 import java.util.Deque;
+import java.util.NoSuchElementException;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import ss.api.Issue;
 import ss.api.Iteration;
 import ss.api.Project;
 
@@ -16,6 +16,8 @@ public class ProjectImpl implements Project {
 	private Integer maxCost;
 
 	private Integer duration = -1;
+
+	private boolean finished = false;
 
 	public ProjectImpl(Deque<Iteration> iterations, Integer maxCost) {
 		super();
@@ -42,8 +44,12 @@ public class ProjectImpl implements Project {
 		this.iterations.add(iteration);
 	}
 
-	public Issue getNextIssue() {
-		return currentIteration.getNextIssue(0);
+	public void nextIteration() {
+		try {
+			currentIteration = iterations.pop();
+		} catch (NoSuchElementException e) {
+			finished = true;
+		}
 	}
 
 	public Iteration getCurrentIteration() {
@@ -56,6 +62,11 @@ public class ProjectImpl implements Project {
 	@Override
 	public void decreaseCost(int qty) {
 		maxCost -= qty;
+	}
+
+	@Override
+	public boolean finished() {
+		return finished;
 	}
 
 }
