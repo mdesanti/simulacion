@@ -33,9 +33,11 @@ public class Start {
 		ReasignationStrategy strategy = getStrategy(config.getStrategy());
 		
 		Simulator simulator = new SimulatorImpl(max, projects, config.getProgrammersQty(), strategy);
+		simulator.start();
 	}
 	
 	private static ReasignationStrategy getStrategy(String strategy) {
+		//TODO: Instanciar el Distribution Manager
 		return null;
 	}
 

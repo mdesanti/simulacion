@@ -4,22 +4,23 @@ public interface Project {
 
 	/**
 	 * Gets the issue that will be developed next
+	 * 
 	 * @return
 	 */
 	Issue getNextIssue();
-	
+
 	/**
-	 * Gets the issue being developed
-	 * @return
+	 * Gets the iteration original duration
 	 */
 	Iteration getCurrentIteration();
-	
+
 	void addIteration(Iteration iteration);
-	
+
 	Integer getMaxCost();
-	
+
 	Integer getDuration();
-	
-	Integer getProgrammersWorking();
-	
+
+	void decreaseCost(int qty);
+
+
 }

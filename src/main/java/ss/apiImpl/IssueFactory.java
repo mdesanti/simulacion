@@ -6,8 +6,6 @@ import ss.apiImpl.issues.FrontendIssue;
 
 public class IssueFactory {
 	
-
-
 	public static Issue createFrontEndIssue() {
 		return new FrontendIssue();
 	}

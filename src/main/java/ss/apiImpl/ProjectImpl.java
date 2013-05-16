@@ -8,33 +8,26 @@ import ss.api.Iteration;
 import ss.api.Project;
 
 public class ProjectImpl implements Project {
-	
+
 	private Deque<Iteration> iterations = new LinkedBlockingDeque<>();
-	
+
 	private Iteration currentIteration = null;
-	
+
 	private Integer maxCost;
-	
+
 	private Integer duration = -1;
-	
-	private Integer programmersWorking;
-	
-	public ProjectImpl(Deque<Iteration> iterations,
-			Integer maxCost) {
+
+	public ProjectImpl(Deque<Iteration> iterations, Integer maxCost) {
 		super();
 		this.iterations = iterations;
 		this.maxCost = maxCost;
 		currentIteration = iterations.pop();
-		this.programmersWorking = 0;
+
 	}
-	
-	public Integer getProgrammersWorking() {
-		return programmersWorking;
-	}
-	
+
 	public Integer getDuration() {
-		if(duration == -1) {
-			for(Iteration iteration: iterations) {
+		if (duration == -1) {
+			for (Iteration iteration : iterations) {
 				duration += iteration.getDuration();
 			}
 		}
@@ -44,7 +37,7 @@ public class ProjectImpl implements Project {
 	public Integer getMaxCost() {
 		return maxCost;
 	}
-	
+
 	public void addIteration(Iteration iteration) {
 		this.iterations.add(iteration);
 	}
@@ -54,10 +47,15 @@ public class ProjectImpl implements Project {
 	}
 
 	public Iteration getCurrentIteration() {
-		if(currentIteration == null) {
+		if (currentIteration == null) {
 			currentIteration = iterations.pop();
 		}
 		return currentIteration;
+	}
+
+	@Override
+	public void decreaseCost(int qty) {
+		maxCost -= qty;
 	}
 
 }
