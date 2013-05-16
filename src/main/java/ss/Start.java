@@ -22,6 +22,8 @@ public class Start {
 		Configuration config = Configuration.fromXML("configuracion.xml");
 		List<Project> projects = buildProjects(config);
 		long max = 0;
+		
+		//Get from projects maximum duration
 		for(Project p: projects) {
 			if(p.getDuration() > max) {
 				max = p.getDuration();
