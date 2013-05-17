@@ -2,6 +2,7 @@ package ss.apiImpl;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import ss.api.Iteration;
@@ -28,30 +29,38 @@ public class SimulatorImpl implements Simulator {
 	}
 
 	public void start() {
-		int today = 1;
+		int today = 0;
 		int projectsFinished = 0;
+		int totalProjects = projects.size();
 		boolean finished = false;
 		while (today < simulationDays && !finished) {
 			Collections.sort(projects, new ProjectComparator());
-			for (Project project : projects) {
+			Iterator<Project> it = projects.iterator();
+			while (it.hasNext()) {
+				Project project = it.next();
 				if (!project.finished()) {
 					Iteration iteration = project.getCurrentIteration();
 					if (iteration.isDelayed()) {
-						idleProgrammers -= strategy.reasing(project, projects,
+						idleProgrammers = strategy.reasing(project, projects,
 								idleProgrammers);
+						iteration.decreaseLastingDays();
 					} else if (iteration.finished()) {
 						project.nextIteration();
 					}
-					iteration.decreaseLastingDays();
+
 				} else {
+					it.remove();
 					projectsFinished++;
 				}
 			}
 			today++;
-			if (projectsFinished == projects.size()) {
+			if (projectsFinished == totalProjects) {
 				finished = true;
 			}
 		}
+		System.out.println("Cantidad proyectos originales: " + totalProjects);
+		System.out.println("Proyectos terminados: " + projectsFinished);
+		System.out.println("Dias de desarrollo: " + today);
 
 	}
 
@@ -73,6 +82,12 @@ public class SimulatorImpl implements Simulator {
 			}
 
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Simulator simulationDays: " + simulationDays + " projectsQty: "
+				+ projects.size() + " idleProgrammers: " + idleProgrammers;
 	}
 
 }

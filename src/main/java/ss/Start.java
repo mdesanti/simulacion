@@ -1,17 +1,12 @@
 package ss;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
-
-import org.simpleframework.xml.strategy.Strategy;
 
 import ss.api.Project;
 import ss.api.ReasignationStrategy;
 import ss.api.Simulator;
 import ss.apiImpl.SimulatorImpl;
+import ss.apiImpl.strategies.ReasignationStrategyImpl;
 import ss.gui.in.Configuration;
 
 import com.google.common.collect.Lists;
@@ -37,9 +32,25 @@ public class Start {
 		simulator.start();
 	}
 
-	private static ReasignationStrategy getStrategy(String strategy) {
-		// TODO: Instanciar el Distribution Manager
-		return null;
+	private static ReasignationStrategyImpl getStrategy(String strategy) {
+		String[] strategies = strategy.split(",");
+		boolean idleStrategy = false;
+		boolean switchStrategy = false;
+		boolean freelanceStrategy = false;
+		for (int i = 0; i < strategies.length; i++) {
+			String strategyString = strategies[i];
+			if (strategyString.equals("idle")) {
+				idleStrategy = true;
+			}
+			if (strategyString.equals("switch")) {
+				switchStrategy = true;
+			}
+			if (strategyString.equals("freelance")) {
+				freelanceStrategy = true;
+			}
+		}
+		return new ReasignationStrategyImpl(idleStrategy, switchStrategy,
+				freelanceStrategy);
 	}
 
 	private static List<Project> buildProjects(Configuration config) {
@@ -52,21 +63,6 @@ public class Start {
 
 		return retList;
 
-	}
-
-	private static Properties loadProperties(String fileName) {
-		try {
-			Properties simulatorProperties = new Properties();
-			FileInputStream in;
-			in = new FileInputStream(fileName);
-			simulatorProperties.load(in);
-			in.close();
-			return simulatorProperties;
-		} catch (FileNotFoundException e) {
-			return null;
-		} catch (IOException e) {
-			return null;
-		}
 	}
 
 }

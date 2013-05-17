@@ -15,7 +15,7 @@ public class ProjectImpl implements Project {
 
 	private Integer maxCost;
 
-	private Integer duration = -1;
+	private Integer duration = 0;
 
 	private boolean finished = false;
 
@@ -23,16 +23,18 @@ public class ProjectImpl implements Project {
 		super();
 		this.iterations = iterations;
 		this.maxCost = maxCost;
+		setDuration();
 		currentIteration = iterations.pop();
 
 	}
 
-	public Integer getDuration() {
-		if (duration == -1) {
-			for (Iteration iteration : iterations) {
-				duration += iteration.getDuration();
-			}
+	private void setDuration() {
+		for (Iteration iteration : iterations) {
+			duration += iteration.getDuration();
 		}
+	}
+
+	public Integer getDuration() {
 		return duration;
 	}
 
@@ -67,6 +69,12 @@ public class ProjectImpl implements Project {
 	@Override
 	public boolean finished() {
 		return finished;
+	}
+
+	@Override
+	public String toString() {
+		return "Project It: " + iterations.size() + " maxCost: " + maxCost
+				+ " duration: " + getDuration() + " It:["+currentIteration+"]";
 	}
 
 }

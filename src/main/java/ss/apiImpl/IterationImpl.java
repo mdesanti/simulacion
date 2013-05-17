@@ -22,6 +22,7 @@ public class IterationImpl implements Iteration {
 		this.frontendIssue = frontendIssue;
 		this.duration = duration;
 		this.programmersWorking = 0;
+		this.lastingDays = 0;
 	}
 
 	@Override
@@ -99,6 +100,18 @@ public class IterationImpl implements Iteration {
 	public void decreaseLastingDays() {
 		lastingDays--;
 
+	}
+
+	@Override
+	public int getLastingDays() {
+		return lastingDays;
+	}
+
+	@Override
+	public String toString() {
+		return "Iteration duration: " + duration + " estimate: " + estimate
+				+ " progQty: " + programmersWorking + " lastingDays: "
+				+ lastingDays;
 	}
 
 }

@@ -46,5 +46,7 @@ public interface Iteration {
 	boolean finished();
 	
 	void decreaseLastingDays();
+	
+	int getLastingDays();
 
 }
