@@ -12,5 +12,7 @@ public interface ReasignationStrategy {
 	 * @return Quantity of idle programmers used.
 	 */
 	int reasing(Project to, List<Project> from, int idleProgrammers);
+	
+	boolean isSwitchStrategyOnly();
 
 }

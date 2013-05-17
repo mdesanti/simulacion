@@ -15,6 +15,8 @@ public class ProjectImpl implements Project {
 
 	private Integer maxCost;
 
+	private Integer totalCost = 0;
+
 	private Integer duration = 0;
 
 	private boolean finished = false;
@@ -65,6 +67,7 @@ public class ProjectImpl implements Project {
 
 	@Override
 	public void decreaseCost(int qty) {
+		totalCost += qty;
 		maxCost -= qty;
 	}
 
@@ -79,13 +82,23 @@ public class ProjectImpl implements Project {
 	}
 
 	@Override
-	public void addProgrammer(int qty) {
+	public void addProgrammers(int qty) {
 		programmersWorking += qty;
 	}
 
 	@Override
 	public void removeProgrammer() {
 		programmersWorking--;
+		if (programmersWorking == 0) {
+			currentIteration.setEstimate(Integer.MAX_VALUE);
+			return;
+		}
+		int newBackEstimation = DistributionManager.getInstance()
+				.getLastingDaysForBackendIssue(programmersWorking);
+		int newFrontEstimation = DistributionManager.getInstance()
+				.getLastingDaysForFrontendIssue(programmersWorking);
+		int newIterationEstimation = newBackEstimation + newFrontEstimation;
+		currentIteration.setEstimate(newIterationEstimation);
 	}
 
 	@Override
@@ -93,6 +106,11 @@ public class ProjectImpl implements Project {
 		int old = programmersWorking;
 		programmersWorking = 0;
 		return old;
+	}
+
+	@Override
+	public int getTotalCost() {
+		return totalCost;
 	}
 
 	@Override

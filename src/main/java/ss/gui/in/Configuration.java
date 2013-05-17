@@ -18,17 +18,10 @@ public class Configuration {
 	private Integer programmersQty;
 	
 	@Element
-	private Integer simulationTime;
-	
-	@Element
 	private String strategy;
 	
 	public String getStrategy() {
 		return strategy;
-	}
-	
-	public Integer getSimulationTime() {
-		return simulationTime;
 	}
 	
 	public Integer getProgrammersQty() {

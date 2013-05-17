@@ -24,10 +24,12 @@ public interface Project {
 	
 	Integer getProgrammersWorking();
 
-	void addProgrammer(int qty);
+	void addProgrammers(int qty);
 
 	void removeProgrammer();
 	
 	int removeProgrammers();
+	
+	int getTotalCost();
 
 }

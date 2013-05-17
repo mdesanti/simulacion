@@ -52,9 +52,9 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 			if (!iteration.isDelayedWith(newIterationEstimation)
 					|| newProgrammers == idleProgrammers) {
 				delayed = false;
-				to.addProgrammer(newEstimateProgrammers);
+				to.addProgrammers(newEstimateProgrammers);
 				iteration.setEstimate(newIterationEstimation);
-				return idleProgrammers - newProgrammers;
+				return newProgrammers;
 			}
 		}
 		return 0;
@@ -62,6 +62,11 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 
 	private void switchStrategyReasign(Project to, List<Project> from) {
 		int projectIndex = from.indexOf(to);
+
+		// Last proyect cant switch programmers with another project.
+		if (projectIndex == from.size() - 1) {
+			return;
+		}
 		Iteration iteration = to.getCurrentIteration();
 		int projectProgrammers = to.getProgrammersWorking();
 		int newProgrammers = 0;
@@ -97,7 +102,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 
 					if (!iteration.isDelayedWith(newIterationEstimation)) {
 						delayed = false;
-						to.addProgrammer(newEstimateProgrammers);
+						to.addProgrammers(newEstimateProgrammers);
 						iteration.setEstimate(newIterationEstimation);
 						return;
 					}
@@ -107,7 +112,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 			if (programmersAvailable == 0) {
 				finished = true;
 				if (newProgrammers > 0) {
-					to.addProgrammer(newEstimateProgrammers);
+					to.addProgrammers(newEstimateProgrammers);
 					iteration.setEstimate(newIterationEstimation);
 				}
 			}
@@ -132,12 +137,17 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 			if (!iteration.isDelayedWith(newIterationEstimation)
 					|| newProgrammers == maxCost) {
 				delayed = false;
-				to.addProgrammer(newEstimateProgrammers);
+				to.addProgrammers(newEstimateProgrammers);
 				iteration.setEstimate(newIterationEstimation);
 				to.decreaseCost(newProgrammers);
 				return;
 			}
 		}
 		return;
+	}
+
+	@Override
+	public boolean isSwitchStrategyOnly() {
+		return switchStrategy && !(idleStrategy || freelanceStrategy);
 	}
 }
