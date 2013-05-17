@@ -1,6 +1,10 @@
 package ss;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import ss.api.Project;
 import ss.api.ReasignationStrategy;
@@ -8,6 +12,7 @@ import ss.api.Simulator;
 import ss.apiImpl.SimulatorImpl;
 import ss.apiImpl.strategies.ReasignationStrategyImpl;
 import ss.gui.in.Configuration;
+import ss.gui.out.Frame;
 
 import com.google.common.collect.Lists;
 
@@ -29,7 +34,15 @@ public class Start {
 
 		Simulator simulator = new SimulatorImpl(max, projects,
 				config.getProgrammersQty(), strategy);
-		simulator.start();
+		Frame frame = null;
+		try {
+			frame = new Frame(simulator);
+		} catch (IOException e) {
+			errorWhileReading("executing simulator.");
+		}
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		frame.setVisible(true);
 	}
 
 	private static ReasignationStrategyImpl getStrategy(String strategy) {
@@ -63,6 +76,12 @@ public class Start {
 
 		return retList;
 
+	}
+
+	private static void errorWhileReading(String string) {
+		JOptionPane.showMessageDialog(null, "Error at " + string,
+				"Simulator Error", JOptionPane.ERROR_MESSAGE);
+		System.exit(1);
 	}
 
 }
