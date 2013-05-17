@@ -11,6 +11,7 @@ import ss.api.ReasignationStrategy;
 import ss.api.Simulator;
 import ss.apiImpl.strategies.ReasignationStrategyImpl;
 import ss.gui.in.Configuration;
+import ss.gui.out.SimulationListener;
 
 import com.google.common.collect.Lists;
 
@@ -20,6 +21,11 @@ public class SimulatorImpl implements Simulator {
 	private List<Project> projects;
 	private int idleProgrammers;
 	private ReasignationStrategy strategy;
+	private SimulationListener listener;
+
+	public SimulatorImpl(SimulationListener listener) {
+		this.listener = listener;
+	}
 
 	public void start() {
 		// Build method must be called before
@@ -42,6 +48,7 @@ public class SimulatorImpl implements Simulator {
 						if (iteration.isDelayed()) {
 							idleProgrammers -= strategy.reasing(project,
 									projects, idleProgrammers);
+							listener.updateIdleProgrammers(idleProgrammers);
 						}
 						if (project.getProgrammersWorking() > 0) {
 							iteration.decreaseLastingDays();
@@ -57,6 +64,7 @@ public class SimulatorImpl implements Simulator {
 				}
 			}
 			today++;
+			listener.updateTime(today);
 			if (projectsFinished == totalProjects) {
 				finished = true;
 			}

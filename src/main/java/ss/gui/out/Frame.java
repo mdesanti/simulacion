@@ -26,17 +26,17 @@ public class Frame extends JFrame {
 	private static final int CELL_SIZE = 30;
 	private int rows = 25;
 	private int cols = 40;
-	private GamePanel gamePanel;
+	private GamePanel simulationPanel;
 	private Sprite sprite;
 	private List<Sprite> sprites;
-	private List<Project> projects;
 	private JTextArea idleProgrammers;
+	private JTextArea finishedProjects;
 	private JTextArea totalTime;
 	private Simulator simulator;
 	private HashMap<Class<?>, Image> classMap;
 
 	public Frame() throws IOException {
-		this.simulator = new SimulatorImpl();
+		this.simulator = new SimulatorImpl(new SimulationListenerImpl(this));
 
 		// Initializes MenuBar
 		MenuBar menuBar = new MenuBar(this);
@@ -57,6 +57,14 @@ public class Frame extends JFrame {
 	 */
 	public Sprite getPlayerSprite() {
 		return this.sprite;
+	}
+
+	/**
+	 * Repaints the panel
+	 */
+	public void paint() {
+		simulationPanel.repaint();
+		this.setVisible(true);
 	}
 
 	private void initializeClassMap() throws IOException {
@@ -111,38 +119,40 @@ public class Frame extends JFrame {
 	 */
 	public void initializePanel() throws IOException {
 		if (existsGamePanel())
-			remove(gamePanel);
-		gamePanel = new GamePanel(cols * CELL_SIZE, rows * CELL_SIZE);
-		gamePanel.setBackground(Color.WHITE);
-		add(gamePanel);
+			remove(simulationPanel);
+		simulationPanel = new GamePanel(cols * CELL_SIZE, rows * CELL_SIZE);
+		simulationPanel.setBackground(Color.WHITE);
+		add(simulationPanel);
 
 		JTextArea area = new JTextArea("Programadores ociosos: ");
 		area.setBounds(50, 10, 150, 20);
-		gamePanel.add(area);
-		idleProgrammers = new JTextArea("" + simulator.getIdleProgrammers());
+		simulationPanel.add(area);
+		idleProgrammers = new JTextArea(String.valueOf(simulator
+				.getIdleProgrammers()));
 		idleProgrammers.setBounds(210, 10, 30, 20);
-		gamePanel.add(idleProgrammers);
+		simulationPanel.add(idleProgrammers);
 
 		area = new JTextArea("Tiempo de simulación: ");
 		area.setBounds(270, 10, 150, 20);
-		gamePanel.add(area);
+		simulationPanel.add(area);
 
 		totalTime = new JTextArea("0");
 		totalTime.setBounds(420, 10, 30, 20);
-		gamePanel.add(totalTime);
+		simulationPanel.add(totalTime);
 
 		area = new JTextArea("Tiempo máximo de simulación: ");
 		area.setBounds(480, 10, 200, 20);
-		gamePanel.add(area);
+		simulationPanel.add(area);
 
-		area = new JTextArea("" + simulator.getSimulationDays());
+		area = new JTextArea(String.valueOf(simulator.getSimulationDays()));
 		area.setBounds(690, 10, 40, 20);
-		gamePanel.add(area);
+		simulationPanel.add(area);
 		for (Project project : simulator.getProjects()) {
 			int id = project.getId();
-			final JTextArea projectName = new JTextArea("Project " + id);
-			projectName.setBounds(50, 80 * id + 60, 100, 80);
-			gamePanel.add(projectName);
+			final JTextArea projectName = new JTextArea("Project "
+					+ String.valueOf(id));
+			projectName.setBounds(50, 100 * id + 60, 100, 100);
+			simulationPanel.add(projectName);
 		}
 	}
 
@@ -152,7 +162,7 @@ public class Frame extends JFrame {
 	 * @return boolean
 	 */
 	public boolean existsGamePanel() {
-		return gamePanel != null;
+		return simulationPanel != null;
 	}
 
 	/**
@@ -178,7 +188,7 @@ public class Frame extends JFrame {
 		Position pos = new Position(CELL_SIZE * (point.y - 1), CELL_SIZE
 				* (point.x - 1));
 		Sprite s = getSprite(pos);
-		gamePanel.removeSprite(s);
+		simulationPanel.removeSprite(s);
 	}
 
 	public void restart() {
@@ -190,7 +200,7 @@ public class Frame extends JFrame {
 		} catch (IOException e) {
 			errorWhileReading("restart of simulation.");
 		}
-		gamePanel.setPixeslPerStep(5);
+		simulationPanel.setPixeslPerStep(5);
 		initializeFrame();
 		simulator.start();
 
@@ -220,6 +230,20 @@ public class Frame extends JFrame {
 		// repaint();
 		// setTitle("Slip & Slide");
 		// initializeFrame();
+	}
+
+	public void updateIdleProgrammers(int qty) {
+		idleProgrammers.setText(String.valueOf(qty));
+
+	}
+
+	public void updateTime(int time) {
+		totalTime.setText(String.valueOf(time));
+
+	}
+
+	public void updateFinishedProjects(int qty) {
+		finishedProjects.setText(String.valueOf(qty));
 	}
 
 	/**
