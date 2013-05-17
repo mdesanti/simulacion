@@ -32,12 +32,6 @@ public interface Iteration {
 
 	boolean isDelayedWith(int estimation);
 
-	Integer getProgrammersWorking();
-
-	void addProgrammer(int qty);
-
-	void removeProgrammer();
-
 	/**
 	 * Returns true if the iterations finished.
 	 * 

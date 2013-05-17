@@ -39,10 +39,10 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		boolean delayed = true;
 		int newProgrammers = 0;
 		Iteration iteration = to.getCurrentIteration();
-		int iterationProgrammers = iteration.getProgrammersWorking();
+		int projectProgrammers = to.getProgrammersWorking();
 		while (newProgrammers < idleProgrammers & delayed) {
 			newProgrammers++;
-			int newEstimateProgrammers = iterationProgrammers + newProgrammers;
+			int newEstimateProgrammers = projectProgrammers + newProgrammers;
 			int newBackEstimation = DistributionManager.getInstance()
 					.getLastingDaysForBackendIssue(newEstimateProgrammers);
 			int newFrontEstimation = DistributionManager.getInstance()
@@ -52,7 +52,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 			if (!iteration.isDelayedWith(newIterationEstimation)
 					|| newProgrammers == idleProgrammers) {
 				delayed = false;
-				iteration.addProgrammer(newEstimateProgrammers);
+				to.addProgrammer(newEstimateProgrammers);
 				iteration.setEstimate(newIterationEstimation);
 				return idleProgrammers - newProgrammers;
 			}
@@ -63,7 +63,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 	private void switchStrategyReasign(Project to, List<Project> from) {
 		int projectIndex = from.indexOf(to);
 		Iteration iteration = to.getCurrentIteration();
-		int iterationProgrammers = iteration.getProgrammersWorking();
+		int projectProgrammers = to.getProgrammersWorking();
 		int newProgrammers = 0;
 		boolean delayed = true;
 		int programmersAvailable = 0;
@@ -78,14 +78,13 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 			programmersAvailable = 0;
 			for (int i = from.size() - 1; i >= projectIndex; i--) {
 				Project other = from.get(i);
-				Iteration otherIteration = other.getCurrentIteration();
-				int programmersQty = otherIteration.getProgrammersWorking();
+				int programmersQty = other.getProgrammersWorking();
 
 				if (programmersQty > 0) {
 					programmersAvailable++;
-					otherIteration.removeProgrammer();
+					other.removeProgrammer();
 					newProgrammers++;
-					newEstimateProgrammers = iterationProgrammers
+					newEstimateProgrammers = projectProgrammers
 							+ newProgrammers;
 					newBackEstimation = DistributionManager.getInstance()
 							.getLastingDaysForBackendIssue(
@@ -98,7 +97,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 
 					if (!iteration.isDelayedWith(newIterationEstimation)) {
 						delayed = false;
-						iteration.addProgrammer(newEstimateProgrammers);
+						to.addProgrammer(newEstimateProgrammers);
 						iteration.setEstimate(newIterationEstimation);
 						return;
 					}
@@ -108,7 +107,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 			if (programmersAvailable == 0) {
 				finished = true;
 				if (newProgrammers > 0) {
-					iteration.addProgrammer(newEstimateProgrammers);
+					to.addProgrammer(newEstimateProgrammers);
 					iteration.setEstimate(newIterationEstimation);
 				}
 			}
@@ -120,10 +119,10 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		boolean delayed = true;
 		int newProgrammers = 0;
 		Iteration iteration = to.getCurrentIteration();
-		int iterationProgrammers = iteration.getProgrammersWorking();
+		int projectProgrammers = to.getProgrammersWorking();
 		while (newProgrammers < maxCost & delayed) {
 			newProgrammers++;
-			int newEstimateProgrammers = iterationProgrammers + newProgrammers;
+			int newEstimateProgrammers = projectProgrammers + newProgrammers;
 			int newBackEstimation = DistributionManager.getInstance()
 					.getLastingDaysForBackendIssue(newEstimateProgrammers);
 			int newFrontEstimation = DistributionManager.getInstance()
@@ -133,7 +132,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 			if (!iteration.isDelayedWith(newIterationEstimation)
 					|| newProgrammers == maxCost) {
 				delayed = false;
-				iteration.addProgrammer(newEstimateProgrammers);
+				to.addProgrammer(newEstimateProgrammers);
 				iteration.setEstimate(newIterationEstimation);
 				to.decreaseCost(newProgrammers);
 				return;

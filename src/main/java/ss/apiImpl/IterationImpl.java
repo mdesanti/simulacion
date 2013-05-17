@@ -13,15 +13,12 @@ public class IterationImpl implements Iteration {
 
 	private int estimate = Integer.MAX_VALUE;
 
-	private Integer programmersWorking;
-
 	private int lastingDays = Integer.MAX_VALUE;
 
 	public IterationImpl(Issue backendIssue, Issue frontendIssue, int duration) {
 		this.backendIssue = backendIssue;
 		this.frontendIssue = frontendIssue;
 		this.duration = duration;
-		this.programmersWorking = 0;
 	}
 
 	@Override
@@ -76,21 +73,6 @@ public class IterationImpl implements Iteration {
 	}
 
 	@Override
-	public Integer getProgrammersWorking() {
-		return programmersWorking;
-	}
-
-	@Override
-	public void addProgrammer(int qty) {
-		programmersWorking += qty;
-	}
-
-	@Override
-	public void removeProgrammer() {
-		programmersWorking--;
-	}
-
-	@Override
 	public boolean finished() {
 		return lastingDays == 0;
 	}
@@ -109,8 +91,7 @@ public class IterationImpl implements Iteration {
 	@Override
 	public String toString() {
 		return "Iteration duration: " + duration + " estimate: " + estimate
-				+ " progQty: " + programmersWorking + " lastingDays: "
-				+ lastingDays;
+				+ " lastingDays: " + lastingDays;
 	}
 
 }

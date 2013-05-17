@@ -35,9 +35,9 @@ public class SimulatorImpl implements Simulator {
 		boolean finished = false;
 		while (today < simulationDays && !finished) {
 			Collections.sort(projects, new ProjectComparator());
-			Iterator<Project> it = projects.iterator();
-			while (it.hasNext()) {
-				Project project = it.next();
+			Iterator<Project> projectIterator = projects.iterator();
+			while (projectIterator.hasNext()) {
+				Project project = projectIterator.next();
 				if (!project.finished()) {
 					Iteration iteration = project.getCurrentIteration();
 					if (!iteration.finished()) {
@@ -45,14 +45,15 @@ public class SimulatorImpl implements Simulator {
 							idleProgrammers = strategy.reasing(project,
 									projects, idleProgrammers);
 						}
-						if (iteration.getProgrammersWorking() > 0) {
+						if (project.getProgrammersWorking() > 0) {
 							iteration.decreaseLastingDays();
 						}
 					} else {
 						project.nextIteration();
 					}
 				} else {
-					it.remove();
+					projectIterator.remove();
+					idleProgrammers += project.removeProgrammers();
 					projectsFinished++;
 				}
 			}

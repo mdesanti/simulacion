@@ -19,13 +19,15 @@ public class ProjectImpl implements Project {
 
 	private boolean finished = false;
 
+	private Integer programmersWorking;
+
 	public ProjectImpl(Deque<Iteration> iterations, Integer maxCost) {
 		super();
 		this.iterations = iterations;
 		this.maxCost = maxCost;
 		setDuration();
 		currentIteration = iterations.pop();
-
+		this.programmersWorking = 0;
 	}
 
 	private void setDuration() {
@@ -72,9 +74,32 @@ public class ProjectImpl implements Project {
 	}
 
 	@Override
+	public Integer getProgrammersWorking() {
+		return programmersWorking;
+	}
+
+	@Override
+	public void addProgrammer(int qty) {
+		programmersWorking += qty;
+	}
+
+	@Override
+	public void removeProgrammer() {
+		programmersWorking--;
+	}
+
+	@Override
+	public int removeProgrammers() {
+		int old = programmersWorking;
+		programmersWorking = 0;
+		return old;
+	}
+
+	@Override
 	public String toString() {
 		return "Project It: " + iterations.size() + " maxCost: " + maxCost
-				+ " duration: " + getDuration() + " It:["+currentIteration+"]";
+				+ " duration: " + getDuration() + " progQty: "
+				+ programmersWorking + " It:[" + currentIteration + "]";
 	}
 
 }
