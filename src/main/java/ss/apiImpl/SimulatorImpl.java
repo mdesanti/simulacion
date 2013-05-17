@@ -22,7 +22,7 @@ public class SimulatorImpl implements Simulator {
 	private ReasignationStrategy strategy;
 
 	public void start() {
-		build();
+		// Build method must be called before
 		int today = 0;
 		int projectsFinished = 0;
 		int totalProjects = projects.size();
@@ -133,14 +133,14 @@ public class SimulatorImpl implements Simulator {
 		List<Project> retList = Lists.newArrayList();
 
 		for (int i = 0; i < projects.length; i++) {
-			retList.add(projects[i].buildProject());
+			retList.add(projects[i].buildProject(i));
 		}
 
 		return retList;
 
 	}
 
-	private void build() {
+	public void build() {
 		Configuration config = Configuration.fromXML("configuracion.xml");
 		this.projects = buildProjects(config);
 		this.idleProgrammers = config.getProgrammersQty();
@@ -175,4 +175,36 @@ public class SimulatorImpl implements Simulator {
 				freelanceStrategy);
 	}
 
+	@Override
+	public int getFinishedProjects() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getIdleProgrammers() {
+		return idleProgrammers;
+	}
+
+	@Override
+	public List<Project> getProjects() {
+		return this.projects;
+	}
+
+	@Override
+	public int getTotalCost() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public String getStrategy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getSimulationDays() {
+		return simulationDays;
+	}
 }

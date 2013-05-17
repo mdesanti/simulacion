@@ -1,5 +1,6 @@
 package ss.gui.out;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.LinkedList;
@@ -26,6 +27,7 @@ public class GamePanel extends JPanel {
 	 * @param height Altura en pixeles del panel.
 	 */
 	public GamePanel(int width, int height) {
+		setBackground(Color.WHITE);
 		setLayout(null);
 		setSize(width, height);
 		sprites = new LinkedList<Sprite>();

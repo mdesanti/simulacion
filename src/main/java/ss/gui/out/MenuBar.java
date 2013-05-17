@@ -7,22 +7,17 @@ import java.awt.event.KeyEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
-
-import ss.api.Simulator;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
 
 	private JMenuBar menuBar;
 	private Frame frame;
-	private Simulator simulator;
-	private GamePanel gamePanel;
 
-	public MenuBar(Frame frame, Simulator simulator, GamePanel gamePanel) {
+	public MenuBar(Frame frame) {
 		this.frame = frame;
-		this.simulator = simulator;
-		this.gamePanel = gamePanel;
 
 		menuBar = new JMenuBar();
 		JMenu simulatorMenu = new JMenu("Simulador");
@@ -34,11 +29,26 @@ public class MenuBar extends JMenuBar {
 				ActionEvent.CTRL_MASK));
 		newGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				getSimulator().start();
+				getFrame().restart();
+			}
+		});
+
+		/*
+		 * Closes the application
+		 */
+		JMenuItem close = new JMenuItem("Close");
+		close.setMnemonic(KeyEvent.VK_C);
+		close.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
+				ActionEvent.CTRL_MASK));
+		close.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				System.exit(0);
 			}
 		});
 
 		simulatorMenu.add(newGame);
+		simulatorMenu.add(new JSeparator());
+		simulatorMenu.add(close);
 		menuBar.add(simulatorMenu);
 	}
 
@@ -53,14 +63,6 @@ public class MenuBar extends JMenuBar {
 
 	private Frame getFrame() {
 		return frame;
-	}
-
-	private Simulator getSimulator() {
-		return simulator;
-	}
-
-	private GamePanel getGamePanel() {
-		return gamePanel;
 	}
 
 }

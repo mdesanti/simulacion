@@ -23,13 +23,21 @@ public class ProjectImpl implements Project {
 
 	private Integer programmersWorking;
 
-	public ProjectImpl(Deque<Iteration> iterations, Integer maxCost) {
+	private Integer id;
+
+	public ProjectImpl(Deque<Iteration> iterations, Integer maxCost, Integer id) {
 		super();
+		this.id = id;
 		this.iterations = iterations;
 		this.maxCost = maxCost;
 		setDuration();
 		currentIteration = iterations.pop();
 		this.programmersWorking = 0;
+	}
+
+	@Override
+	public int getId() {
+		return id;
 	}
 
 	private void setDuration() {

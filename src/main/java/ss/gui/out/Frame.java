@@ -1,5 +1,6 @@
 package ss.gui.out;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
@@ -7,11 +8,12 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
+import ss.api.Project;
 import ss.api.Simulator;
 import ss.apiImpl.SimulatorImpl;
 
@@ -22,20 +24,22 @@ import ss.apiImpl.SimulatorImpl;
 @SuppressWarnings("serial")
 public class Frame extends JFrame {
 	private static final int CELL_SIZE = 30;
-	private int rows = 12;
-	private int cols = 12;
+	private int rows = 25;
+	private int cols = 40;
 	private GamePanel gamePanel;
 	private Sprite sprite;
 	private List<Sprite> sprites;
+	private List<Project> projects;
+	private JTextArea idleProgrammers;
+	private JTextArea totalTime;
 	private Simulator simulator;
-	private Level actualLevel;
 	private HashMap<Class<?>, Image> classMap;
 
 	public Frame() throws IOException {
 		this.simulator = new SimulatorImpl();
 
 		// Initializes MenuBar
-		MenuBar menuBar = new MenuBar(this, this.simulator, gamePanel);
+		MenuBar menuBar = new MenuBar(this);
 		setJMenuBar(menuBar.getMenu());
 
 		// Initializes basic Frame and MapHash of images
@@ -85,13 +89,6 @@ public class Frame extends JFrame {
 	// return image;
 	// }
 
-	/**
-	 * Sets the actualLevel
-	 */
-	public void setActualLevel(Level level) {
-		this.actualLevel = level;
-	}
-
 	/*
 	 * Initializes the Frame according to a column and a row and positions it in
 	 * the center of the screan
@@ -113,21 +110,40 @@ public class Frame extends JFrame {
 	 *             If there was a problem loading the image
 	 */
 	public void initializePanel() throws IOException {
-		// rows = actualLevel.getBoard().getRows();
-		// cols = actualLevel.getBoard().getCols();
-		// sprites = new LinkedList<Sprite>();
-		// if (existsGamePanel())
-		// remove(gamePanel);
-		// gamePanel = new GamePanel(cols * CELL_SIZE, rows * CELL_SIZE);
-		// gamePanel.setBackground(Color.WHITE);
-		// int playerX = actualLevel.getPlayer().getLocation().x;
-		// int playerY = actualLevel.getPlayer().getLocation().y;
-		// sprite = new Sprite(
-		// ImageUtils.loadImage("resources/images/player.png"),
-		// new Position((playerY - 1) * CELL_SIZE, (playerX - 1)
-		// * CELL_SIZE));
-		// add(gamePanel);
-		// addSprites(actualLevel);
+		if (existsGamePanel())
+			remove(gamePanel);
+		gamePanel = new GamePanel(cols * CELL_SIZE, rows * CELL_SIZE);
+		gamePanel.setBackground(Color.WHITE);
+		add(gamePanel);
+
+		JTextArea area = new JTextArea("Programadores ociosos: ");
+		area.setBounds(50, 10, 150, 20);
+		gamePanel.add(area);
+		idleProgrammers = new JTextArea("" + simulator.getIdleProgrammers());
+		idleProgrammers.setBounds(210, 10, 30, 20);
+		gamePanel.add(idleProgrammers);
+
+		area = new JTextArea("Tiempo de simulación: ");
+		area.setBounds(270, 10, 150, 20);
+		gamePanel.add(area);
+
+		totalTime = new JTextArea("0");
+		totalTime.setBounds(420, 10, 30, 20);
+		gamePanel.add(totalTime);
+
+		area = new JTextArea("Tiempo máximo de simulación: ");
+		area.setBounds(480, 10, 200, 20);
+		gamePanel.add(area);
+
+		area = new JTextArea("" + simulator.getSimulationDays());
+		area.setBounds(690, 10, 40, 20);
+		gamePanel.add(area);
+		for (Project project : simulator.getProjects()) {
+			int id = project.getId();
+			final JTextArea projectName = new JTextArea("Project " + id);
+			projectName.setBounds(50, 80 * id + 60, 100, 80);
+			gamePanel.add(projectName);
+		}
 	}
 
 	/**
@@ -137,25 +153,6 @@ public class Frame extends JFrame {
 	 */
 	public boolean existsGamePanel() {
 		return gamePanel != null;
-	}
-
-	/*
-	 * Add all the sprites in the board to the game panel
-	 */
-	private void addSprites(Level level) throws IOException {
-		// for (int i = 0; i < rows; i++) {
-		// for (int j = 0; j < cols; j++) {
-		// Cell cell = level.getBoard().getElemIn(i, j);
-		// if (!(cell instanceof BlankCell)) {
-		// Image image = getImage(cell);
-		// Sprite s = new Sprite(image, new Position(CELL_SIZE
-		// * (j - 1), CELL_SIZE * (i - 1)));
-		// gamePanel.addSprite(s);
-		// sprites.add(s);
-		// }
-		// }
-		// }
-		// gamePanel.addSprite(sprite);
 	}
 
 	/**
@@ -184,40 +181,19 @@ public class Frame extends JFrame {
 		gamePanel.removeSprite(s);
 	}
 
-	/**
-	 * Resets the game actual level to a new level. Initializes the key
-	 * listener. Refresh the panel and the title.
-	 * 
-	 * @param levelNumber
-	 */
-	public void restartTo(int levelNumber) {
-		// try {
-		// repaint();
-		// simulator.setActualLevel(levelNumber);
-		// actualLevel = simulator.getActualLevel();
-		// actualLevel.initializeTime();
-		// initializePanel();
-		// gamePanel.setPixeslPerStep(5);
-		// actualLevel.setKeyListener(new KeyListenerImplementation(this,
-		// simulator, gamePanel));
-		// simulator.setKeyListener(new KeyListenerImplementation(this,
-		// simulator, gamePanel));
-		// setTitle("Slip & Slide" + " - Level "
-		// + simulator.getActualLevelNumber());
-		// initializeFrame();
-		// } catch (NoSizeFoundOnFileException e) {
-		// errorWhileReading("reading levels size.");
-		// } catch (PlayerMustBeOnBlankCellException e) {
-		// errorWhileReading("reading levels, the player is over another sprite.");
-		// } catch (FileNotFoundException e) {
-		// errorWhileReading("reading levels, file not found.");
-		// } catch (PointAllreadyContainsCellException e) {
-		// errorWhileReading("reading levels, two or more sprites are on the same place.");
-		// } catch (IOException e) {
-		// errorWhileReading("reading file.");
-		// } catch (ErrorWhileReadingFileException e) {
-		// errorWhileReading("reading file.");
-		// }
+	public void restart() {
+		repaint();
+		simulator.build();
+		// simulator.start();
+		try {
+			initializePanel();
+		} catch (IOException e) {
+			errorWhileReading("restart of simulation.");
+		}
+		gamePanel.setPixeslPerStep(5);
+		initializeFrame();
+		simulator.start();
+
 	}
 
 	/**

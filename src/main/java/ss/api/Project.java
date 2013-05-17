@@ -21,15 +21,17 @@ public interface Project {
 	void decreaseCost(int qty);
 
 	boolean finished();
-	
+
 	Integer getProgrammersWorking();
 
 	void addProgrammers(int qty);
 
 	void removeProgrammer();
-	
+
 	int removeProgrammers();
-	
+
 	int getTotalCost();
+
+	int getId();
 
 }

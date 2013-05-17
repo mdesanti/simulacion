@@ -28,12 +28,12 @@ public class Project {
 		this.iterations = iterations;
 	}
 	
-	public ss.api.Project buildProject() {
+	public ss.api.Project buildProject(int id) {
 		Deque<ss.api.Iteration> its = new LinkedBlockingDeque<>();
 		for(Iteration iteration: iterations) {
 			its.add(iteration.buildIteration());
 		}
-		return new ss.apiImpl.ProjectImpl(its, maxCost);
+		return new ss.apiImpl.ProjectImpl(its, maxCost,id);
 	}
 	
 }
