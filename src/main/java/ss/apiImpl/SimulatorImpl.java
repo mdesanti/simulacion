@@ -9,6 +9,10 @@ import ss.api.Iteration;
 import ss.api.Project;
 import ss.api.ReasignationStrategy;
 import ss.api.Simulator;
+import ss.apiImpl.strategies.ReasignationStrategyImpl;
+import ss.gui.in.Configuration;
+
+import com.google.common.collect.Lists;
 
 public class SimulatorImpl implements Simulator {
 
@@ -17,18 +21,8 @@ public class SimulatorImpl implements Simulator {
 	private int idleProgrammers;
 	private ReasignationStrategy strategy;
 
-	public SimulatorImpl(int simulationDays, List<Project> projects,
-			int programmersQty, ReasignationStrategy strategy) {
-		this.simulationDays = simulationDays;
-		this.projects = projects;
-		this.idleProgrammers = programmersQty;
-		this.strategy = strategy;
-	}
-
-	public void addProject(Project project) {
-	}
-
 	public void start() {
+		build();
 		int today = 0;
 		int projectsFinished = 0;
 		int totalProjects = projects.size();
@@ -111,7 +105,8 @@ public class SimulatorImpl implements Simulator {
 			} else if (!delayedP1 && delayedP2) {
 				return 1;
 			} else {
-				if ((diffP1 <= 0 && diffP2 <= 0) || (diffP1 >= 0 && diffP2 >= 0)) {
+				if ((diffP1 <= 0 && diffP2 <= 0)
+						|| (diffP1 >= 0 && diffP2 >= 0)) {
 					if (diffP1 < diffP2) {
 						return -1;
 					} else if (diffP1 > diffP2) {
@@ -131,6 +126,53 @@ public class SimulatorImpl implements Simulator {
 	public String toString() {
 		return "Simulator simulationDays: " + simulationDays + " projectsQty: "
 				+ projects.size() + " idleProgrammers: " + idleProgrammers;
+	}
+
+	private static List<Project> buildProjects(Configuration config) {
+		ss.gui.in.Project[] projects = config.getProjects();
+		List<Project> retList = Lists.newArrayList();
+
+		for (int i = 0; i < projects.length; i++) {
+			retList.add(projects[i].buildProject());
+		}
+
+		return retList;
+
+	}
+
+	private void build() {
+		Configuration config = Configuration.fromXML("configuracion.xml");
+		this.projects = buildProjects(config);
+		this.idleProgrammers = config.getProgrammersQty();
+		this.strategy = getStrategy(config.getStrategy());
+		// Get from projects maximum duration
+		this.simulationDays = 0;
+		for (Project p : projects) {
+			if (p.getDuration() > simulationDays) {
+				simulationDays = p.getDuration();
+			}
+		}
+	}
+
+	private static ReasignationStrategyImpl getStrategy(String strategy) {
+		String[] strategies = strategy.split(",");
+		boolean idleStrategy = false;
+		boolean switchStrategy = false;
+		boolean freelanceStrategy = false;
+		for (int i = 0; i < strategies.length; i++) {
+			String strategyString = strategies[i];
+			if (strategyString.equals("idle")) {
+				idleStrategy = true;
+			}
+			if (strategyString.equals("switch")) {
+				switchStrategy = true;
+			}
+			if (strategyString.equals("freelance")) {
+				freelanceStrategy = true;
+			}
+		}
+		return new ReasignationStrategyImpl(idleStrategy, switchStrategy,
+				freelanceStrategy);
 	}
 
 }

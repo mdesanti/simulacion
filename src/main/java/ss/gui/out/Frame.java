@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import ss.api.Simulator;
+import ss.apiImpl.SimulatorImpl;
 
 /**
  * This class is the one in charge of building the frame for the graphic
@@ -30,11 +31,11 @@ public class Frame extends JFrame {
 	private Level actualLevel;
 	private HashMap<Class<?>, Image> classMap;
 
-	public Frame(Simulator simulator) throws IOException {
-		this.simulator = simulator;
+	public Frame() throws IOException {
+		this.simulator = new SimulatorImpl();
 
 		// Initializes MenuBar
-		MenuBar menuBar = new MenuBar(this, simulator, gamePanel);
+		MenuBar menuBar = new MenuBar(this, this.simulator, gamePanel);
 		setJMenuBar(menuBar.getMenu());
 
 		// Initializes basic Frame and MapHash of images
@@ -226,7 +227,7 @@ public class Frame extends JFrame {
 	 */
 	public void errorWhileReading(String string) {
 		JOptionPane.showMessageDialog(null, "Error at " + string,
-				"Slip & Slide Error", JOptionPane.ERROR_MESSAGE);
+				"Simulator Error", JOptionPane.ERROR_MESSAGE);
 		System.exit(1);
 	}
 
