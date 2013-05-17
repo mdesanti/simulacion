@@ -76,7 +76,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		// Iterates from minor priority to mayor
 		while (delayed && !finished) {
 			programmersAvailable = 0;
-			for (int i = from.size() - 1; i <= projectIndex; i++) {
+			for (int i = from.size() - 1; i >= projectIndex; i--) {
 				Project other = from.get(i);
 				Iteration otherIteration = other.getCurrentIteration();
 				int programmersQty = otherIteration.getProgrammersWorking();

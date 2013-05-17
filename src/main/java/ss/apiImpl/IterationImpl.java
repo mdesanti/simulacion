@@ -15,14 +15,13 @@ public class IterationImpl implements Iteration {
 
 	private Integer programmersWorking;
 
-	private int lastingDays;
+	private int lastingDays = Integer.MAX_VALUE;
 
 	public IterationImpl(Issue backendIssue, Issue frontendIssue, int duration) {
 		this.backendIssue = backendIssue;
 		this.frontendIssue = frontendIssue;
 		this.duration = duration;
 		this.programmersWorking = 0;
-		this.lastingDays = 0;
 	}
 
 	@Override

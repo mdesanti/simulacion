@@ -40,14 +40,17 @@ public class SimulatorImpl implements Simulator {
 				Project project = it.next();
 				if (!project.finished()) {
 					Iteration iteration = project.getCurrentIteration();
-					if (iteration.isDelayed()) {
-						idleProgrammers = strategy.reasing(project, projects,
-								idleProgrammers);
-						iteration.decreaseLastingDays();
-					} else if (iteration.finished()) {
+					if (!iteration.finished()) {
+						if (iteration.isDelayed()) {
+							idleProgrammers = strategy.reasing(project,
+									projects, idleProgrammers);
+						}
+						if (iteration.getProgrammersWorking() > 0) {
+							iteration.decreaseLastingDays();
+						}
+					} else {
 						project.nextIteration();
 					}
-
 				} else {
 					it.remove();
 					projectsFinished++;

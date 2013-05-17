@@ -1,7 +1,7 @@
 <configuration>
 	<programmersQty>10</programmersQty>
 	<simulationTime>50</simulationTime>
-	<strategy>idle</strategy>
+	<strategy>idle,switch</strategy>
 	<projects length="3">
 		<project>
 			<maxCost>3</maxCost>
