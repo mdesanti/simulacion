@@ -1,5 +1,7 @@
 package ss.api;
 
+import java.util.Deque;
+
 public interface Project {
 
 	/**
@@ -33,5 +35,5 @@ public interface Project {
 	int getTotalCost();
 
 	int getId();
-
+	
 }

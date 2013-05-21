@@ -49,12 +49,14 @@ public class SimulatorImpl implements Simulator {
 							idleProgrammers -= strategy.reasing(project,
 									projects, idleProgrammers);
 							listener.updateIdleProgrammers(idleProgrammers);
+							listener.updateIterationEstimate(project);
 						}
 						if (project.getProgrammersWorking() > 0) {
 							iteration.decreaseLastingDays();
 						}
 					} else {
 						project.nextIteration();
+						listener.updateIterationDuration(project);
 					}
 				} else {
 					totalCost += project.getTotalCost();

@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import ss.api.Iteration;
 import ss.api.Project;
 import ss.api.Simulator;
 import ss.apiImpl.SimulatorImpl;
@@ -34,6 +36,8 @@ public class Frame extends JFrame {
 	private JTextArea finishedProjects;
 	private JTextArea totalTime;
 	private Simulator simulator;
+	private List<ProjectTimes> projectEstimationTimes = new ArrayList<>();
+	private List<ProjectTimes> projectDurationTimes = new ArrayList<>();
 	private HashMap<Class<?>, Image> classMap;
 
 	public Frame() throws IOException {
@@ -65,7 +69,7 @@ public class Frame extends JFrame {
 	 */
 	public void paint() {
 		simulationPanel.repaint();
-//		this.setVisible(true);
+		// this.setVisible(true);
 	}
 
 	private void initializeClassMap() throws IOException {
@@ -109,6 +113,24 @@ public class Frame extends JFrame {
 		setLocation((screan.width - window.width) / 2,
 				(screan.height - window.height) / 2);
 		paintAll(this.getGraphics());
+	}
+
+	private class ProjectTimes {
+		JTextArea area;
+		Project project;
+
+		public ProjectTimes(JTextArea area, Project project) {
+			this.area = area;
+			this.project = project;
+		}
+
+		public Project getProject() {
+			return project;
+		}
+
+		public JTextArea getArea() {
+			return area;
+		}
 	}
 
 	/**
@@ -156,6 +178,22 @@ public class Frame extends JFrame {
 					+ String.valueOf(id));
 			projectName.setBounds(50, 100 * id + 60, 100, 100);
 			simulationPanel.add(projectName);
+			Iteration iteration = project.getCurrentIteration();
+			JTextArea duration = new JTextArea("Duración: ");
+			duration.setBounds(150, 100 * id + 60, 60, 100);
+			simulationPanel.add(duration);
+			duration = new JTextArea(String.valueOf(iteration.getDuration()));
+			duration.setBounds(220, 100 * id + 60, 40, 100);
+			simulationPanel.add(duration);
+
+			JTextArea estimation = new JTextArea("Estimación: ");
+			estimation.setBounds(300, 100 * id + 60, 80, 100);
+			simulationPanel.add(estimation);
+			estimation = new JTextArea("0");
+			estimation.setBounds(390, 100 * id + 60, 40, 100);
+			simulationPanel.add(estimation);
+
+			projectEstimationTimes.add(new ProjectTimes(estimation, project));
 		}
 	}
 
@@ -191,19 +229,19 @@ public class Frame extends JFrame {
 		Position pos = new Position(CELL_SIZE * (point.y - 1), CELL_SIZE
 				* (point.x - 1));
 		Sprite s = getSprite(pos);
-	//	simulationPanel.removeSprite(s);
+		// simulationPanel.removeSprite(s);
 	}
 
 	public void restart() {
 		repaint();
-		
+
 		// simulator.start();
 		try {
 			initializePanel();
 		} catch (IOException e) {
 			errorWhileReading("restart of simulation.");
 		}
-		//simulationPanel.setPixeslPerStep(5);
+		// simulationPanel.setPixeslPerStep(5);
 		initializeFrame();
 
 	}
@@ -250,11 +288,21 @@ public class Frame extends JFrame {
 	public void updateFinishedProjects(int qty) {
 		finishedProjects.setText(String.valueOf(qty));
 	}
-	
+
 	public Simulator getSimulator() {
 		return simulator;
 	}
 
+	public void updateIterationEstimate(Project project) {
+		for (ProjectTimes projectTime: projectEstimationTimes) {
+			if(projectTime.getProject().equals(project)){
+				projectTime.getArea().setText(String.valueOf(project.getCurrentIteration().getEstimate()));
+				return;
+			}
+			
+		}
+		
+	}
 	/**
 	 * Returns the actualLevel
 	 * 

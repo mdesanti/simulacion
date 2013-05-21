@@ -38,7 +38,8 @@ public class SimulationListenerImpl implements SimulationListener {
 
 	@Override
 	public void updateIterationEstimate(Project project) {
-		// TODO Auto-generated method stub
+		frame.updateIterationEstimate(project);
+		repaint();
 
 	}
 	
@@ -52,7 +53,7 @@ public class SimulationListenerImpl implements SimulationListener {
 	private void repaint() {
 		frame.repaint();
 		try {
-			Thread.sleep(400);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			System.out.println("Error en thread");
 			System.exit(1);

@@ -39,7 +39,7 @@ public class ProjectImpl implements Project {
 	public int getId() {
 		return id;
 	}
-
+	
 	private void setDuration() {
 		for (Iteration iteration : iterations) {
 			duration += iteration.getDuration();
