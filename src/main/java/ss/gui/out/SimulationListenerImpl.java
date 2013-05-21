@@ -18,8 +18,15 @@ public class SimulationListenerImpl implements SimulationListener {
 
 	@Override
 	public void updateTime(int time) {
+		
 		frame.updateTime(time);
-		frame.paint();
+		frame.repaint();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			System.out.println("Error en thread");
+			System.exit(1);
+		}
 	}
 
 	@Override

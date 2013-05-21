@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import ss.api.Project;
@@ -26,7 +27,7 @@ public class Frame extends JFrame {
 	private static final int CELL_SIZE = 30;
 	private int rows = 25;
 	private int cols = 40;
-	private GamePanel simulationPanel;
+	private JPanel simulationPanel;
 	private Sprite sprite;
 	private List<Sprite> sprites;
 	private JTextArea idleProgrammers;
@@ -43,7 +44,7 @@ public class Frame extends JFrame {
 		setJMenuBar(menuBar.getMenu());
 
 		// Initializes basic Frame and MapHash of images
-		setTitle("Simulador: Distribución de programadores en una Software Factory");
+		setTitle("Simulador: Distribuci��n de programadores en una Software Factory");
 		setLayout(null);
 		// setIconImage(ImageUtils.loadImage("resources/images/player.png"));
 		initializeFrame();
@@ -64,7 +65,7 @@ public class Frame extends JFrame {
 	 */
 	public void paint() {
 		simulationPanel.repaint();
-		this.setVisible(true);
+//		this.setVisible(true);
 	}
 
 	private void initializeClassMap() throws IOException {
@@ -120,7 +121,9 @@ public class Frame extends JFrame {
 	public void initializePanel() throws IOException {
 		if (existsGamePanel())
 			remove(simulationPanel);
-		simulationPanel = new GamePanel(cols * CELL_SIZE, rows * CELL_SIZE);
+		simulationPanel = new JPanel();
+		simulationPanel.setSize(cols * CELL_SIZE, rows * CELL_SIZE);
+		simulationPanel.setLayout(null);
 		simulationPanel.setBackground(Color.WHITE);
 		add(simulationPanel);
 
@@ -132,7 +135,7 @@ public class Frame extends JFrame {
 		idleProgrammers.setBounds(210, 10, 30, 20);
 		simulationPanel.add(idleProgrammers);
 
-		area = new JTextArea("Tiempo de simulación: ");
+		area = new JTextArea("Tiempo de simulaci��n: ");
 		area.setBounds(270, 10, 150, 20);
 		simulationPanel.add(area);
 
@@ -140,7 +143,7 @@ public class Frame extends JFrame {
 		totalTime.setBounds(420, 10, 30, 20);
 		simulationPanel.add(totalTime);
 
-		area = new JTextArea("Tiempo máximo de simulación: ");
+		area = new JTextArea("Tiempo m��ximo de simulaci��n: ");
 		area.setBounds(480, 10, 200, 20);
 		simulationPanel.add(area);
 
@@ -188,21 +191,20 @@ public class Frame extends JFrame {
 		Position pos = new Position(CELL_SIZE * (point.y - 1), CELL_SIZE
 				* (point.x - 1));
 		Sprite s = getSprite(pos);
-		simulationPanel.removeSprite(s);
+	//	simulationPanel.removeSprite(s);
 	}
 
 	public void restart() {
 		repaint();
-		simulator.build();
+		
 		// simulator.start();
 		try {
 			initializePanel();
 		} catch (IOException e) {
 			errorWhileReading("restart of simulation.");
 		}
-		simulationPanel.setPixeslPerStep(5);
+		//simulationPanel.setPixeslPerStep(5);
 		initializeFrame();
-		simulator.start();
 
 	}
 
@@ -239,11 +241,18 @@ public class Frame extends JFrame {
 
 	public void updateTime(int time) {
 		totalTime.setText(String.valueOf(time));
+		totalTime.updateUI();
+		totalTime.revalidate();
+		totalTime.validate();
 
 	}
 
 	public void updateFinishedProjects(int qty) {
 		finishedProjects.setText(String.valueOf(qty));
+	}
+	
+	public Simulator getSimulator() {
+		return simulator;
 	}
 
 	/**

@@ -27,12 +27,20 @@ public class MenuBar extends JMenuBar {
 		newGame.setMnemonic(KeyEvent.VK_N);
 		newGame.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
 				ActionEvent.CTRL_MASK));
-		newGame.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
+		final Thread sim = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				getFrame().getSimulator().build();
 				getFrame().restart();
+				getFrame().getSimulator().start();
 			}
 		});
-
+		newGame.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				sim.start();
+			}
+		});
+		
 		/*
 		 * Closes the application
 		 */
