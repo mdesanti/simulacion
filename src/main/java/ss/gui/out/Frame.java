@@ -44,7 +44,7 @@ public class Frame extends JFrame {
 		setJMenuBar(menuBar.getMenu());
 
 		// Initializes basic Frame and MapHash of images
-		setTitle("Simulador: Distribuci��n de programadores en una Software Factory");
+		setTitle("Simulador: Distribución de programadores en una Software Factory");
 		setLayout(null);
 		// setIconImage(ImageUtils.loadImage("resources/images/player.png"));
 		initializeFrame();
@@ -135,7 +135,7 @@ public class Frame extends JFrame {
 		idleProgrammers.setBounds(210, 10, 30, 20);
 		simulationPanel.add(idleProgrammers);
 
-		area = new JTextArea("Tiempo de simulaci��n: ");
+		area = new JTextArea("Tiempo de simulación: ");
 		area.setBounds(270, 10, 150, 20);
 		simulationPanel.add(area);
 
@@ -143,7 +143,7 @@ public class Frame extends JFrame {
 		totalTime.setBounds(420, 10, 30, 20);
 		simulationPanel.add(totalTime);
 
-		area = new JTextArea("Tiempo m��ximo de simulaci��n: ");
+		area = new JTextArea("Tiempo máximo de simulación: ");
 		area.setBounds(480, 10, 200, 20);
 		simulationPanel.add(area);
 
