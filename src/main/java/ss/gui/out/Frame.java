@@ -194,6 +194,7 @@ public class Frame extends JFrame {
 			simulationPanel.add(estimation);
 
 			projectEstimationTimes.add(new ProjectTimes(estimation, project));
+			projectDurationTimes.add(new ProjectTimes(duration, project));
 		}
 	}
 
@@ -308,6 +309,17 @@ public class Frame extends JFrame {
 	 * 
 	 * @return Level
 	 */
+
+	public void updateIterationDuration(Project project) {
+		for (ProjectTimes projectTime: projectDurationTimes) {
+			if(projectTime.getProject().equals(project)){
+				projectTime.getArea().setText(String.valueOf(project.getCurrentIteration().getDuration()));
+				return;
+			}
+			
+		}
+		
+	}
 
 	// public Level getActualLevel() {
 	// return this.actualLevel;

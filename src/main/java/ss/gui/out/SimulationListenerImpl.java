@@ -16,6 +16,12 @@ public class SimulationListenerImpl implements SimulationListener {
 		repaint();
 	
 	}
+	
+	@Override
+	public void updateIterationDuration(Project project) {
+		frame.updateIterationDuration(project);
+		repaint();
+	}
 
 	@Override
 	public void updateTime(int time) {
