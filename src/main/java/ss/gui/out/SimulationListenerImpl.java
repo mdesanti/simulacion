@@ -13,14 +13,14 @@ public class SimulationListenerImpl implements SimulationListener {
 	@Override
 	public void updateIdleProgrammers(int qty) {
 		frame.updateIdleProgrammers(qty);
-		repaint();
+//		repaint();
 	
 	}
 	
 	@Override
 	public void updateIterationDuration(Project project) {
 		frame.updateIterationDuration(project);
-		repaint();
+//		repaint();
 	}
 
 	@Override
