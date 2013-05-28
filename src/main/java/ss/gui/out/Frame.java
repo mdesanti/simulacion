@@ -13,9 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -38,7 +36,6 @@ public class Frame extends JFrame {
 	private int cols = 40;
 	private JPanel simulationPanel;
 	private Sprite sprite;
-	private List<Sprite> sprites;
 	private JTextArea idleProgrammers;
 	private JTextArea finishedProjects;
 	private JTextArea totalTime;
@@ -149,7 +146,7 @@ public class Frame extends JFrame {
 	 *             If there was a problem loading the image
 	 */
 	public void initializePanel() throws IOException {
-		if (existsGamePanel())
+		if (existsPanel())
 			remove(simulationPanel);
 		simulationPanel = new SimulationPanel();
 		simulationPanel.setSize(cols * CELL_SIZE, rows * CELL_SIZE);
@@ -240,26 +237,12 @@ public class Frame extends JFrame {
 	}
 
 	/**
-	 * Returns true if already existed a Game Panel and false if not.
+	 * Returns true if already existed a Panel and false if not.
 	 * 
 	 * @return boolean
 	 */
-	public boolean existsGamePanel() {
+	public boolean existsPanel() {
 		return simulationPanel != null;
-	}
-
-	/**
-	 * Searches a sprite in the sprites list and returns it, if it doesn't found
-	 * it returns null
-	 * 
-	 * @param position
-	 * @return Sprite
-	 */
-	public Sprite getSprite(Position position) {
-		for (Sprite s : sprites)
-			if (s.getPosition().equals(position))
-				return s;
-		return null;
 	}
 
 	public void restart() {
@@ -355,32 +338,6 @@ public class Frame extends JFrame {
 			}
 
 		}
-
-	}
-
-	public void updateProjectStatus(Project project) {
-		// for (ProjectTimes projectTime : projectCosts) {
-		// if (projectTime.getProject().equals(project)) {
-		//
-		// Image image = null;
-		// try {
-		// image = ImageIO.read(new File("resources/images/tick.png"));
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// JLabel picLabel = new JLabel(new ImageIcon(image));
-		// simulationPanel.add(picLabel);
-		// }
-		//
-		// }
-		// paintComponents(getGraphics());
-
-	}
-
-	@Override
-	public void paintComponents(Graphics g) {
-		super.paintComponents(g);
 
 	}
 

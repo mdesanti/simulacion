@@ -56,13 +56,6 @@ public class SimulationListenerImpl implements SimulationListener {
 
 	}
 
-	@Override
-	public void updateProjectStatus(Project project) {
-		frame.updateProjectStatus(project);
-		repaint();
-
-	}
-
 	private void repaint() {
 		frame.repaint();
 		try {

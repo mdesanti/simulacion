@@ -18,6 +18,4 @@ public interface SimulationListener {
 
 	public void updateIterationDuration(Project project);
 	
-	public void updateProjectStatus(Project project);
-
 }

@@ -65,7 +65,6 @@ public class SimulatorImpl implements Simulator {
 					idleProgrammers += project.removeProgrammers();
 					listener.updateIdleProgrammers(idleProgrammers);
 					projectsFinished++;
-					listener.updateProjectStatus(project);
 					listener.updateFinishedProjects(projectsFinished);
 				}
 			}
