@@ -37,7 +37,8 @@ public class SimulationListenerImpl implements SimulationListener {
 
 	@Override
 	public void updateCost(Project project) {
-		// TODO Auto-generated method stub
+		frame.updateCost(project);
+		repaint();
 
 	}
 
@@ -51,6 +52,13 @@ public class SimulationListenerImpl implements SimulationListener {
 	@Override
 	public void updateFinishedProjects(int qty) {
 		frame.updateFinishedProjects(qty);
+		repaint();
+		
+	}
+	
+	@Override
+	public void updateProjectStatus(Project project) {
+		frame.updateProjectStatus(project);
 		repaint();
 		
 	}

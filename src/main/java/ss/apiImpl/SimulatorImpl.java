@@ -33,7 +33,6 @@ public class SimulatorImpl implements Simulator {
 		int projectsFinished = 0;
 		int totalProjects = projects.size();
 		boolean finished = false;
-		int totalCost = 0;
 		if (strategy.isSwitchStrategyOnly()) {
 			distributeProgrammers();
 		}
@@ -62,11 +61,12 @@ public class SimulatorImpl implements Simulator {
 						listener.updateIdleProgrammers(idleProgrammers);
 					}
 				} else {
-					totalCost += project.getTotalCost();
 					projectIterator.remove();
 					idleProgrammers += project.removeProgrammers();
 					listener.updateIdleProgrammers(idleProgrammers);
 					projectsFinished++;
+					listener.updateProjectStatus(project);
+					listener.updateFinishedProjects(projectsFinished);
 				}
 			}
 			today++;
@@ -75,11 +75,6 @@ public class SimulatorImpl implements Simulator {
 				finished = true;
 			}
 		}
-		System.out.println("Cantidad proyectos originales: " + totalProjects);
-		System.out.println("Proyectos terminados: " + projectsFinished);
-		System.out.println("Dias de desarrollo: " + today);
-		System.out.println("Costo total: " + totalCost);
-
 	}
 
 	private void distributeProgrammers() {
@@ -168,7 +163,7 @@ public class SimulatorImpl implements Simulator {
 		}
 	}
 
-	private static ReasignationStrategyImpl getStrategy(String strategy) {
+	private ReasignationStrategyImpl getStrategy(String strategy) {
 		String[] strategies = strategy.split(",");
 		boolean idleStrategy = false;
 		boolean switchStrategy = false;
@@ -186,7 +181,7 @@ public class SimulatorImpl implements Simulator {
 			}
 		}
 		return new ReasignationStrategyImpl(idleStrategy, switchStrategy,
-				freelanceStrategy);
+				freelanceStrategy, listener);
 	}
 
 	@Override

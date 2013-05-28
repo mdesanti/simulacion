@@ -5,26 +5,27 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.RoundRectangle2D;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-
-import com.google.common.collect.Lists;
 
 import ss.api.Iteration;
 import ss.api.Project;
 import ss.api.Simulator;
 import ss.apiImpl.SimulatorImpl;
+
+import com.google.common.collect.Lists;
 
 /**
  * This class is the one in charge of building the frame for the graphic
@@ -33,7 +34,6 @@ import ss.apiImpl.SimulatorImpl;
 @SuppressWarnings("serial")
 public class Frame extends JFrame {
 	private static final int CELL_SIZE = 30;
-	private static int RADIUS = 15;
 	private int rows = 25;
 	private int cols = 40;
 	private JPanel simulationPanel;
@@ -45,9 +45,12 @@ public class Frame extends JFrame {
 	private Simulator simulator;
 	private List<ProjectTimes> projectEstimationTimes = new ArrayList<>();
 	private List<ProjectTimes> projectDurationTimes = new ArrayList<>();
-	private HashMap<Class<?>, Image> classMap;
+	private List<ProjectTimes> projectCosts = new ArrayList<>();
 	private List<Project> projects = Lists.newArrayList();
 	private List<Color> colors = Lists.newArrayList();
+	private int MARGINPROJECTSTOP = 130;
+	private int INITIALVALUESTOP = 10;
+	private int FINAVALUETOP = 30;
 
 	public Frame() throws IOException {
 		this.simulator = new SimulatorImpl(new SimulationListenerImpl(this));
@@ -59,9 +62,8 @@ public class Frame extends JFrame {
 		// Initializes basic Frame and MapHash of images
 		setTitle("Simulador: Distribución de programadores en una Software Factory");
 		setLayout(null);
-		// setIconImage(ImageUtils.loadImage("resources/images/player.png"));
+		// setIconImage(ImageUtils.loadImage("resources/images/ss.jpg"));
 		initializeFrame();
-		// initializeClassMap();
 		initColors();
 	}
 
@@ -96,7 +98,7 @@ public class Frame extends JFrame {
 			g2d.setColor(getColor(project.getId()));
 			for (int j = 0; j < project.getProgrammersWorking(); j++) {
 				int x = 150 + 25 * j;
-				int y = 100 * (project.getId() + 1) + 30;
+				int y = MARGINPROJECTSTOP * (project.getId() + 1) + 30;
 				Ellipse2D.Double circle = new Ellipse2D.Double(x, y, 15, 15);
 				g2d.fill(circle);
 			}
@@ -156,51 +158,84 @@ public class Frame extends JFrame {
 		add(simulationPanel);
 
 		JTextArea area = new JTextArea("Programadores ociosos: ");
-		area.setBounds(50, 10, 150, 20);
+		area.setBounds(50, INITIALVALUESTOP, 150, 20);
 		simulationPanel.add(area);
 		idleProgrammers = new JTextArea(String.valueOf(simulator
 				.getIdleProgrammers()));
-		idleProgrammers.setBounds(210, 10, 30, 20);
+		idleProgrammers.setBounds(210, INITIALVALUESTOP, 30, 20);
 		simulationPanel.add(idleProgrammers);
 
 		area = new JTextArea("Tiempo de simulación: ");
-		area.setBounds(270, 10, 150, 20);
+		area.setBounds(270, INITIALVALUESTOP, 150, 20);
 		simulationPanel.add(area);
 
 		totalTime = new JTextArea("0");
-		totalTime.setBounds(420, 10, 30, 20);
+		totalTime.setBounds(420, INITIALVALUESTOP, 30, 20);
 		simulationPanel.add(totalTime);
 
 		area = new JTextArea("Tiempo máximo de simulación: ");
-		area.setBounds(480, 10, 200, 20);
+		area.setBounds(480, INITIALVALUESTOP, 200, 20);
 		simulationPanel.add(area);
 
 		area = new JTextArea(String.valueOf(simulator.getSimulationDays()));
-		area.setBounds(690, 10, 40, 20);
+		area.setBounds(690, INITIALVALUESTOP, 40, 20);
 		simulationPanel.add(area);
+
+		area = new JTextArea("Cantidad proyectos: ");
+		area.setBounds(50, FINAVALUETOP, 150, 20);
+		simulationPanel.add(area);
+
+		area = new JTextArea(String.valueOf(simulator.getProjects().size()));
+		area.setBounds(210, FINAVALUETOP, 30, 20);
+		simulationPanel.add(area);
+
+		area = new JTextArea("Proyectos terminados: ");
+		area.setBounds(270, FINAVALUETOP, 150, 20);
+		simulationPanel.add(area);
+
+		finishedProjects = new JTextArea("0");
+		finishedProjects.setBounds(420, FINAVALUETOP, 30, 20);
+		simulationPanel.add(finishedProjects);
+
 		for (Project project : simulator.getProjects()) {
 			int id = project.getId();
+
 			final JTextArea projectName = new JTextArea("Project "
 					+ String.valueOf(id));
-			projectName.setBounds(50, 100 * id + 60, 100, 100);
+			projectName.setBounds(50, MARGINPROJECTSTOP * id + 60, 100, 100);
 			simulationPanel.add(projectName);
 			Iteration iteration = project.getCurrentIteration();
 			JTextArea duration = new JTextArea("Duración: ");
-			duration.setBounds(150, 100 * id + 60, 60, 100);
+			duration.setBounds(150, MARGINPROJECTSTOP * id + 60, 60, 100);
 			simulationPanel.add(duration);
 			duration = new JTextArea(String.valueOf(iteration.getDuration()));
-			duration.setBounds(220, 100 * id + 60, 40, 100);
+			duration.setBounds(220, MARGINPROJECTSTOP * id + 60, 40, 100);
 			simulationPanel.add(duration);
 
 			JTextArea estimation = new JTextArea("Estimación: ");
-			estimation.setBounds(300, 100 * id + 60, 80, 100);
+			estimation.setBounds(300, MARGINPROJECTSTOP * id + 60, 80, 100);
 			simulationPanel.add(estimation);
 			estimation = new JTextArea("0");
-			estimation.setBounds(390, 100 * id + 60, 40, 100);
+			estimation.setBounds(390, MARGINPROJECTSTOP * id + 60, 40, 100);
 			simulationPanel.add(estimation);
+
+			JTextArea permittedCost = new JTextArea("Costo permitido: ");
+			permittedCost.setBounds(470, MARGINPROJECTSTOP * id + 60, 110, 100);
+			simulationPanel.add(permittedCost);
+			permittedCost = new JTextArea(String.valueOf(project.getMaxCost()));
+			permittedCost.setBounds(590, MARGINPROJECTSTOP * id + 60, 40, 100);
+			simulationPanel.add(permittedCost);
+
+			JTextArea actualCost = new JTextArea("Costo actual: ");
+			actualCost.setBounds(690, MARGINPROJECTSTOP * id + 60, 100, 100);
+			simulationPanel.add(actualCost);
+			actualCost = new JTextArea("0");
+			actualCost.setBounds(800, MARGINPROJECTSTOP * id + 60, 40, 100);
+			simulationPanel.add(actualCost);
 
 			projectEstimationTimes.add(new ProjectTimes(estimation, project));
 			projectDurationTimes.add(new ProjectTimes(duration, project));
+			projectCosts.add(new ProjectTimes(actualCost, project));
 		}
 	}
 
@@ -227,18 +262,6 @@ public class Frame extends JFrame {
 		return null;
 	}
 
-	/**
-	 * Removes a sprite in a point from the game panel
-	 * 
-	 * @param point
-	 */
-	public void removeSprite(Point point) {
-		Position pos = new Position(CELL_SIZE * (point.y - 1), CELL_SIZE
-				* (point.x - 1));
-		Sprite s = getSprite(pos);
-		// simulationPanel.removeSprite(s);
-	}
-
 	public void restart() {
 		repaint();
 
@@ -262,21 +285,6 @@ public class Frame extends JFrame {
 		JOptionPane.showMessageDialog(null, "Error at " + string,
 				"Simulator Error", JOptionPane.ERROR_MESSAGE);
 		System.exit(1);
-	}
-
-	/**
-	 * Returns the game to the main menu with a size of 12x12 and removes the
-	 * Game Panel if it exists. Sets the actualLevel in null.
-	 */
-	public void refreshToMenu() {
-		// actualLevel = null;
-		// rows = 12;
-		// cols = 12;
-		// if (existsGamePanel())
-		// remove(gamePanel);
-		// repaint();
-		// setTitle("Slip & Slide");
-		// initializeFrame();
 	}
 
 	public void updateIdleProgrammers(int qty) {
@@ -338,7 +346,56 @@ public class Frame extends JFrame {
 		repaint();
 	}
 
-	// public Level getActualLevel() {
-	// return this.actualLevel;
-	// }
+	public void updateCost(Project project) {
+		for (ProjectTimes projectTime : projectCosts) {
+			if (projectTime.getProject().equals(project)) {
+				projectTime.getArea().setText(
+						String.valueOf(project.getTotalCost()));
+				return;
+			}
+
+		}
+
+	}
+
+	public void updateProjectStatus(Project project) {
+		// for (ProjectTimes projectTime : projectCosts) {
+		// if (projectTime.getProject().equals(project)) {
+		//
+		// Image image = null;
+		// try {
+		// image = ImageIO.read(new File("resources/images/tick.png"));
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// JLabel picLabel = new JLabel(new ImageIcon(image));
+		// simulationPanel.add(picLabel);
+		// }
+		//
+		// }
+		// paintComponents(getGraphics());
+
+	}
+
+	@Override
+	public void paintComponents(Graphics g) {
+		super.paintComponents(g);
+		for (ProjectTimes projectTime : projectCosts) {
+			Project project = projectTime.project;
+			if (project.finished()) {
+				int x = projectTime.getArea().getX();
+				int y = projectTime.getArea().getY();
+				try {
+					Image image = ImageIO.read(new File(
+							"resources/images/tick.png"));
+					g.drawImage(image, x + 10, y, null);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
 }

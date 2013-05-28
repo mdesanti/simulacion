@@ -6,18 +6,21 @@ import ss.api.Iteration;
 import ss.api.Project;
 import ss.api.ReasignationStrategy;
 import ss.apiImpl.DistributionManager;
+import ss.gui.out.SimulationListener;
 
 public class ReasignationStrategyImpl implements ReasignationStrategy {
 
 	private boolean idleStrategy;
 	private boolean switchStrategy;
 	private boolean freelanceStrategy;
+	private SimulationListener listener;
 
 	public ReasignationStrategyImpl(boolean idleStrategy,
-			boolean switchStrategy, boolean freelanceStrategy) {
+			boolean switchStrategy, boolean freelanceStrategy, SimulationListener listener) {
 		this.idleStrategy = idleStrategy;
 		this.switchStrategy = switchStrategy;
 		this.freelanceStrategy = freelanceStrategy;
+		this.listener = listener;
 	}
 
 	@Override
@@ -140,6 +143,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 				to.addProgrammers(newEstimateProgrammers);
 				iteration.setEstimate(newIterationEstimation);
 				to.decreaseCost(newProgrammers);
+				listener.updateCost(to);
 				return;
 			}
 		}

@@ -1,18 +1,18 @@
 <configuration>
-	<programmersQty>2</programmersQty>
-	<strategy>idle</strategy>
+	<programmersQty>1</programmersQty>
+	<strategy>idle,freelance</strategy>
 	<projects length="3">
 		<project>
 			<maxCost>30</maxCost>
 			<iterations length="3">
 				<iteration number="1">
-					<duration>100</duration>
+					<duration>10</duration>
 				</iteration>
 				<iteration number="2">
-					<duration>140</duration>
+					<duration>14</duration>
 				</iteration>
 				<iteration number="3">
-					<duration>200</duration>
+					<duration>20</duration>
 				</iteration>
 			</iterations>
 		</project>
@@ -20,10 +20,10 @@
 			<maxCost>15</maxCost>
 			<iterations length="2">
 				<iteration number="1">
-					<duration>100</duration>
+					<duration>10</duration>
 				</iteration>
 				<iteration number="2">
-					<duration>140</duration>
+					<duration>14</duration>
 				</iteration>
 			</iterations>
 		</project>
@@ -31,7 +31,7 @@
 			<maxCost>10</maxCost>
 			<iterations length="1">
 				<iteration number="1">
-					<duration>100</duration>
+					<duration>10</duration>
 				</iteration>
 			</iterations>
 		</project>
