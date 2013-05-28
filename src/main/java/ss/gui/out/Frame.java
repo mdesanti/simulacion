@@ -76,8 +76,7 @@ public class Frame extends JFrame {
 		colors.add(Color.ORANGE);
 		colors.add(Color.PINK);
 		colors.add(Color.RED);
-		
-		
+
 	}
 
 	/**
@@ -103,7 +102,7 @@ public class Frame extends JFrame {
 			}
 		}
 	}
-	
+
 	private Color getColor(int id) {
 		id = id % colors.size();
 		return colors.get(id);
@@ -287,9 +286,6 @@ public class Frame extends JFrame {
 
 	public void updateTime(int time) {
 		totalTime.setText(String.valueOf(time));
-		totalTime.updateUI();
-		totalTime.revalidate();
-		totalTime.validate();
 
 	}
 
