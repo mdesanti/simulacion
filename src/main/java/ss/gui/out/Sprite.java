@@ -14,7 +14,7 @@ public class Sprite {
 	 * Crea un nuevo sprite ubicado en las coordenadas indicadas con alguna imagen asociada.
 	 * 
 	 * @param image Imagen asociada al sprite.
-	 * @param position Ubicaci??n del sprite.
+	 * @param position Ubicación del sprite.
 	 */
 	public Sprite(Image image, Position position) {
 		this.image = image;

@@ -48,6 +48,7 @@ public class SimulatorImpl implements Simulator {
 						if (iteration.isDelayed()) {
 							idleProgrammers -= strategy.reasing(project,
 									projects, idleProgrammers);
+							listener.updateWorkingProgrammers(project);
 							listener.updateIdleProgrammers(idleProgrammers);
 							listener.updateIterationEstimate(project);
 						}
@@ -57,11 +58,14 @@ public class SimulatorImpl implements Simulator {
 					} else {
 						project.nextIteration();
 						listener.updateIterationDuration(project);
+						idleProgrammers += project.removeProgrammers();
+						listener.updateIdleProgrammers(idleProgrammers);
 					}
 				} else {
 					totalCost += project.getTotalCost();
 					projectIterator.remove();
 					idleProgrammers += project.removeProgrammers();
+					listener.updateIdleProgrammers(idleProgrammers);
 					projectsFinished++;
 				}
 			}

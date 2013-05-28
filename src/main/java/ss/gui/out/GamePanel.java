@@ -9,12 +9,18 @@ import java.util.List;
 import javax.swing.JPanel;
 
 /**
- * Panel al que se le pueden agregar, eliminar y mover im??genes. Al mover una imagen, esta se desplaza hasta las coordenadas destino indicadas. La velocidad con la que se mueven las im??genes puede ser parametrizada. <p> Tener en cuenta que el orden en que las im??genes son pintadas coincide con el orden en que las mismas son agregadas al panel. </p>
+ * Panel al que se le pueden agregar, eliminar y mover im??genes. Al mover una
+ * imagen, esta se desplaza hasta las coordenadas destino indicadas. La
+ * velocidad con la que se mueven las im??genes puede ser parametrizada.
+ * <p>
+ * Tener en cuenta que el orden en que las im??genes son pintadas coincide con
+ * el orden en que las mismas son agregadas al panel.
+ * </p>
  */
 public class GamePanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private int pixelsPerStep = 10;
 	private int sleepTime = 10;
 
@@ -23,8 +29,10 @@ public class GamePanel extends JPanel {
 	/**
 	 * Crea un nuevo panel con las dimensiones indicadas.
 	 * 
-	 * @param width Ancho en pixeles del panel.
-	 * @param height Altura en pixeles del panel.
+	 * @param width
+	 *            Ancho en pixeles del panel.
+	 * @param height
+	 *            Altura en pixeles del panel.
 	 */
 	public GamePanel(int width, int height) {
 		setBackground(Color.WHITE);
@@ -36,7 +44,8 @@ public class GamePanel extends JPanel {
 	/**
 	 * Agrega al panel una nueva imagen.
 	 * 
-	 * @param sprite Imagen que se quiere agregar al panel.
+	 * @param sprite
+	 *            Imagen que se quiere agregar al panel.
 	 */
 	public void addSprite(Sprite sprite) {
 		sprites.add(sprite);
@@ -46,7 +55,8 @@ public class GamePanel extends JPanel {
 	/**
 	 * Quita del panel una imagen.
 	 * 
-	 * @param sprite Imagen que se desea eliminar del panel.
+	 * @param sprite
+	 *            Imagen que se desea eliminar del panel.
 	 */
 	public void removeSprite(Sprite sprite) {
 		sprites.remove(sprite);
@@ -56,11 +66,14 @@ public class GamePanel extends JPanel {
 	/**
 	 * Mueve animadamente una imagen.
 	 * <p>
-	 * La invocaci??n a este m??todo es bloqueante hasta que la imagen llega a las coordenadas destino.
+	 * La invocaci??n a este m??todo es bloqueante hasta que la imagen llega a
+	 * las coordenadas destino.
 	 * </p>
 	 * 
-	 * @param sprite Imagen que se desea mover.
-	 * @param position Nueva posici??n a donde se debe mover el sprite.
+	 * @param sprite
+	 *            Imagen que se desea mover.
+	 * @param position
+	 *            Nueva posici??n a donde se debe mover el sprite.
 	 */
 	public void moveSprite(Sprite sprite, Position position) {
 		int xdistance = Math.abs(position.getX() - sprite.getPosition().getX());
@@ -71,13 +84,14 @@ public class GamePanel extends JPanel {
 			int dy = position.getY() - sprite.getPosition().getY();
 			double alpha = Math.atan(ydistance / (double) xdistance);
 
-			double xstep = Math.abs(pixelsPerStep * Math.cos(alpha)); 
+			double xstep = Math.abs(pixelsPerStep * Math.cos(alpha));
 			double ystep = Math.abs(pixelsPerStep * Math.sin(alpha));
-			
+
 			xstep = (int) Math.ceil(Math.min(xstep, xdistance));
 			ystep = (int) Math.ceil(Math.min(ystep, ydistance));
-			sprite.setPosition(new Position(sprite.getPosition().getX() + ((int) (Math.signum(dx) * xstep)), sprite.getPosition().getY()
-					+ ((int) (Math.signum(dy) * ystep))));
+			sprite.setPosition(new Position(sprite.getPosition().getX()
+					+ ((int) (Math.signum(dx) * xstep)), sprite.getPosition()
+					.getY() + ((int) (Math.signum(dy) * ystep))));
 			xdistance -= xstep;
 			ydistance -= ystep;
 			sync();
@@ -88,8 +102,10 @@ public class GamePanel extends JPanel {
 	/**
 	 * Mueve una imagen hacia una nueva posici??n.
 	 * 
-	 * @param sprite Imagen que se desea mover.
-	 * @param position Nueva posici??n a donde se debe mover el sprite.
+	 * @param sprite
+	 *            Imagen que se desea mover.
+	 * @param position
+	 *            Nueva posici??n a donde se debe mover el sprite.
 	 */
 	public void translateSprite(Sprite sprite, Position position) {
 		sprite.setPosition(position);
@@ -99,8 +115,10 @@ public class GamePanel extends JPanel {
 	/**
 	 * Modifica la imagen asociada a un sprite.
 	 * 
-	 * @param sprite Sprite al cual se le quiere modificar la imagen.
-	 * @param image Nueva imagen que debe tener el sprite.
+	 * @param sprite
+	 *            Sprite al cual se le quiere modificar la imagen.
+	 * @param image
+	 *            Nueva imagen que debe tener el sprite.
 	 */
 	public void changeSpriteImage(Sprite sprite, Image image) {
 		sprite.changeImage(image);
@@ -108,14 +126,16 @@ public class GamePanel extends JPanel {
 	}
 
 	/**
-	 * Modifica la cantidad de pixels que las im??genes deben avanzar en cada paso cuando son desplazados.
+	 * Modifica la cantidad de pixels que las im??genes deben avanzar en cada
+	 * paso cuando son desplazados.
 	 */
 	public void setPixeslPerStep(int pixeslPerStep) {
 		this.pixelsPerStep = pixeslPerStep;
 	}
 
 	/**
-	 * Modifica la cantidad de milisegundos que se deben esperar entre cada movimiento de una imagen.
+	 * Modifica la cantidad de milisegundos que se deben esperar entre cada
+	 * movimiento de una imagen.
 	 */
 	public void setSleepTime(int sleepTime) {
 		this.sleepTime = sleepTime;
@@ -126,7 +146,8 @@ public class GamePanel extends JPanel {
 		super.paint(g);
 
 		for (Sprite sprite : sprites) {
-			g.drawImage(sprite.getImage(), sprite.getPosition().getX(), sprite.getPosition().getY(), null);
+			g.drawImage(sprite.getImage(), sprite.getPosition().getX(), sprite
+					.getPosition().getY(), null);
 		}
 	}
 

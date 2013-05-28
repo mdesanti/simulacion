@@ -2,9 +2,13 @@ package ss.gui.out;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.RoundRectangle2D;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +18,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+
+import com.google.common.collect.Lists;
 
 import ss.api.Iteration;
 import ss.api.Project;
@@ -27,6 +33,7 @@ import ss.apiImpl.SimulatorImpl;
 @SuppressWarnings("serial")
 public class Frame extends JFrame {
 	private static final int CELL_SIZE = 30;
+	private static int RADIUS = 15;
 	private int rows = 25;
 	private int cols = 40;
 	private JPanel simulationPanel;
@@ -39,6 +46,8 @@ public class Frame extends JFrame {
 	private List<ProjectTimes> projectEstimationTimes = new ArrayList<>();
 	private List<ProjectTimes> projectDurationTimes = new ArrayList<>();
 	private HashMap<Class<?>, Image> classMap;
+	private List<Project> projects = Lists.newArrayList();
+	private List<Color> colors = Lists.newArrayList();
 
 	public Frame() throws IOException {
 		this.simulator = new SimulatorImpl(new SimulationListenerImpl(this));
@@ -52,7 +61,23 @@ public class Frame extends JFrame {
 		setLayout(null);
 		// setIconImage(ImageUtils.loadImage("resources/images/player.png"));
 		initializeFrame();
-		initializeClassMap();
+		// initializeClassMap();
+		initColors();
+	}
+
+	private void initColors() {
+		colors.add(Color.BLACK);
+		colors.add(Color.BLUE);
+		colors.add(Color.DARK_GRAY);
+		colors.add(Color.GRAY);
+		colors.add(Color.LIGHT_GRAY);
+		colors.add(Color.GREEN);
+		colors.add(Color.MAGENTA);
+		colors.add(Color.ORANGE);
+		colors.add(Color.PINK);
+		colors.add(Color.RED);
+		
+		
 	}
 
 	/**
@@ -64,43 +89,25 @@ public class Frame extends JFrame {
 		return this.sprite;
 	}
 
-	/**
-	 * Repaints the panel
-	 */
-	public void paint() {
-		simulationPanel.repaint();
-		// this.setVisible(true);
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		Graphics2D g2d = (Graphics2D) g;
+		for (Project project : projects) {
+			g2d.setColor(getColor(project.getId()));
+			for (int j = 0; j < project.getProgrammersWorking(); j++) {
+				int x = 150 + 25 * j;
+				int y = 100 * (project.getId() + 1) + 30;
+				Ellipse2D.Double circle = new Ellipse2D.Double(x, y, 15, 15);
+				g2d.fill(circle);
+			}
+		}
 	}
-
-	private void initializeClassMap() throws IOException {
-		// classMap = new HashMap<Class<?>, Image>();
-		// classMap.put(Key.class,
-		// ImageUtils.loadImage("resources/images/key.png"));
-		// classMap.put(BreakableWall.class,
-		// ImageUtils.loadImage("resources/images/wall.png"));
-		// classMap.put(Wall.class,
-		// ImageUtils.loadImage("resources/images/wall.png"));
-		// classMap.put(Door.class,
-		// ImageUtils.loadImage("resources/images/door.png"));
-		// classMap.put(Transporter.class,
-		// ImageUtils.loadImage("resources/images/teleporter.png"));
-		// classMap.put(Coin.class,
-		// ImageUtils.loadImage("resources/images/coin.png"));
-		// classMap.put(Destiny.class,
-		// ImageUtils.loadImage("resources/images/target.png"));
+	
+	private Color getColor(int id) {
+		id = id % colors.size();
+		return colors.get(id);
 	}
-
-	// private Image getImage(Cell cell) {
-	// Image image = classMap.get(cell.getClass());
-	// if (cell instanceof BreakableWall) {
-	// String s = String.valueOf(((BreakableWall) cell).getLeftTries());
-	// return ImageUtils.drawString(image, s, Color.BLACK);
-	// }
-	// if (cell instanceof Paintable)
-	// image = ImageUtils.colorize(image,
-	// Colors.values()[((Paintable) cell).getID()].getColor());
-	// return image;
-	// }
 
 	/*
 	 * Initializes the Frame according to a column and a row and positions it in
@@ -295,15 +302,22 @@ public class Frame extends JFrame {
 	}
 
 	public void updateIterationEstimate(Project project) {
-		for (ProjectTimes projectTime: projectEstimationTimes) {
-			if(projectTime.getProject().equals(project)){
-				projectTime.getArea().setText(String.valueOf(project.getCurrentIteration().getEstimate()));
+		for (ProjectTimes projectTime : projectEstimationTimes) {
+			if (projectTime.getProject().equals(project)) {
+				if (project.getCurrentIteration().getEstimate() == Integer.MAX_VALUE) {
+					projectTime.getArea().setText("-");
+				} else {
+					projectTime.getArea().setText(
+							String.valueOf(project.getCurrentIteration()
+									.getEstimate()));
+				}
 				return;
 			}
-			
+
 		}
-		
+
 	}
+
 	/**
 	 * Returns the actualLevel
 	 * 
@@ -311,14 +325,21 @@ public class Frame extends JFrame {
 	 */
 
 	public void updateIterationDuration(Project project) {
-		for (ProjectTimes projectTime: projectDurationTimes) {
-			if(projectTime.getProject().equals(project)){
-				projectTime.getArea().setText(String.valueOf(project.getCurrentIteration().getDuration()));
+		for (ProjectTimes projectTime : projectDurationTimes) {
+			if (projectTime.getProject().equals(project)) {
+				projectTime.getArea().setText(
+						String.valueOf(project.getCurrentIteration()
+								.getDuration()));
 				return;
 			}
-			
+
 		}
-		
+
+	}
+
+	public void updateProgrammersQty(Project project) {
+		projects.add(project);
+		repaint();
 	}
 
 	// public Level getActualLevel() {

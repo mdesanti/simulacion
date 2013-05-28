@@ -1,5 +1,5 @@
 <configuration>
-	<programmersQty>20</programmersQty>
+	<programmersQty>2</programmersQty>
 	<strategy>idle</strategy>
 	<projects length="3">
 		<project>
