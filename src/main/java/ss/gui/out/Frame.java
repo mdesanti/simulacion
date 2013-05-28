@@ -151,7 +151,7 @@ public class Frame extends JFrame {
 	public void initializePanel() throws IOException {
 		if (existsGamePanel())
 			remove(simulationPanel);
-		simulationPanel = new JPanel();
+		simulationPanel = new SimulationPanel();
 		simulationPanel.setSize(cols * CELL_SIZE, rows * CELL_SIZE);
 		simulationPanel.setLayout(null);
 		simulationPanel.setBackground(Color.WHITE);
@@ -381,18 +381,34 @@ public class Frame extends JFrame {
 	@Override
 	public void paintComponents(Graphics g) {
 		super.paintComponents(g);
-		for (ProjectTimes projectTime : projectCosts) {
-			Project project = projectTime.project;
-			if (project.finished()) {
+
+	}
+
+	private class SimulationPanel extends JPanel {
+		@Override
+		public void paint(Graphics g) {
+			// TODO Auto-generated method stub
+			super.paint(g);
+			for (ProjectTimes projectTime : projectCosts) {
+				Project project = projectTime.project;
 				int x = projectTime.getArea().getX();
 				int y = projectTime.getArea().getY();
-				try {
-					Image image = ImageIO.read(new File(
-							"resources/images/tick.png"));
-					g.drawImage(image, x + 10, y, null);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (project.finished()) {
+					try {
+						Image image = ImageIO.read(new File(
+								"resources/images/tick.png"));
+						g.drawImage(image, x + 40, y - 8, null);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} else {
+					try {
+						Image image = ImageIO.read(new File(
+								"resources/images/cross.png"));
+						g.drawImage(image, x + 40, y - 10, null);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
