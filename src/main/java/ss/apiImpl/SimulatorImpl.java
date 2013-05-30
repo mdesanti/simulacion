@@ -65,7 +65,9 @@ public class SimulatorImpl implements Simulator {
 								iteration.decreaseLastingDays();
 							}
 						} else {
-							project.nextIteration();
+							int extraTime = iteration.getEstimate() - iteration.getDuration();
+							extraTime = (extraTime > 0)? extraTime: 0;
+							project.nextIteration(extraTime);
 							listener.updateIterationDuration(project);
 							idleProgrammers += project.removeProgrammers();
 							listener.updateIdleProgrammers(idleProgrammers);
@@ -88,6 +90,7 @@ public class SimulatorImpl implements Simulator {
 				}
 			}
 			build(listener);
+			listener.reset();
 			if (loops == 0) {
 				this.strategy = assignStrategy(++loopNumber);
 				loops = totalTimes;

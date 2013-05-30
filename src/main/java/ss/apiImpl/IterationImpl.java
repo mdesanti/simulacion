@@ -93,5 +93,9 @@ public class IterationImpl implements Iteration {
 		return "Iteration duration: " + duration + " estimate: " + estimate
 				+ " lastingDays: " + lastingDays;
 	}
+	
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
 
 }

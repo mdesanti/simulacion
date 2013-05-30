@@ -55,24 +55,28 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		int newProgrammers = 0;
 		Iteration iteration = to.getCurrentIteration();
 		int projectProgrammers = to.getProgrammersWorking();
-		while (newProgrammers < idleProgrammers && delayed && ((newProgrammers + projectProgrammers) <= 4)) {
+		int newEstimateProgrammers = 0;
+		int newBackEstimation = 0;
+		int newFrontEstimation = 0;
+		int newIterationEstimation = 0;
+		while (newProgrammers < idleProgrammers && delayed && ((newProgrammers + projectProgrammers) < 4)) {
 			newProgrammers++;
-			int newEstimateProgrammers = projectProgrammers + newProgrammers;
-			int newBackEstimation = DistributionManager.getInstance()
+			newEstimateProgrammers = projectProgrammers + newProgrammers;
+			newBackEstimation = DistributionManager.getInstance()
 					.getLastingDaysForBackendIssue(newEstimateProgrammers);
-			int newFrontEstimation = DistributionManager.getInstance()
+			newFrontEstimation = DistributionManager.getInstance()
 					.getLastingDaysForFrontendIssue(newEstimateProgrammers);
-			int newIterationEstimation = newBackEstimation + newFrontEstimation;
+			newIterationEstimation = newBackEstimation + newFrontEstimation;
 
-			if (!iteration.isDelayedWith(newIterationEstimation)
-					|| newProgrammers == idleProgrammers) {
-				delayed = false;
-				to.addProgrammers(newEstimateProgrammers);
-				iteration.setEstimate(newIterationEstimation);
-				return newProgrammers;
-			}
+			delayed = iteration.isDelayedWith(newIterationEstimation);
+			
 		}
-		return 0;
+		if(newEstimateProgrammers == 0) {
+			return 0;
+		}
+		to.addProgrammers(newEstimateProgrammers);
+		iteration.setEstimate(newIterationEstimation);
+		return newProgrammers;
 	}
 
 	private void switchStrategyReasign(Project to, List<Project> from) {
@@ -94,7 +98,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		int newIterationEstimation = 0;
 
 		// Iterates from minor priority to mayor
-		while (delayed && !finished && ((newProgrammers + projectProgrammers) <= 4)) {
+		while (delayed && !finished && ((newProgrammers + projectProgrammers) < 4)) {
 			programmersAvailable = 0;
 			for (int i = from.size() - 1; i >= projectIndex; i--) {
 				Project other = from.get(i);
@@ -140,7 +144,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		int newProgrammers = 0;
 		Iteration iteration = to.getCurrentIteration();
 		int projectProgrammers = to.getProgrammersWorking();
-		while (newProgrammers < maxCost && delayed && ((newProgrammers + projectProgrammers) <= 4)) {
+		while (newProgrammers < maxCost && delayed && ((newProgrammers + projectProgrammers) < 4)) {
 			newProgrammers++;
 			int newEstimateProgrammers = projectProgrammers + newProgrammers;
 			int newBackEstimation = DistributionManager.getInstance()

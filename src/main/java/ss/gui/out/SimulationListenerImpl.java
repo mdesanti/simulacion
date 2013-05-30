@@ -55,6 +55,12 @@ public class SimulationListenerImpl implements SimulationListener {
 		repaint();
 
 	}
+	
+	@Override
+	public void reset() {
+		frame.restart();
+		
+	}
 
 	private void repaint() {
 		frame.repaint();

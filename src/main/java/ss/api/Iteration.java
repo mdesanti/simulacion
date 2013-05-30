@@ -42,5 +42,7 @@ public interface Iteration {
 	void decreaseLastingDays();
 	
 	int getLastingDays();
+	
+	public void setDuration(int duration);
 
 }

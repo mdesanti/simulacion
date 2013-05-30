@@ -70,9 +70,10 @@ public class ProjectImpl implements Project {
 		this.iterations.add(iteration);
 	}
 
-	public void nextIteration() {
+	public void nextIteration(int extraTime) {
 		try {
 			currentIteration = iterations.pop();
+			currentIteration.setDuration(currentIteration.getDuration() + extraTime);
 		} catch (NoSuchElementException e) {
 			finished = true;
 		}
@@ -156,6 +157,7 @@ public class ProjectImpl implements Project {
 			return false;
 		return true;
 	}
+
 	
 
 

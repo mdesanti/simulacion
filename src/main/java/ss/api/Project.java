@@ -7,7 +7,7 @@ public interface Project {
 	/**
 	 * Project moves to next iteration available
 	 */
-	void nextIteration();
+	void nextIteration(int extraTime);
 
 	/**
 	 * Gets the iteration original duration
