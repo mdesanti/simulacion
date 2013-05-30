@@ -55,7 +55,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		int newProgrammers = 0;
 		Iteration iteration = to.getCurrentIteration();
 		int projectProgrammers = to.getProgrammersWorking();
-		while (newProgrammers < idleProgrammers & delayed) {
+		while (newProgrammers < idleProgrammers && delayed && ((newProgrammers + projectProgrammers) <= 4)) {
 			newProgrammers++;
 			int newEstimateProgrammers = projectProgrammers + newProgrammers;
 			int newBackEstimation = DistributionManager.getInstance()
@@ -94,7 +94,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		int newIterationEstimation = 0;
 
 		// Iterates from minor priority to mayor
-		while (delayed && !finished) {
+		while (delayed && !finished && ((newProgrammers + projectProgrammers) <= 4)) {
 			programmersAvailable = 0;
 			for (int i = from.size() - 1; i >= projectIndex; i--) {
 				Project other = from.get(i);
@@ -140,7 +140,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		int newProgrammers = 0;
 		Iteration iteration = to.getCurrentIteration();
 		int projectProgrammers = to.getProgrammersWorking();
-		while (newProgrammers < maxCost & delayed) {
+		while (newProgrammers < maxCost && delayed && ((newProgrammers + projectProgrammers) <= 4)) {
 			newProgrammers++;
 			int newEstimateProgrammers = projectProgrammers + newProgrammers;
 			int newBackEstimation = DistributionManager.getInstance()

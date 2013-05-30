@@ -33,7 +33,7 @@ public class DistributionManager {
 	}
 
 	public int getLastingDaysForBackendIssue(int programmersQty) {
-		int qty = (programmersQty <= 3) ? programmersQty : 3;
+		int qty = (programmersQty <= 4) ? programmersQty : 4;
 		String str = (String) simulatorProperties.get("back_" + qty);
 		String[] parameters = str.split(",");
 		return (int)RandomGenerator.triangular(Double.parseDouble(parameters[0]),
@@ -42,7 +42,7 @@ public class DistributionManager {
 	}
 	
 	public int getLastingDaysForFrontendIssue(int programmersQty) {
-		int qty = (programmersQty <= 3) ? programmersQty : 3;
+		int qty = (programmersQty <= 4) ? programmersQty : 4;
 		String str = (String) simulatorProperties.get("front_" + qty);
 		String[] parameters = str.split(",");
 		return (int)RandomGenerator.triangular(Double.parseDouble(parameters[0]),
