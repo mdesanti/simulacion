@@ -24,15 +24,27 @@ public class ProjectImpl implements Project {
 	private Integer programmersWorking;
 
 	private Integer id;
+	
+	private Integer iterationsQty;
 
 	public ProjectImpl(Deque<Iteration> iterations, Integer maxCost, Integer id) {
 		super();
 		this.id = id;
 		this.iterations = iterations;
+		this.iterationsQty = iterations.size();
 		this.maxCost = maxCost;
 		setDuration();
 		currentIteration = iterations.pop();
 		this.programmersWorking = 0;
+	}
+	
+	@Override
+	public int getIterationsQty() {
+		return this.iterationsQty;
+	}
+	@Override
+	public int getIterationsLeft() {
+		return this.iterationsQty - iterations.size();
 	}
 
 	@Override

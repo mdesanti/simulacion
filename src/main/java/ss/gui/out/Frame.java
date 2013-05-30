@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -31,7 +33,7 @@ import com.google.common.collect.Lists;
  */
 @SuppressWarnings("serial")
 public class Frame extends JFrame {
-	private static final int CELL_SIZE = 30;
+	private static final int CELL_SIZE = 35;
 	private int rows = 25;
 	private int cols = 40;
 	private JPanel simulationPanel;
@@ -43,7 +45,8 @@ public class Frame extends JFrame {
 	private List<ProjectTimes> projectEstimationTimes = new ArrayList<>();
 	private List<ProjectTimes> projectDurationTimes = new ArrayList<>();
 	private List<ProjectTimes> projectCosts = new ArrayList<>();
-	private List<Project> projects = Lists.newArrayList();
+	private List<ProjectTimes> iterations = new ArrayList<>();
+	private Queue<Project> projects = new LinkedBlockingDeque<>();
 	private List<Color> colors = Lists.newArrayList();
 	private int MARGINPROJECTSTOP = 130;
 	private int INITIALVALUESTOP = 10;
@@ -229,10 +232,21 @@ public class Frame extends JFrame {
 			actualCost = new JTextArea("0");
 			actualCost.setBounds(800, MARGINPROJECTSTOP * id + 60, 40, 100);
 			simulationPanel.add(actualCost);
+			
+			JTextArea iterationsQty = new JTextArea("Iteraciones: ");
+			iterationsQty.setBounds(900, MARGINPROJECTSTOP * id + 60, 100, 100);
+			simulationPanel.add(iterationsQty);
+			iterationsQty = new JTextArea("0");
+			iterationsQty.setBounds(1000, MARGINPROJECTSTOP * id + 60, 20, 100);
+			simulationPanel.add(iterationsQty);
+			JTextArea iterationsTotal = new JTextArea("/ "+String.valueOf(project.getIterationsQty()));
+			iterationsTotal.setBounds(1020, MARGINPROJECTSTOP * id + 60, 40, 100);
+			simulationPanel.add(iterationsTotal);
 
 			projectEstimationTimes.add(new ProjectTimes(estimation, project));
 			projectDurationTimes.add(new ProjectTimes(duration, project));
 			projectCosts.add(new ProjectTimes(actualCost, project));
+			iterations.add(new ProjectTimes(iterationsQty, project));
 		}
 	}
 
@@ -317,6 +331,15 @@ public class Frame extends JFrame {
 				projectTime.getArea().setText(
 						String.valueOf(project.getCurrentIteration()
 								.getDuration()));
+				break;
+			}
+
+		}
+		
+		for (ProjectTimes projectTime : iterations) {
+			if (projectTime.getProject().equals(project)) {
+				projectTime.getArea().setText(
+						String.valueOf(project.getIterationsLeft()));
 				return;
 			}
 
@@ -346,7 +369,7 @@ public class Frame extends JFrame {
 		public void paint(Graphics g) {
 			// TODO Auto-generated method stub
 			super.paint(g);
-			for (ProjectTimes projectTime : projectCosts) {
+			for (ProjectTimes projectTime : iterations) {
 				Project project = projectTime.project;
 				int x = projectTime.getArea().getX();
 				int y = projectTime.getArea().getY();
@@ -354,7 +377,7 @@ public class Frame extends JFrame {
 					try {
 						Image image = ImageIO.read(new File(
 								"resources/images/tick.png"));
-						g.drawImage(image, x + 40, y - 8, null);
+						g.drawImage(image, x + 80, y - 8, null);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -362,7 +385,7 @@ public class Frame extends JFrame {
 					try {
 						Image image = ImageIO.read(new File(
 								"resources/images/cross.png"));
-						g.drawImage(image, x + 40, y - 10, null);
+						g.drawImage(image, x + 80, y - 10, null);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

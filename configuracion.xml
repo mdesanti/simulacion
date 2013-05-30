@@ -1,37 +1,89 @@
 <configuration>
-	<programmersQty>1</programmersQty>
+	<programmersQty>12</programmersQty>
 	<strategy>idle,freelance</strategy>
-	<projects length="3">
+	<projects length="5">
 		<project>
-			<maxCost>30</maxCost>
-			<iterations length="3">
+			<maxCost>8</maxCost>
+			<iterations length="5">
 				<iteration number="1">
-					<duration>10</duration>
+					<duration>25</duration>
 				</iteration>
 				<iteration number="2">
-					<duration>14</duration>
+					<duration>20</duration>
 				</iteration>
 				<iteration number="3">
-					<duration>20</duration>
+					<duration>12</duration>
+				</iteration>
+				<iteration number="4">
+					<duration>30</duration>
+				</iteration>
+				<iteration number="5">
+					<duration>27</duration>
 				</iteration>
 			</iterations>
 		</project>
 		<project>
-			<maxCost>15</maxCost>
-			<iterations length="2">
+			<maxCost>5</maxCost>
+			<iterations length="4">
 				<iteration number="1">
-					<duration>10</duration>
+					<duration>14</duration>
 				</iteration>
 				<iteration number="2">
-					<duration>14</duration>
+					<duration>23</duration>
+				</iteration>
+				<iteration number="3">
+					<duration>32</duration>
+				</iteration>
+				<iteration number="4">
+					<duration>8</duration>
+				</iteration>
+			</iterations>
+		</project>
+		<project>
+			<maxCost>4</maxCost>
+			<iterations length="4">
+				<iteration number="1">
+					<duration>22</duration>
+				</iteration>
+				<iteration number="2">
+					<duration>34</duration>
+				</iteration>
+				<iteration number="3">
+					<duration>29</duration>
+				</iteration>
+				<iteration number="4">
+					<duration>30</duration>
+				</iteration>
+			</iterations>
+		</project>
+		<project>
+			<maxCost>5</maxCost>
+			<iterations length="4">
+				<iteration number="1">
+					<duration>20</duration>
+				</iteration>
+				<iteration number="2">
+					<duration>18</duration>
+				</iteration>
+				<iteration number="3">
+					<duration>12</duration>
+				</iteration>
+				<iteration number="4">
+					<duration>21</duration>
 				</iteration>
 			</iterations>
 		</project>
 		<project>
 			<maxCost>10</maxCost>
-			<iterations length="1">
+			<iterations length="3">
 				<iteration number="1">
-					<duration>10</duration>
+					<duration>15</duration>
+				</iteration>
+				<iteration number="2">
+					<duration>20</duration>
+				</iteration>
+				<iteration number="3">
+					<duration>21</duration>
 				</iteration>
 			</iterations>
 		</project>

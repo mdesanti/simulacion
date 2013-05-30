@@ -36,4 +36,8 @@ public interface Project {
 
 	int getId();
 	
+	int getIterationsQty();
+	
+	int getIterationsLeft();
+	
 }
