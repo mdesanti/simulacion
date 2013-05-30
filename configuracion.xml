@@ -1,6 +1,6 @@
 <configuration>
 	<programmersQty>12</programmersQty>
-	<strategy>idle,freelance</strategy>
+	<strategy>idle</strategy>
 	<projects length="5">
 		<project>
 			<maxCost>8</maxCost>

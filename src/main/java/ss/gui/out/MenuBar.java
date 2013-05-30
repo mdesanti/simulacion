@@ -24,23 +24,34 @@ public class MenuBar extends JMenuBar {
 		simulatorMenu.setMnemonic(KeyEvent.VK_S);
 
 		JMenuItem newGame = new JMenuItem("Simular");
+		JMenuItem newGameWithNoFront = new JMenuItem("Simular sin efectos");
 		newGame.setMnemonic(KeyEvent.VK_N);
 		newGame.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
 				ActionEvent.CTRL_MASK));
-		final Thread sim = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				getFrame().getSimulator().build();
-				getFrame().restart();
-				getFrame().getSimulator().start();
-			}
-		});
+		
 		newGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
+				final Thread sim = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						getFrame().getSimulator().build(
+								new SimulationListenerImpl(getFrame()));
+						getFrame().restart();
+						getFrame().getSimulator().start();
+					}
+				});
 				sim.start();
 			}
 		});
-		
+		newGameWithNoFront.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				getFrame().getSimulator().build(
+						new SimulationDummyListenerImpl());
+				// getFrame().restart();
+				getFrame().getSimulator().start();
+			}
+		});
+
 		/*
 		 * Closes the application
 		 */
@@ -55,6 +66,8 @@ public class MenuBar extends JMenuBar {
 		});
 
 		simulatorMenu.add(newGame);
+		simulatorMenu.add(new JSeparator());
+		simulatorMenu.add(newGameWithNoFront);
 		simulatorMenu.add(new JSeparator());
 		simulatorMenu.add(close);
 		menuBar.add(simulatorMenu);

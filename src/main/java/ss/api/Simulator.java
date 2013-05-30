@@ -2,11 +2,13 @@ package ss.api;
 
 import java.util.List;
 
+import ss.gui.out.SimulationListener;
+
 public interface Simulator {
 
 	void start();
 
-	void build();
+	void build(SimulationListener listener);
 
 	List<Project> getProjects();
 

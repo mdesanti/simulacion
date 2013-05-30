@@ -23,10 +23,6 @@ public class SimulatorImpl implements Simulator {
 	private ReasignationStrategy strategy;
 	private SimulationListener listener;
 
-	public SimulatorImpl(SimulationListener listener) {
-		this.listener = listener;
-	}
-
 	public void start() {
 		// Build method must be called before
 		int today = 0;
@@ -74,6 +70,8 @@ public class SimulatorImpl implements Simulator {
 				finished = true;
 			}
 		}
+		
+		System.out.println("finished");
 	}
 
 	private void distributeProgrammers() {
@@ -148,7 +146,8 @@ public class SimulatorImpl implements Simulator {
 
 	}
 
-	public void build() {
+	public void build(SimulationListener listener) {
+		this.listener = listener;
 		Configuration config = Configuration.fromXML("configuracion.xml");
 		this.projects = buildProjects(config);
 		this.idleProgrammers = config.getProgrammersQty();

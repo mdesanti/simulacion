@@ -1,11 +1,9 @@
 package ss.gui.out;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +51,7 @@ public class Frame extends JFrame {
 	private int FINAVALUETOP = 30;
 
 	public Frame() throws IOException {
-		this.simulator = new SimulatorImpl(new SimulationListenerImpl(this));
+		this.simulator = new SimulatorImpl();
 
 		// Initializes MenuBar
 		MenuBar menuBar = new MenuBar(this);
@@ -115,11 +113,11 @@ public class Frame extends JFrame {
 	 * the center of the screan
 	 */
 	private void initializeFrame() {
-		setSize(cols * CELL_SIZE - 54, rows * CELL_SIZE - 6);
-		Dimension screan = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension window = this.getSize();
-		setLocation((screan.width - window.width) / 2,
-				(screan.height - window.height) / 2);
+		setSize(cols * CELL_SIZE - 54, rows * CELL_SIZE - 20);
+//		Dimension screan = Toolkit.getDefaultToolkit().getScreenSize();
+//		Dimension window = this.getSize();
+//		setLocation((screan.width - window.width) / 2,
+//				(screan.height - window.height) / 2);
 		paintAll(this.getGraphics());
 	}
 
@@ -149,8 +147,13 @@ public class Frame extends JFrame {
 	 *             If there was a problem loading the image
 	 */
 	public void initializePanel() throws IOException {
-		if (existsPanel())
+		if (existsPanel()){
+			projectEstimationTimes.clear();
+			projectDurationTimes.clear();
+			projectCosts.clear();
+			iterations.clear();
 			remove(simulationPanel);
+		}
 		simulationPanel = new SimulationPanel();
 		simulationPanel.setSize(cols * CELL_SIZE, rows * CELL_SIZE);
 		simulationPanel.setLayout(null);
@@ -262,13 +265,11 @@ public class Frame extends JFrame {
 	public void restart() {
 		repaint();
 
-		// simulator.start();
 		try {
 			initializePanel();
 		} catch (IOException e) {
 			errorWhileReading("restart of simulation.");
 		}
-		// simulationPanel.setPixeslPerStep(5);
 		initializeFrame();
 
 	}

@@ -13,14 +13,14 @@ public class SimulationListenerImpl implements SimulationListener {
 	@Override
 	public void updateIdleProgrammers(int qty) {
 		frame.updateIdleProgrammers(qty);
-		// repaint();
+		 repaint();
 
 	}
 
 	@Override
 	public void updateIterationDuration(Project project) {
 		frame.updateIterationDuration(project);
-		// repaint();
+		 repaint();
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class SimulationListenerImpl implements SimulationListener {
 	private void repaint() {
 		frame.repaint();
 		try {
-			Thread.sleep(200);
+			Thread.sleep(100);
 		} catch (InterruptedException e) {
 			System.out.println("Error en thread");
 			System.exit(1);
