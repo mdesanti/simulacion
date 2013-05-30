@@ -6,7 +6,7 @@ import ss.gui.out.SimulationListener;
 
 public interface Simulator {
 
-	void start();
+	void start(int times);
 
 	void build(SimulationListener listener);
 

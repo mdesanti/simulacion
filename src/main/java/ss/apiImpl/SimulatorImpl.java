@@ -2,13 +2,19 @@ package ss.apiImpl;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
+import org.jfree.ui.RefineryUtilities;
 
 import ss.api.Iteration;
 import ss.api.Project;
 import ss.api.ReasignationStrategy;
 import ss.api.Simulator;
+import ss.apiImpl.charts.StrategiesChart;
 import ss.apiImpl.strategies.ReasignationStrategyImpl;
 import ss.gui.in.Configuration;
 import ss.gui.out.SimulationListener;
@@ -22,56 +28,91 @@ public class SimulatorImpl implements Simulator {
 	private int idleProgrammers;
 	private ReasignationStrategy strategy;
 	private SimulationListener listener;
+	private Map<String, LinkedList<Integer>> finishedProjects = new HashMap<>();
 
-	public void start() {
+	public void start(int totalTimes) {
 		// Build method must be called before
-		int today = 0;
-		int projectsFinished = 0;
+
 		int totalProjects = projects.size();
-		boolean finished = false;
-		if (strategy.isSwitchStrategyOnly()) {
-			distributeProgrammers();
-		}
-		while (today < simulationDays && !finished) {
-			Collections.sort(projects, new ProjectComparator());
-			Iterator<Project> projectIterator = projects.iterator();
-			while (projectIterator.hasNext()) {
-				Project project = projectIterator.next();
-				if (!project.finished()) {
-					Iteration iteration = project.getCurrentIteration();
-					if (!iteration.finished()) {
-						if (iteration.isDelayed()) {
-							idleProgrammers -= strategy.reasing(project,
-									projects, idleProgrammers);
-							listener.updateWorkingProgrammers(project);
+		
+		int loopNumber = 0;
+		int loops = totalTimes;
+		this.strategy = assignStrategy(0);
+		finishedProjects.put("idle", new LinkedList<Integer>());
+		while (--loops >= 0 && loopNumber < 3) {
+			int today = 0;
+			int projectsFinished = 0;
+			boolean finished = false;
+			if (strategy.isSwitchStrategyOnly()) {
+				distributeProgrammers();
+			}
+			while (today < simulationDays && !finished) {
+				Collections.sort(projects, new ProjectComparator());
+				Iterator<Project> projectIterator = projects.iterator();
+				while (projectIterator.hasNext()) {
+					Project project = projectIterator.next();
+					if (!project.finished()) {
+						Iteration iteration = project.getCurrentIteration();
+						if (!iteration.finished()) {
+							if (iteration.isDelayed()) {
+								idleProgrammers -= strategy.reasing(project,
+										projects, idleProgrammers);
+								listener.updateWorkingProgrammers(project);
+								listener.updateIdleProgrammers(idleProgrammers);
+								listener.updateIterationEstimate(project);
+							}
+							if (project.getProgrammersWorking() > 0) {
+								iteration.decreaseLastingDays();
+							}
+						} else {
+							project.nextIteration();
+							listener.updateIterationDuration(project);
+							idleProgrammers += project.removeProgrammers();
 							listener.updateIdleProgrammers(idleProgrammers);
-							listener.updateIterationEstimate(project);
-						}
-						if (project.getProgrammersWorking() > 0) {
-							iteration.decreaseLastingDays();
 						}
 					} else {
-						project.nextIteration();
-						listener.updateIterationDuration(project);
+						projectIterator.remove();
 						idleProgrammers += project.removeProgrammers();
 						listener.updateIdleProgrammers(idleProgrammers);
+						projectsFinished++;
+						listener.updateFinishedProjects(projectsFinished);
 					}
-				} else {
-					projectIterator.remove();
-					idleProgrammers += project.removeProgrammers();
-					listener.updateIdleProgrammers(idleProgrammers);
-					projectsFinished++;
-					listener.updateFinishedProjects(projectsFinished);
+				}
+				today++;
+				listener.updateTime(today);
+				if ((projectsFinished == totalProjects)
+						|| (today == simulationDays)) {
+					finishedProjects.get(strategy.getStrategy()).push(
+							projectsFinished);
+					finished = true;
 				}
 			}
-			today++;
-			listener.updateTime(today);
-			if (projectsFinished == totalProjects) {
-				finished = true;
+			build(listener);
+			if (loops == 0) {
+				this.strategy = assignStrategy(++loopNumber);
+				loops = totalTimes;
 			}
 		}
-		
-		System.out.println("finished");
+
+		StrategiesChart chart = new StrategiesChart("Estrategias",
+				finishedProjects);
+		chart.pack();
+		RefineryUtilities.centerFrameOnScreen(chart);
+		chart.setVisible(true);
+
+	}
+
+	private ReasignationStrategyImpl assignStrategy(int loopNumber) {
+		switch (loopNumber) {
+		case 0:
+			return new ReasignationStrategyImpl(true, false, false, listener);
+		case 1:
+			finishedProjects.put("switch", new LinkedList<Integer>());
+			return new ReasignationStrategyImpl(false, true, false, listener);
+		default: // Case 2
+			finishedProjects.put("freelance", new LinkedList<Integer>());
+			return new ReasignationStrategyImpl(false, false, true, listener);
+		}
 	}
 
 	private void distributeProgrammers() {
@@ -151,7 +192,7 @@ public class SimulatorImpl implements Simulator {
 		Configuration config = Configuration.fromXML("configuracion.xml");
 		this.projects = buildProjects(config);
 		this.idleProgrammers = config.getProgrammersQty();
-		this.strategy = getStrategy(config.getStrategy());
+//		this.strategy = getStrategy(config.getStrategy());
 		// Get from projects maximum duration
 		this.simulationDays = 0;
 		for (Project p : projects) {

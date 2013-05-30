@@ -37,7 +37,7 @@ public class MenuBar extends JMenuBar {
 						getFrame().getSimulator().build(
 								new SimulationListenerImpl(getFrame()));
 						getFrame().restart();
-						getFrame().getSimulator().start();
+						getFrame().getSimulator().start(10);
 					}
 				});
 				sim.start();
@@ -48,7 +48,7 @@ public class MenuBar extends JMenuBar {
 				getFrame().getSimulator().build(
 						new SimulationDummyListenerImpl());
 				// getFrame().restart();
-				getFrame().getSimulator().start();
+				getFrame().getSimulator().start(10);
 			}
 		});
 

@@ -16,7 +16,8 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 	private SimulationListener listener;
 
 	public ReasignationStrategyImpl(boolean idleStrategy,
-			boolean switchStrategy, boolean freelanceStrategy, SimulationListener listener) {
+			boolean switchStrategy, boolean freelanceStrategy,
+			SimulationListener listener) {
 		this.idleStrategy = idleStrategy;
 		this.switchStrategy = switchStrategy;
 		this.freelanceStrategy = freelanceStrategy;
@@ -36,6 +37,17 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 			freelanceStrategyReasign(to);
 		}
 		return ret;
+	}
+
+	@Override
+	public String getStrategy() {
+		if (idleStrategy) {
+			return "idle";
+		}
+		if (switchStrategy) {
+			return "switch";
+		}
+		return "freelance";
 	}
 
 	private int idleStrategyReasign(Project to, int idleProgrammers) {
