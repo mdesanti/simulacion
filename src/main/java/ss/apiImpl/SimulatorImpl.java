@@ -43,6 +43,8 @@ public class SimulatorImpl implements Simulator {
 		int loops = totalTimes;
 		this.strategy = assignStrategy(0);
 		finishedProjects.put("idle", new LinkedList<Integer>());
+		StrategiesChart chart = new StrategiesChart(projects);
+		chart.start();
 		while (--loops >= 0 && loopNumber < 3) {
 			int today = 0;
 			int projectsFinished = 0;
@@ -87,7 +89,7 @@ public class SimulatorImpl implements Simulator {
 					}
 				}
 				int newProjectsQty = projects.size();
-				int diff = projectsQty-newProjectsQty;
+				int diff = projectsQty - newProjectsQty;
 				for (int i = 0; i < diff; i++) {
 					projects.add(buildProject(projectsId++));
 				}
@@ -101,6 +103,7 @@ public class SimulatorImpl implements Simulator {
 				}
 			}
 			build(listener);
+			chart.restart(projects);
 			listener.reset();
 			if (loops == 0) {
 				this.strategy = assignStrategy(++loopNumber);
@@ -108,11 +111,11 @@ public class SimulatorImpl implements Simulator {
 			}
 		}
 
-		StrategiesChart chart = new StrategiesChart("Estrategias",
-				finishedProjects);
-		chart.pack();
-		RefineryUtilities.centerFrameOnScreen(chart);
-		chart.setVisible(true);
+		// StrategiesChart chart = new StrategiesChart("Estrategias",
+		// finishedProjects);
+		// chart.pack();
+		// RefineryUtilities.centerFrameOnScreen(chart);
+		// chart.setVisible(true);
 
 	}
 
@@ -233,12 +236,12 @@ public class SimulatorImpl implements Simulator {
 		this.idleProgrammers = 12;
 		// this.strategy = getStrategy(config.getStrategy());
 		// Get from projects maximum duration
-		this.simulationDays = 365; //In days
-//		for (Project p : projects) {
-//			if (p.getDuration() > simulationDays) {
-//				simulationDays = p.getDuration();
-//			}
-//		}
+		this.simulationDays = 365; // In days
+		// for (Project p : projects) {
+		// if (p.getDuration() > simulationDays) {
+		// simulationDays = p.getDuration();
+		// }
+		// }
 	}
 
 	private ReasignationStrategyImpl getStrategy(String strategy) {

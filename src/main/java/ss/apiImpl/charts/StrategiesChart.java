@@ -1,143 +1,123 @@
 package ss.apiImpl.charts;
 
-import java.awt.Color;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import javax.swing.JFrame;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.ApplicationFrame;
+import org.jfree.data.time.Second;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.ui.RefineryUtilities;
 
-public class StrategiesChart extends ApplicationFrame {
+import ss.api.Project;
 
-	/**
-	 * Creates a new demo.
-	 * 
-	 * @param title
-	 *            the frame title.
-	 */
-	public StrategiesChart(final String title,
-			Map<String, LinkedList<Integer>> map) {
+public class StrategiesChart {
 
-		super(title);
+	private Updater updater;
 
-		final XYDataset dataset = createDataset(map);
-		final JFreeChart chart = createChart(dataset);
-		final ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-		setContentPane(chartPanel);
+	private List<TimeSeries> series;
+	private BlockingQueue<Project> projects;
+	private BlockingQueue<TimeSeriesProject> timeSeriesProject;
 
+	private class TimeSeriesProject {
+		TimeSeries timeSeries;
+		Project project;
+
+		public TimeSeriesProject(TimeSeries timeSeries, Project project) {
+			this.timeSeries = timeSeries;
+			this.project = project;
+		}
+
+		public Project getProject() {
+			return project;
+		}
+
+		public TimeSeries getTimeSeries() {
+			return timeSeries;
+		}
 	}
 
-	/**
-	 * Creates a sample dataset.
-	 * 
-	 * @return a sample dataset.
-	 */
-	private XYDataset createDataset(Map<String, LinkedList<Integer>> map) {
-
-		LinkedList<Integer> idleStrat = map.get("idle");
-		final XYSeries series1 = new XYSeries("Estrategia 1");
-		int i=1;
-		for (Integer integer : idleStrat) {
-			series1.add(i++, integer);
-
-		}
-		LinkedList<Integer> switchStrat = map.get("switch");
-		final XYSeries series2 = new XYSeries("Estrategia 2");
-		i=0;
-		for (Integer integer : switchStrat) {
-			series2.add(i++, integer);
-
-		}
-
-		LinkedList<Integer> freelanceSwitch = map.get("freelance");
-		final XYSeries series3 = new XYSeries("Estrategia 3");
-		i=0;
-		for (Integer integer : freelanceSwitch) {
-			series3.add(i++, integer);
-
-		}
-
-		final XYSeriesCollection dataset = new XYSeriesCollection();
-		dataset.addSeries(series1);
-		dataset.addSeries(series2);
-		dataset.addSeries(series3);
-
-		return dataset;
-
+	public StrategiesChart(List<Project> projects) {
+		initialize(projects);
 	}
 
-	/**
-	 * Creates a chart.
-	 * 
-	 * @param dataset
-	 *            the data for the chart.
-	 * 
-	 * @return a chart.
-	 */
-	private JFreeChart createChart(final XYDataset dataset) {
+	private void initialize(List<Project> projects) {
+		this.series = new ArrayList<>();
+		this.projects = new LinkedBlockingQueue<>();
+		this.timeSeriesProject = new LinkedBlockingQueue<>();
+		for (Project project : projects) {
+			this.projects.add(project);
+			TimeSeries ts = new TimeSeries("Projecto " + project.getId(),
+					Second.class);
+			series.add(ts);
+			timeSeriesProject.add(new TimeSeriesProject(ts, project));
+		}
+		updater = new Updater();
 
-		// create the chart...
-		final JFreeChart chart = ChartFactory.createXYLineChart(
-				"Estrategias vs Proyectos terminados", // chart title
-				"Estrategias", // x axis label
-				"Proyectos terminados", // y axis label
-				dataset, // data
-				PlotOrientation.VERTICAL, true, // include legend
-				true, // tooltips
-				false // urls
-				);
-
-		// NOW DO SOME OPTIONAL CUSTOMISATION OF THE CHART...
-		chart.setBackgroundPaint(Color.white);
-
-		// final StandardLegend legend = (StandardLegend) chart.getLegend();
-		// legend.setDisplaySeriesShapes(true);
-
-		// get a reference to the plot for further customisation...
+		TimeSeriesCollection dataset = new TimeSeriesCollection();
+		for (TimeSeries serie : series) {
+			dataset.addSeries(serie);
+		}
+		JFreeChart chart = ChartFactory.createTimeSeriesChart("Simulador",
+				"Tiempo", "Programadores", dataset, true, true, false);
 		final XYPlot plot = chart.getXYPlot();
-		plot.setBackgroundPaint(Color.lightGray);
-		// plot.setAxisOffset(new Spacer(Spacer.ABSOLUTE, 5.0, 5.0, 5.0, 5.0));
-		plot.setDomainGridlinePaint(Color.white);
-		plot.setRangeGridlinePaint(Color.white);
+		ValueAxis axis = plot.getDomainAxis();
+		axis.setAutoRange(true);
+		axis.setFixedAutoRange(10);
 
-		final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-		renderer.setSeriesLinesVisible(0, false);
-		renderer.setSeriesShapesVisible(1, false);
-		plot.setRenderer(renderer);
+		JFrame frame = new JFrame("Simulador");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		ChartPanel label = new ChartPanel(chart);
+		frame.getContentPane().add(label);
+		// Suppose I add combo boxes and buttons here later
 
-		// change the auto tick unit selection to integer units only...
-		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-		// OPTIONAL CUSTOMISATION COMPLETED.
-
-		return chart;
-
+		frame.pack();
+		RefineryUtilities.centerFrameOnScreen(frame);
+		frame.setVisible(true);
 	}
 
-	/**
-	 * Starting point for the demonstration application.
-	 * 
-	 * @param args
-	 *            ignored.
-	 */
-	public static void main(final String[] args) {
-
-//		final StrategiesChart chart = new StrategiesChart("Estrategías");
-//		chart.pack();
-//		RefineryUtilities.centerFrameOnScreen(chart);
-//		chart.setVisible(true);
-
+	public void start() {
+		updater.start();
 	}
 
+	public void addProject(Project project) {
+		projects.add(project);
+		TimeSeries ts = new TimeSeries("Projecto " + project.getId(),
+				Second.class);
+		series.add(ts);
+		timeSeriesProject.add(new TimeSeriesProject(ts, project));
+	}
+
+	public void restart(List<Project> projects) {
+		initialize(projects);
+	}
+
+	private class Updater extends Thread {
+
+		public void run() {
+			while (true) {
+				for (TimeSeriesProject ts : timeSeriesProject) {
+					ts.getTimeSeries().addOrUpdate(new Second(),
+							ts.getProject().getProgrammersWorking());
+
+				}
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException ex) {
+					System.out.println(ex);
+				}
+
+			}
+		}
+
+	}
 }
