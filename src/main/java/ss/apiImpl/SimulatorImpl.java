@@ -2,11 +2,14 @@ package ss.apiImpl;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import org.jfree.ui.RefineryUtilities;
 
@@ -15,6 +18,7 @@ import ss.api.Project;
 import ss.api.ReasignationStrategy;
 import ss.api.Simulator;
 import ss.apiImpl.charts.StrategiesChart;
+import ss.apiImpl.issues.FrontendIssue;
 import ss.apiImpl.strategies.ReasignationStrategyImpl;
 import ss.gui.in.Configuration;
 import ss.gui.out.SimulationListener;
@@ -34,7 +38,7 @@ public class SimulatorImpl implements Simulator {
 		// Build method must be called before
 
 		int totalProjects = projects.size();
-		
+		int projectsId = totalProjects;
 		int loopNumber = 0;
 		int loops = totalTimes;
 		this.strategy = assignStrategy(0);
@@ -49,6 +53,7 @@ public class SimulatorImpl implements Simulator {
 			while (today < simulationDays && !finished) {
 				Collections.sort(projects, new ProjectComparator());
 				Iterator<Project> projectIterator = projects.iterator();
+				int projectsQty = projects.size();
 				while (projectIterator.hasNext()) {
 					Project project = projectIterator.next();
 					if (!project.finished()) {
@@ -65,8 +70,9 @@ public class SimulatorImpl implements Simulator {
 								iteration.decreaseLastingDays();
 							}
 						} else {
-							int extraTime = iteration.getEstimate() - iteration.getDuration();
-							extraTime = (extraTime > 0)? extraTime: 0;
+							int extraTime = iteration.getEstimate()
+									- iteration.getDuration();
+							extraTime = (extraTime > 0) ? extraTime : 0;
 							project.nextIteration(extraTime);
 							listener.updateIterationDuration(project);
 							idleProgrammers += project.removeProgrammers();
@@ -79,6 +85,11 @@ public class SimulatorImpl implements Simulator {
 						projectsFinished++;
 						listener.updateFinishedProjects(projectsFinished);
 					}
+				}
+				int newProjectsQty = projects.size();
+				int diff = projectsQty-newProjectsQty;
+				for (int i = 0; i < diff; i++) {
+					projects.add(buildProject(projectsId++));
 				}
 				today++;
 				listener.updateTime(today);
@@ -190,19 +201,44 @@ public class SimulatorImpl implements Simulator {
 
 	}
 
+	private List<Project> buildProjects(int qty) {
+		List<Project> retList = Lists.newArrayList();
+		for (int i = 0; i < qty; i++) {
+			retList.add(buildProject(i));
+		}
+		return retList;
+
+	}
+
+	private Project buildProject(int id) {
+		Deque<ss.api.Iteration> iterations = new LinkedBlockingDeque<>();
+		Random r = new Random();
+		int iterationsQty = r.nextInt(7) + 1; // (0,7]
+		for (int j = 0; j < iterationsQty; j++) {
+			int duration = r.nextInt(27 - 20) + 20; // (20,27]
+			Iteration it = new IterationImpl(IssueFactory.createBackendIssue(),
+					IssueFactory.createFrontEndIssue(), duration);
+			iterations.push(it);
+		}
+		int maxCost = r.nextInt(10 - 5) + 5; // (5,10]
+		return new ProjectImpl(iterations, maxCost, id);
+	}
+
 	public void build(SimulationListener listener) {
 		this.listener = listener;
-		Configuration config = Configuration.fromXML("configuracion.xml");
-		this.projects = buildProjects(config);
-		this.idleProgrammers = config.getProgrammersQty();
-//		this.strategy = getStrategy(config.getStrategy());
+		// Configuration config = Configuration.fromXML("configuracion.xml");
+		// this.projects = buildProjects(config);
+		this.projects = buildProjects(5);
+		// this.idleProgrammers = config.getProgrammersQty();
+		this.idleProgrammers = 12;
+		// this.strategy = getStrategy(config.getStrategy());
 		// Get from projects maximum duration
-		this.simulationDays = 0;
-		for (Project p : projects) {
-			if (p.getDuration() > simulationDays) {
-				simulationDays = p.getDuration();
-			}
-		}
+		this.simulationDays = 365; //In days
+//		for (Project p : projects) {
+//			if (p.getDuration() > simulationDays) {
+//				simulationDays = p.getDuration();
+//			}
+//		}
 	}
 
 	private ReasignationStrategyImpl getStrategy(String strategy) {
