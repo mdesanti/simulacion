@@ -24,6 +24,7 @@ public class MenuBar extends JMenuBar {
 		simulatorMenu.setMnemonic(KeyEvent.VK_S);
 
 		JMenuItem newGame = new JMenuItem("Simular");
+		JMenuItem newGameWithChart = new JMenuItem("Simular con gráfico");
 		JMenuItem newGameWithNoFront = new JMenuItem("Simular sin efectos");
 		newGame.setMnemonic(KeyEvent.VK_N);
 		newGame.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
@@ -35,7 +36,7 @@ public class MenuBar extends JMenuBar {
 					@Override
 					public void run() {
 						getFrame().getSimulator().build(
-								new SimulationListenerImpl(getFrame()));
+								new SimulationFrameListener(getFrame()));
 						getFrame().restart();
 						getFrame().getSimulator().start(10);
 					}
@@ -46,8 +47,16 @@ public class MenuBar extends JMenuBar {
 		newGameWithNoFront.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				getFrame().getSimulator().build(
-						new SimulationDummyListenerImpl());
+						new SimulationDummyListener());
 				// getFrame().restart();
+				getFrame().getSimulator().start(10);
+			}
+		});
+		
+		newGameWithChart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				getFrame().getSimulator().build(
+						new SimulationChartListener(getFrame().getSimulator()));
 				getFrame().getSimulator().start(10);
 			}
 		});
@@ -66,6 +75,8 @@ public class MenuBar extends JMenuBar {
 		});
 
 		simulatorMenu.add(newGame);
+		simulatorMenu.add(new JSeparator());
+		simulatorMenu.add(newGameWithChart);
 		simulatorMenu.add(new JSeparator());
 		simulatorMenu.add(newGameWithNoFront);
 		simulatorMenu.add(new JSeparator());

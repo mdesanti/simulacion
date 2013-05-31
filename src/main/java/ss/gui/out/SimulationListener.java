@@ -19,5 +19,9 @@ public interface SimulationListener {
 	public void updateIterationDuration(Project project);
 
 	public void reset();
-	
+
+	public void removeProject(Project project);
+
+	public void addProject(Project project);
+
 }

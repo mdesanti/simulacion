@@ -2,7 +2,7 @@ package ss.gui.out;
 
 import ss.api.Project;
 
-public class SimulationDummyListenerImpl implements SimulationListener {
+public class SimulationDummyListener implements SimulationListener {
 
 	@Override
 	public void updateIdleProgrammers(int qty) {
@@ -48,6 +48,18 @@ public class SimulationDummyListenerImpl implements SimulationListener {
 	
 	@Override
 	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeProject(Project project) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addProject(Project project) {
 		// TODO Auto-generated method stub
 		
 	}

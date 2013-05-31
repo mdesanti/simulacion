@@ -11,16 +11,14 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import org.jfree.ui.RefineryUtilities;
-
 import ss.api.Iteration;
 import ss.api.Project;
 import ss.api.ReasignationStrategy;
 import ss.api.Simulator;
 import ss.apiImpl.charts.StrategiesChart;
-import ss.apiImpl.issues.FrontendIssue;
 import ss.apiImpl.strategies.ReasignationStrategyImpl;
 import ss.gui.in.Configuration;
+import ss.gui.out.SimulationChartListener;
 import ss.gui.out.SimulationListener;
 
 import com.google.common.collect.Lists;
@@ -43,8 +41,6 @@ public class SimulatorImpl implements Simulator {
 		int loops = totalTimes;
 		this.strategy = assignStrategy(0);
 		finishedProjects.put("idle", new LinkedList<Integer>());
-		StrategiesChart chart = new StrategiesChart(projects);
-		chart.start();
 		while (--loops >= 0 && loopNumber < 3) {
 			int today = 0;
 			int projectsFinished = 0;
@@ -81,6 +77,7 @@ public class SimulatorImpl implements Simulator {
 							listener.updateIdleProgrammers(idleProgrammers);
 						}
 					} else {
+						listener.removeProject(project);
 						projectIterator.remove();
 						idleProgrammers += project.removeProgrammers();
 						listener.updateIdleProgrammers(idleProgrammers);
@@ -91,7 +88,9 @@ public class SimulatorImpl implements Simulator {
 				int newProjectsQty = projects.size();
 				int diff = projectsQty - newProjectsQty;
 				for (int i = 0; i < diff; i++) {
-					projects.add(buildProject(projectsId++));
+					Project aux = buildProject(projectsId++);
+					projects.add(aux);
+					listener.addProject(aux);
 				}
 				today++;
 				listener.updateTime(today);
@@ -103,7 +102,7 @@ public class SimulatorImpl implements Simulator {
 				}
 			}
 			build(listener);
-			chart.restart(projects);
+			projectsId = projects.size();
 			listener.reset();
 			if (loops == 0) {
 				this.strategy = assignStrategy(++loopNumber);
@@ -232,6 +231,10 @@ public class SimulatorImpl implements Simulator {
 		// Configuration config = Configuration.fromXML("configuracion.xml");
 		// this.projects = buildProjects(config);
 		this.projects = buildProjects(5);
+		if (listener.getClass().equals(SimulationChartListener.class)) {
+			((SimulationChartListener) listener).setChart(new StrategiesChart(
+					this.projects));
+		}
 		// this.idleProgrammers = config.getProgrammersQty();
 		this.idleProgrammers = 12;
 		// this.strategy = getStrategy(config.getStrategy());
