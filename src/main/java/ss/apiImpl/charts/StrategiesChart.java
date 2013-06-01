@@ -90,6 +90,7 @@ public class StrategiesChart {
 				Second.class);
 		dataset.addSeries(ts);
 		timeSeriesProject.add(new TimeSeriesProject(ts, project));
+		frame.repaint();
 	}
 
 	public void removeProject(Project project) {
@@ -100,14 +101,29 @@ public class StrategiesChart {
 				projects.remove(project);
 				dataset.removeSeries(next.getTimeSeries());
 				it.remove();
+				frame.repaint();
 				return;
 			}
 		}
 	}
 
 	public void restart(List<Project> projects) {
-		frame.setVisible(false);
 		initialize(projects);
+		JFreeChart chart = ChartFactory.createTimeSeriesChart("Simulador",
+				"Tiempo", "Programadores", dataset, true, true, false);
+		final XYPlot plot = chart.getXYPlot();
+		ValueAxis axis = plot.getDomainAxis();
+		axis.setAutoRange(true);
+		axis.setFixedAutoRange(10);
+		frame = new JFrame("Simulador");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		ChartPanel label = new ChartPanel(chart);
+		frame.getContentPane().add(label);
+		// Suppose I add combo boxes and buttons here later
+
+		frame.pack();
+		RefineryUtilities.centerFrameOnScreen(frame);
+		frame.setVisible(true);
 	}
 
 	public void updateWorkingProgrammers(Project project) {
@@ -116,6 +132,7 @@ public class StrategiesChart {
 				TimeSeriesDataItem data =ts.getTimeSeries().addOrUpdate(new Millisecond(),
 						ts.getProject().getProgrammersWorking());
 				System.out.println(data);
+				frame.repaint();
 				return;
 			}
 		}

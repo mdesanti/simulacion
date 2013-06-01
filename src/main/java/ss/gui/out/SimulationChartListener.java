@@ -77,12 +77,12 @@ public class SimulationChartListener implements SimulationListener {
 	}
 	
 	private void wait(int time){
-//		try {
-//			Thread.sleep(time);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
