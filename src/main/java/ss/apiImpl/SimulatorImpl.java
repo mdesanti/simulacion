@@ -91,10 +91,13 @@ public class SimulatorImpl implements Simulator {
 				int newProjectsQty = projects.size();
 				int diff = projectsQty - newProjectsQty;
 				for (int i = 0; i < diff; i++) {
+					Project p = buildProject(projectsId++);
 					projects.add(buildProject(projectsId++));
+					chart.addProject(p);
 				}
 				today++;
 				listener.updateTime(today);
+				chart.updateTime();
 				if ((projectsFinished == totalProjects)
 						|| (today == simulationDays)) {
 					finishedProjects.get(strategy.getStrategy()).push(
