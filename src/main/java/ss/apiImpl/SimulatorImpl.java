@@ -82,6 +82,7 @@ public class SimulatorImpl implements Simulator {
 						}
 					} else {
 						projectIterator.remove();
+						chart.removeProject(project);
 						idleProgrammers += project.removeProgrammers();
 						listener.updateIdleProgrammers(idleProgrammers);
 						projectsFinished++;
@@ -113,12 +114,6 @@ public class SimulatorImpl implements Simulator {
 				loops = totalTimes;
 			}
 		}
-
-		// StrategiesChart chart = new StrategiesChart("Estrategias",
-		// finishedProjects);
-		// chart.pack();
-		// RefineryUtilities.centerFrameOnScreen(chart);
-		// chart.setVisible(true);
 
 	}
 

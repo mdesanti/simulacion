@@ -44,9 +44,9 @@ public class Frame extends JFrame {
 	private List<ProjectTimes> projectDurationTimes = new ArrayList<>();
 	private List<ProjectTimes> projectCosts = new ArrayList<>();
 	private List<ProjectTimes> iterations = new ArrayList<>();
-	private Queue<Project> projects = new LinkedBlockingDeque<>();
+	private List<ProjectTimes> programmers = new ArrayList<>();
 	private List<Color> colors = Lists.newArrayList();
-	private int MARGINPROJECTSTOP = 130;
+	private int MARGINPROJECTSTOP = 20;
 	private int INITIALVALUESTOP = 10;
 	private int FINAVALUETOP = 30;
 
@@ -92,15 +92,15 @@ public class Frame extends JFrame {
 	public void paint(Graphics g) {
 		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
-		for (Project project : projects) {
-			g2d.setColor(getColor(project.getId()));
-			for (int j = 0; j < project.getProgrammersWorking(); j++) {
-				int x = 150 + 25 * j;
-				int y = MARGINPROJECTSTOP * (project.getId() + 1) + 30;
-				Ellipse2D.Double circle = new Ellipse2D.Double(x, y, 15, 15);
-				g2d.fill(circle);
-			}
-		}
+//		for (Project project : projects) {
+//			g2d.setColor(getColor(project.getId()));
+//			for (int j = 0; j < project.getProgrammersWorking(); j++) {
+//				int x = 150 + 25 * j;
+//				int y = MARGINPROJECTSTOP * (project.getId() + 1) + 30;
+//				Ellipse2D.Double circle = new Ellipse2D.Double(x, y, 15, 15);
+//				g2d.fill(circle);
+//			}
+//		}
 	}
 
 	private Color getColor(int id) {
@@ -195,61 +195,84 @@ public class Frame extends JFrame {
 		area = new JTextArea("Proyectos terminados: ");
 		area.setBounds(270, FINAVALUETOP, 150, 20);
 		simulationPanel.add(area);
+		
+		//titulos de las columnas
+		area = new JTextArea("Proyecto");
+		area.setBounds(50, FINAVALUETOP + 30, 70, 20);
+		simulationPanel.add(area);
+		
+		area = new JTextArea("Duración");
+		area.setBounds(150, FINAVALUETOP + 30, 150, 20);
+		simulationPanel.add(area);
+		
+		area = new JTextArea("Estimación");
+		area.setBounds(300, FINAVALUETOP + 30, 150, 20);
+		simulationPanel.add(area);
+		
+		area = new JTextArea("Costo permitido");
+		area.setBounds(470, FINAVALUETOP + 30, 150, 20);
+		simulationPanel.add(area);
+		
+		area = new JTextArea("Costo actual");
+		area.setBounds(690, FINAVALUETOP + 30, 150, 20);
+		simulationPanel.add(area);
+		
+		area = new JTextArea("Iteraciones");
+		area.setBounds(850, FINAVALUETOP + 30, 150, 20);
+		simulationPanel.add(area);
+		
+		area = new JTextArea("Programadores");
+		area.setBounds(1000, FINAVALUETOP + 30, 150, 20);
+		simulationPanel.add(area);
 
 		finishedProjects = new JTextArea("0");
 		finishedProjects.setBounds(420, FINAVALUETOP, 30, 20);
 		simulationPanel.add(finishedProjects);
-
+		boolean firstTime = true;
 		for (Project project : simulator.getProjects()) {
 			int id = project.getId();
 
 			final JTextArea projectName = new JTextArea("Project "
 					+ String.valueOf(id));
-			projectName.setBounds(50, MARGINPROJECTSTOP * id + 60, 100, 100);
+			int margin = 40;
+			int height = 25;
+			int addition = 90;
+			
+			projectName.setBounds(50, margin * id + addition, 100, height);
 			simulationPanel.add(projectName);
 			Iteration iteration = project.getCurrentIteration();
-			JTextArea duration = new JTextArea("Duración: ");
-			duration.setBounds(150, MARGINPROJECTSTOP * id + 60, 60, 100);
-			simulationPanel.add(duration);
-			duration = new JTextArea(String.valueOf(iteration.getDuration()));
-			duration.setBounds(220, MARGINPROJECTSTOP * id + 60, 40, 100);
+			JTextArea duration = new JTextArea(String.valueOf(iteration.getDuration()));
+			duration.setBounds(170, margin * id + addition, 40, height);
 			simulationPanel.add(duration);
 
-			JTextArea estimation = new JTextArea("Estimación: ");
-			estimation.setBounds(300, MARGINPROJECTSTOP * id + 60, 80, 100);
-			simulationPanel.add(estimation);
-			estimation = new JTextArea("0");
-			estimation.setBounds(390, MARGINPROJECTSTOP * id + 60, 40, 100);
+			JTextArea estimation = new JTextArea("0");
+			estimation.setBounds(330, margin * id + addition, 40, height);
 			simulationPanel.add(estimation);
 
-			JTextArea permittedCost = new JTextArea("Costo permitido: ");
-			permittedCost.setBounds(470, MARGINPROJECTSTOP * id + 60, 110, 100);
-			simulationPanel.add(permittedCost);
-			permittedCost = new JTextArea(String.valueOf(project.getMaxCost()));
-			permittedCost.setBounds(590, MARGINPROJECTSTOP * id + 60, 40, 100);
+			JTextArea permittedCost = new JTextArea(String.valueOf(project.getMaxCost()));
+			permittedCost.setBounds(520, margin * id + addition, 40, height);
 			simulationPanel.add(permittedCost);
 
-			JTextArea actualCost = new JTextArea("Costo actual: ");
-			actualCost.setBounds(690, MARGINPROJECTSTOP * id + 60, 100, 100);
+			JTextArea actualCost = new JTextArea("0");
+			actualCost.setBounds(730, margin * id + addition, 40, height);
 			simulationPanel.add(actualCost);
-			actualCost = new JTextArea("0");
-			actualCost.setBounds(800, MARGINPROJECTSTOP * id + 60, 40, 100);
-			simulationPanel.add(actualCost);
-			
-			JTextArea iterationsQty = new JTextArea("Iteraciones: ");
-			iterationsQty.setBounds(900, MARGINPROJECTSTOP * id + 60, 100, 100);
-			simulationPanel.add(iterationsQty);
-			iterationsQty = new JTextArea("0");
-			iterationsQty.setBounds(1000, MARGINPROJECTSTOP * id + 60, 20, 100);
+
+			JTextArea iterationsQty = new JTextArea("0");
+			iterationsQty.setBounds(870, margin * id + addition, 10, height);
 			simulationPanel.add(iterationsQty);
 			JTextArea iterationsTotal = new JTextArea("/ "+String.valueOf(project.getIterationsQty()));
-			iterationsTotal.setBounds(1020, MARGINPROJECTSTOP * id + 60, 40, 100);
+			iterationsTotal.setBounds(880, margin * id + addition, 20, height);
 			simulationPanel.add(iterationsTotal);
+			
+			JTextArea programmersQty = new JTextArea("0");
+			programmersQty.setBounds(1040, margin * id + addition, 20, height);
+			simulationPanel.add(programmersQty);
 
 			projectEstimationTimes.add(new ProjectTimes(estimation, project));
 			projectDurationTimes.add(new ProjectTimes(duration, project));
 			projectCosts.add(new ProjectTimes(actualCost, project));
 			iterations.add(new ProjectTimes(iterationsQty, project));
+			programmers.add(new ProjectTimes(programmersQty, project));
 		}
 	}
 
@@ -349,8 +372,14 @@ public class Frame extends JFrame {
 	}
 
 	public void updateProgrammersQty(Project project) {
-		projects.add(project);
-		repaint();
+		for (ProjectTimes projectTime : programmers) {
+			if (projectTime.getProject().equals(project)) {
+				projectTime.getArea().setText(
+						String.valueOf(project.getProgrammersWorking()));
+				return;
+			}
+
+		}
 	}
 
 	public void updateCost(Project project) {
@@ -370,7 +399,7 @@ public class Frame extends JFrame {
 		public void paint(Graphics g) {
 			// TODO Auto-generated method stub
 			super.paint(g);
-			for (ProjectTimes projectTime : iterations) {
+			for (ProjectTimes projectTime : programmers) {
 				Project project = projectTime.project;
 				int x = projectTime.getArea().getX();
 				int y = projectTime.getArea().getY();
@@ -378,7 +407,7 @@ public class Frame extends JFrame {
 					try {
 						Image image = ImageIO.read(new File(
 								"resources/images/tick.png"));
-						g.drawImage(image, x + 80, y - 8, null);
+						g.drawImage(image, x + 140, y - 8, null);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -386,7 +415,7 @@ public class Frame extends JFrame {
 					try {
 						Image image = ImageIO.read(new File(
 								"resources/images/cross.png"));
-						g.drawImage(image, x + 80, y - 10, null);
+						g.drawImage(image, x + 140, y - 10, null);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

@@ -1,5 +1,6 @@
 package ss.apiImpl.charts;
 
+import java.awt.BasicStroke;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -21,8 +22,6 @@ import org.jfree.ui.RefineryUtilities;
 import ss.api.Project;
 
 public class StrategiesChart extends ApplicationFrame {
-
-	private Updater updater;
 
 	private List<TimeSeries> series;
 	private BlockingQueue<Project> projects;
@@ -70,7 +69,6 @@ public class StrategiesChart extends ApplicationFrame {
 			series.add(ts);
 			timeSeriesProject.add(new TimeSeriesProject(ts, project));
 		}
-		updater = new Updater();
 
 		dataset = new TimeSeriesCollection();
 		for (TimeSeries serie : series) {
@@ -84,6 +82,7 @@ public class StrategiesChart extends ApplicationFrame {
 		axis.setFixedAutoRange(10);
 
 		frame = new JFrame("Simulador");
+		frame.setSize(500, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		label = new ChartPanel(chart);
 		frame.getContentPane().add(label);
@@ -95,7 +94,17 @@ public class StrategiesChart extends ApplicationFrame {
 	}
 
 	public void start() {
-		updater.start();
+//		updater.start();
+	}
+	
+	public void removeProject(Project p) {
+		TimeSeriesProject toRemove = null;
+		for(TimeSeriesProject tsp: timeSeriesProject) {
+			if(tsp.project.equals(p)) {
+				toRemove = tsp;
+			}
+		}
+		timeSeriesProject.remove(toRemove);
 	}
 
 	public void addProject(Project project) {
@@ -132,36 +141,43 @@ public class StrategiesChart extends ApplicationFrame {
 		frame.getContentPane().removeAll();
 		ChartPanel label = new ChartPanel(chart);
 		frame.getContentPane().add(label);
-		// Suppose I add combo boxes and buttons here later
 
 		frame.pack();
-		RefineryUtilities.centerFrameOnScreen(frame);
-		frame.setVisible(true);
 
 		day = (Day) day.next();
 		repaint();
 		try {
-			Thread.sleep(400);
+			Thread.sleep(750);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+    /** Line style: line */
+    public static final String STYLE_LINE = "line";
+    /** Line style: dashed */
+    public static final String STYLE_DASH = "dash";
+    /** Line style: dotted */
+    public static final String STYLE_DOT = "dot";
+	private BasicStroke toStroke(String style) {
+        BasicStroke result = null;
+        
+        if (style != null) {
+            float lineWidth = 0.2f;
+            float dash[] = {5.0f};
+            float dot[] = {lineWidth};
+    
+            if (style.equalsIgnoreCase(STYLE_LINE)) {
+                result = new BasicStroke(lineWidth);
+            } else if (style.equalsIgnoreCase(STYLE_DASH)) {
+                result = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
+            } else if (style.equalsIgnoreCase(STYLE_DOT)) {
+                result = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 2.0f, dot, 0.0f);
+            }
+        }//else: input unavailable
+        
+        return result;
+    }//toStroke()
 
-	private class Updater extends Thread {
-
-		public void run() {
-//			while (true) {
-//				
-//				try {
-//					Thread.sleep(1000);
-//				} catch (InterruptedException ex) {
-//					System.out.println(ex);
-//				}
-//				repaint();
-//				day = (Day) day.next();
-//			}
-		}
-
-	}
 }
