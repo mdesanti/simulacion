@@ -5,7 +5,7 @@ import java.util.List;
 public interface ReasignationStrategy {
 
 	/**
-	 * Reasigns programmers
+	 * Reasigns programmers and returns the quantity of idle programmers consumed
 	 * @param to
 	 * @param from
 	 * @param idleProgrammers

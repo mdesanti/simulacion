@@ -10,7 +10,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
-import ss.apiImpl.SimulatorImpl;
+import ss.apiImpl.strategies.ReasignationStrategyImpl;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
@@ -38,7 +38,7 @@ public class MenuBar extends JMenuBar {
 					@Override
 					public void run() {
 						getFrame().getSimulator().build(
-								new SimulationListenerImpl(getFrame()),SimulatorImpl.IDLE_STRATEGY);
+								new SimulationListenerImpl(getFrame()),ReasignationStrategyImpl.IDLE_STRATEGY);
 						getFrame().restart();
 						getFrame().getSimulator().start(10);
 					}
@@ -52,7 +52,7 @@ public class MenuBar extends JMenuBar {
 					@Override
 					public void run() {
 						getFrame().getSimulator().build(
-								new SimulationListenerImpl(getFrame()),SimulatorImpl.SWITCH_STRATEGY);
+								new SimulationListenerImpl(getFrame()),ReasignationStrategyImpl.SWITCH_STRATEGY);
 						getFrame().restart();
 						getFrame().getSimulator().start(10);
 					}
@@ -66,7 +66,7 @@ public class MenuBar extends JMenuBar {
 					@Override
 					public void run() {
 						getFrame().getSimulator().build(
-								new SimulationListenerImpl(getFrame()),SimulatorImpl.FREELANCE_STRATEGY);
+								new SimulationListenerImpl(getFrame()),ReasignationStrategyImpl.FREELANCE_STRATEGY);
 						getFrame().restart();
 						getFrame().getSimulator().start(10);
 					}

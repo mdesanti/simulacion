@@ -14,10 +14,6 @@ public interface Simulator {
 
 	int getIdleProgrammers();
 
-	int getTotalCost();
-
-	int getFinishedProjects();
-	
 	int getSimulationDays();
 
 }

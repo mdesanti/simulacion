@@ -24,7 +24,7 @@ public class ProjectImpl implements Project {
 	private Integer programmersWorking;
 
 	private Integer id;
-	
+
 	private Integer iterationsQty;
 
 	public ProjectImpl(Deque<Iteration> iterations, Integer maxCost, Integer id) {
@@ -37,11 +37,12 @@ public class ProjectImpl implements Project {
 		currentIteration = iterations.pop();
 		this.programmersWorking = 0;
 	}
-	
+
 	@Override
 	public int getIterationsQty() {
 		return this.iterationsQty;
 	}
+
 	@Override
 	public int getIterationsLeft() {
 		return this.iterationsQty - iterations.size();
@@ -51,7 +52,7 @@ public class ProjectImpl implements Project {
 	public int getId() {
 		return id;
 	}
-	
+
 	private void setDuration() {
 		for (Iteration iteration : iterations) {
 			duration += iteration.getDuration();
@@ -73,9 +74,16 @@ public class ProjectImpl implements Project {
 	public void nextIteration(int extraTime) {
 		try {
 			currentIteration = iterations.pop();
-			currentIteration.setDuration(currentIteration.getDuration() + extraTime);
+			currentIteration.setDuration(currentIteration.getDuration()
+					+ extraTime);
 		} catch (NoSuchElementException e) {
-			finished = true;
+			if (extraTime > 0) {
+				currentIteration = new IterationImpl(
+						IssueFactory.createBackendIssue(),
+						IssueFactory.createFrontEndIssue(), extraTime);
+			} else {
+				finished = true;
+			}
 		}
 	}
 
@@ -157,8 +165,5 @@ public class ProjectImpl implements Project {
 			return false;
 		return true;
 	}
-
-	
-
 
 }
