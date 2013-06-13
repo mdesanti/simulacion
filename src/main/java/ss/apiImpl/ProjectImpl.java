@@ -71,7 +71,7 @@ public class ProjectImpl implements Project {
 		this.iterations.add(iteration);
 	}
 
-	public void nextIteration(int extraTime) {
+	public boolean nextIteration(int extraTime) {
 		try {
 			currentIteration = iterations.pop();
 			currentIteration.setDuration(currentIteration.getDuration()
@@ -83,8 +83,11 @@ public class ProjectImpl implements Project {
 						IssueFactory.createFrontEndIssue(), extraTime);
 			} else {
 				finished = true;
+				
 			}
 		}
+		
+		return finished;
 	}
 
 	public Iteration getCurrentIteration() {

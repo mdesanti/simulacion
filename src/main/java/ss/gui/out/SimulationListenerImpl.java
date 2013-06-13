@@ -13,14 +13,14 @@ public class SimulationListenerImpl implements SimulationListener {
 	@Override
 	public void updateIdleProgrammers(int qty) {
 		frame.updateIdleProgrammers(qty);
-		 repaint();
+		repaint();
 
 	}
 
 	@Override
 	public void updateIterationDuration(Project project) {
 		frame.updateIterationDuration(project);
-		 repaint();
+		repaint();
 	}
 
 	@Override
@@ -50,16 +50,27 @@ public class SimulationListenerImpl implements SimulationListener {
 	}
 
 	@Override
+	public void addProject(Project project) {
+		frame.addProject(project);
+		repaint();
+	}
+
+	@Override
 	public void updateFinishedProjects(int qty) {
 		frame.updateFinishedProjects(qty);
 		repaint();
 
 	}
-	
+
+	@Override
+	public void finishProject(Project project) {
+		frame.finishProject(project);
+		repaint();
+	}
+
 	@Override
 	public void reset() {
 		frame.restart();
-		
 	}
 
 	private void repaint() {

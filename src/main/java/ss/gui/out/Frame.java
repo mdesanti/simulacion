@@ -2,15 +2,11 @@ package ss.gui.out;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingDeque;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -46,7 +42,6 @@ public class Frame extends JFrame {
 	private List<ProjectTimes> iterations = new ArrayList<>();
 	private List<ProjectTimes> programmers = new ArrayList<>();
 	private List<Color> colors = Lists.newArrayList();
-	private int MARGINPROJECTSTOP = 20;
 	private int INITIALVALUESTOP = 10;
 	private int FINAVALUETOP = 30;
 
@@ -91,22 +86,8 @@ public class Frame extends JFrame {
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		Graphics2D g2d = (Graphics2D) g;
-//		for (Project project : projects) {
-//			g2d.setColor(getColor(project.getId()));
-//			for (int j = 0; j < project.getProgrammersWorking(); j++) {
-//				int x = 150 + 25 * j;
-//				int y = MARGINPROJECTSTOP * (project.getId() + 1) + 30;
-//				Ellipse2D.Double circle = new Ellipse2D.Double(x, y, 15, 15);
-//				g2d.fill(circle);
-//			}
-//		}
 	}
 
-	private Color getColor(int id) {
-		id = id % colors.size();
-		return colors.get(id);
-	}
 
 	/*
 	 * Initializes the Frame according to a column and a row and positions it in
@@ -114,10 +95,10 @@ public class Frame extends JFrame {
 	 */
 	private void initializeFrame() {
 		setSize(cols * CELL_SIZE - 54, rows * CELL_SIZE - 20);
-//		Dimension screan = Toolkit.getDefaultToolkit().getScreenSize();
-//		Dimension window = this.getSize();
-//		setLocation((screan.width - window.width) / 2,
-//				(screan.height - window.height) / 2);
+		// Dimension screan = Toolkit.getDefaultToolkit().getScreenSize();
+		// Dimension window = this.getSize();
+		// setLocation((screan.width - window.width) / 2,
+		// (screan.height - window.height) / 2);
 		paintAll(this.getGraphics());
 	}
 
@@ -147,7 +128,7 @@ public class Frame extends JFrame {
 	 *             If there was a problem loading the image
 	 */
 	public void initializePanel() throws IOException {
-		if (existsPanel()){
+		if (existsPanel()) {
 			projectEstimationTimes.clear();
 			projectDurationTimes.clear();
 			projectCosts.clear();
@@ -195,32 +176,32 @@ public class Frame extends JFrame {
 		area = new JTextArea("Proyectos terminados: ");
 		area.setBounds(270, FINAVALUETOP, 150, 20);
 		simulationPanel.add(area);
-		
-		//titulos de las columnas
+
+		// titulos de las columnas
 		area = new JTextArea("Proyecto");
 		area.setBounds(50, FINAVALUETOP + 30, 70, 20);
 		simulationPanel.add(area);
-		
+
 		area = new JTextArea("Duración");
 		area.setBounds(150, FINAVALUETOP + 30, 150, 20);
 		simulationPanel.add(area);
-		
+
 		area = new JTextArea("Estimación");
 		area.setBounds(300, FINAVALUETOP + 30, 150, 20);
 		simulationPanel.add(area);
-		
+
 		area = new JTextArea("Costo permitido");
 		area.setBounds(470, FINAVALUETOP + 30, 150, 20);
 		simulationPanel.add(area);
-		
+
 		area = new JTextArea("Costo actual");
 		area.setBounds(690, FINAVALUETOP + 30, 150, 20);
 		simulationPanel.add(area);
-		
+
 		area = new JTextArea("Iteraciones");
 		area.setBounds(850, FINAVALUETOP + 30, 150, 20);
 		simulationPanel.add(area);
-		
+
 		area = new JTextArea("Programadores");
 		area.setBounds(1000, FINAVALUETOP + 30, 150, 20);
 		simulationPanel.add(area);
@@ -228,20 +209,24 @@ public class Frame extends JFrame {
 		finishedProjects = new JTextArea("0");
 		finishedProjects.setBounds(420, FINAVALUETOP, 30, 20);
 		simulationPanel.add(finishedProjects);
-		boolean firstTime = true;
-		for (Project project : simulator.getProjects()) {
+		initializeProjects(simulator.getProjects());
+	}
+
+	private void initializeProjects(List<Project> projects) {
+		for (Project project : projects) {
 			int id = project.getId();
 
-			final JTextArea projectName = new JTextArea("Project "
+			final JTextArea projectName = new JTextArea("Projecto "
 					+ String.valueOf(id));
 			int margin = 40;
 			int height = 25;
 			int addition = 90;
-			
+
 			projectName.setBounds(50, margin * id + addition, 100, height);
 			simulationPanel.add(projectName);
 			Iteration iteration = project.getCurrentIteration();
-			JTextArea duration = new JTextArea(String.valueOf(iteration.getDuration()));
+			JTextArea duration = new JTextArea(String.valueOf(iteration
+					.getDuration()));
 			duration.setBounds(170, margin * id + addition, 40, height);
 			simulationPanel.add(duration);
 
@@ -249,7 +234,8 @@ public class Frame extends JFrame {
 			estimation.setBounds(330, margin * id + addition, 40, height);
 			simulationPanel.add(estimation);
 
-			JTextArea permittedCost = new JTextArea(String.valueOf(project.getMaxCost()));
+			JTextArea permittedCost = new JTextArea(String.valueOf(project
+					.getMaxCost()));
 			permittedCost.setBounds(520, margin * id + addition, 40, height);
 			simulationPanel.add(permittedCost);
 
@@ -260,10 +246,11 @@ public class Frame extends JFrame {
 			JTextArea iterationsQty = new JTextArea("0");
 			iterationsQty.setBounds(870, margin * id + addition, 10, height);
 			simulationPanel.add(iterationsQty);
-			JTextArea iterationsTotal = new JTextArea("/ "+String.valueOf(project.getIterationsQty()));
+			JTextArea iterationsTotal = new JTextArea("/ "
+					+ String.valueOf(project.getIterationsQty()));
 			iterationsTotal.setBounds(880, margin * id + addition, 20, height);
 			simulationPanel.add(iterationsTotal);
-			
+
 			JTextArea programmersQty = new JTextArea("0");
 			programmersQty.setBounds(1040, margin * id + addition, 20, height);
 			simulationPanel.add(programmersQty);
@@ -359,7 +346,7 @@ public class Frame extends JFrame {
 			}
 
 		}
-		
+
 		for (ProjectTimes projectTime : iterations) {
 			if (projectTime.getProject().equals(project)) {
 				projectTime.getArea().setText(
@@ -424,5 +411,39 @@ public class Frame extends JFrame {
 		}
 	}
 
+	public void addProject(Project project) {
+		List<Project> projects = new ArrayList<>();
+		projects.add(project);
+		initializeProjects(projects);
+		
+
+	}
+
+	public void finishProject(Project project) {
+		for (ProjectTimes projectTime : projectDurationTimes) {
+			if (projectTime.getProject().equals(project)) {
+				projectTime.getArea().setText("0");
+				break;
+			}
+
+		}
+		
+		for (ProjectTimes projectTime : projectEstimationTimes) {
+			if (projectTime.getProject().equals(project)) {
+				projectTime.getArea().setText("0");
+				break;
+			}
+
+		}
+		
+		for (ProjectTimes projectTime : programmers) {
+			if (projectTime.getProject().equals(project)) {
+				projectTime.getArea().setText("0");
+				return;
+			}
+
+		}
+		
+	}
 
 }

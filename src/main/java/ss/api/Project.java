@@ -5,9 +5,9 @@ import java.util.Deque;
 public interface Project {
 
 	/**
-	 * Project moves to next iteration available
+	 * Project moves to next iteration available. Returns true if the project finished.
 	 */
-	void nextIteration(int extraTime);
+	boolean nextIteration(int extraTime);
 
 	/**
 	 * Gets the iteration original duration

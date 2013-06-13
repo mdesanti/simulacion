@@ -44,8 +44,8 @@ public class SimulatorImpl implements Simulator {
 		int totalProjects = projects.size();
 		int projectsId = totalProjects;
 		finishedProjects.put("idle", new LinkedList<Integer>());
-		StrategiesChart chart = new StrategiesChart(projects);
-		chart.start();
+//		StrategiesChart chart = new StrategiesChart(projects);
+//		chart.start();
 
 		while (--totalTimes >= 0) {
 			int today = 0;
@@ -76,8 +76,11 @@ public class SimulatorImpl implements Simulator {
 							int extraTime = iteration.getEstimate()
 									- iteration.getDuration();
 							extraTime = (extraTime > 0) ? extraTime : 0;
-							project.nextIteration(extraTime);
-							listener.updateIterationDuration(project);
+							if(project.nextIteration(extraTime)){
+								listener.finishProject(project);
+							}else{
+								listener.updateIterationDuration(project);
+							}
 
 							// If idle strategy only, programmers must be
 							// released in every iteration
@@ -91,7 +94,7 @@ public class SimulatorImpl implements Simulator {
 						}
 					} else {
 						projectIterator.remove();
-						chart.removeProject(project);
+//						chart.removeProject(project);
 						idleProgrammers += project.removeProgrammers();
 						listener.updateIdleProgrammers(idleProgrammers);
 						projectsFinished++;
@@ -104,12 +107,13 @@ public class SimulatorImpl implements Simulator {
 				int diff = projectsQty - newProjectsQty;
 				for (int i = 0; i < diff; i++) {
 					Project p = buildProject(projectsId++);
-					projects.add(buildProject(projectsId++));
-					chart.addProject(p);
+					projects.add(buildProject(projectsId));
+					listener.addProject(p);
+//					chart.addProject(p);
 				}
 				today++;
 				listener.updateTime(today);
-				chart.updateTime();
+//				chart.updateTime();
 				if ((today == simulationDays)) {
 					finishedProjects.get(strategy.getStrategy()).push(
 							projectsFinished);
@@ -117,7 +121,7 @@ public class SimulatorImpl implements Simulator {
 			}
 			build(listener, strategy.getStrategyID());
 			// chart.restart(projects);
-			chart = new StrategiesChart(projects);
+//			chart = new StrategiesChart(projects);
 			listener.reset();
 		}
 

@@ -51,5 +51,16 @@ public class SimulationChartListener implements SimulationListener{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void addProject(Project project) {
+		// TODO Auto-generated method stub
+		
+	}
 
+	@Override
+	public void finishProject(Project project) {
+		// TODO Auto-generated method stub
+		
+	}
 }
