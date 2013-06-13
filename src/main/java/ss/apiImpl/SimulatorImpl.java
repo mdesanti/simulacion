@@ -15,7 +15,6 @@ import ss.api.Iteration;
 import ss.api.Project;
 import ss.api.ReasignationStrategy;
 import ss.api.Simulator;
-import ss.apiImpl.charts.StrategiesChart;
 import ss.apiImpl.strategies.ReasignationStrategyImpl;
 import ss.gui.out.SimulationListener;
 
@@ -107,7 +106,7 @@ public class SimulatorImpl implements Simulator {
 				int diff = projectsQty - newProjectsQty;
 				for (int i = 0; i < diff; i++) {
 					Project p = buildProject(projectsId++);
-					projects.add(buildProject(projectsId));
+					projects.add(p);
 					listener.addProject(p);
 //					chart.addProject(p);
 				}
@@ -119,10 +118,10 @@ public class SimulatorImpl implements Simulator {
 							projectsFinished);
 				}
 			}
+			listener.reset();
 			build(listener, strategy.getStrategyID());
 			// chart.restart(projects);
 //			chart = new StrategiesChart(projects);
-			listener.reset();
 		}
 
 	}

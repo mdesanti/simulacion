@@ -133,6 +133,7 @@ public class Frame extends JFrame {
 			projectDurationTimes.clear();
 			projectCosts.clear();
 			iterations.clear();
+			programmers.clear();
 			remove(simulationPanel);
 		}
 		simulationPanel = new SimulationPanel();
@@ -216,7 +217,7 @@ public class Frame extends JFrame {
 		for (Project project : projects) {
 			int id = project.getId();
 
-			final JTextArea projectName = new JTextArea("Projecto "
+			final JTextArea projectName = new JTextArea("Proyecto "
 					+ String.valueOf(id));
 			int margin = 40;
 			int height = 25;

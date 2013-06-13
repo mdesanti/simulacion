@@ -28,8 +28,14 @@ public class MenuBar extends JMenuBar {
 		JMenuItem simulateWithStrategyIdle = new JMenuItem("Simular con estrategia Idle");
 		JMenuItem simulateWithStrategySwitch = new JMenuItem("Simular con estrategia Switch");
 		JMenuItem simulateWithStrategyFreelance = new JMenuItem("Simular con estrategia Freelance");
-		simulateWithStrategyIdle.setMnemonic(KeyEvent.VK_N);
-		simulateWithStrategyIdle.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
+		simulateWithStrategyIdle.setMnemonic(KeyEvent.VK_I);
+		simulateWithStrategyIdle.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,
+				ActionEvent.CTRL_MASK));
+		simulateWithStrategySwitch.setMnemonic(KeyEvent.VK_S);
+		simulateWithStrategySwitch.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
+				ActionEvent.CTRL_MASK));
+		simulateWithStrategyFreelance.setMnemonic(KeyEvent.VK_F);
+		simulateWithStrategyFreelance.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F,
 				ActionEvent.CTRL_MASK));
 		
 		simulateWithStrategyIdle.addActionListener(new ActionListener() {
