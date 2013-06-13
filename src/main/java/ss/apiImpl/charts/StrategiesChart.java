@@ -21,11 +21,14 @@ import org.jfree.ui.RefineryUtilities;
 
 import ss.api.Project;
 
+import com.google.common.collect.Lists;
+
 public class StrategiesChart extends ApplicationFrame {
 
 	private List<TimeSeries> series;
 	private BlockingQueue<Project> projects;
 	private BlockingQueue<TimeSeriesProject> timeSeriesProject;
+	private List<TimeSeriesProject> backup = Lists.newArrayList();
 	
 	private Day day = new Day();
 	
@@ -104,6 +107,7 @@ public class StrategiesChart extends ApplicationFrame {
 				toRemove = tsp;
 			}
 		}
+		backup.add(toRemove);
 		timeSeriesProject.remove(toRemove);
 	}
 

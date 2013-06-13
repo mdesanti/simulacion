@@ -10,6 +10,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
+import ss.apiImpl.SimulatorImpl;
+
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
 
@@ -23,19 +25,20 @@ public class MenuBar extends JMenuBar {
 		JMenu simulatorMenu = new JMenu("Simulador");
 		simulatorMenu.setMnemonic(KeyEvent.VK_S);
 
-		JMenuItem newGame = new JMenuItem("Simular");
-		JMenuItem newGameWithNoFront = new JMenuItem("Simular sin efectos");
-		newGame.setMnemonic(KeyEvent.VK_N);
-		newGame.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
+		JMenuItem simulateWithStrategyIdle = new JMenuItem("Simular con estrategia Idle");
+		JMenuItem simulateWithStrategySwitch = new JMenuItem("Simular con estrategia Switch");
+		JMenuItem simulateWithStrategyFreelance = new JMenuItem("Simular con estrategia Freelance");
+		simulateWithStrategyIdle.setMnemonic(KeyEvent.VK_N);
+		simulateWithStrategyIdle.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
 				ActionEvent.CTRL_MASK));
 		
-		newGame.addActionListener(new ActionListener() {
+		simulateWithStrategyIdle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				final Thread sim = new Thread(new Runnable() {
 					@Override
 					public void run() {
 						getFrame().getSimulator().build(
-								new SimulationListenerImpl(getFrame()));
+								new SimulationListenerImpl(getFrame()),SimulatorImpl.IDLE_STRATEGY);
 						getFrame().restart();
 						getFrame().getSimulator().start(10);
 					}
@@ -43,12 +46,32 @@ public class MenuBar extends JMenuBar {
 				sim.start();
 			}
 		});
-		newGameWithNoFront.addActionListener(new ActionListener() {
+		simulateWithStrategySwitch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				getFrame().getSimulator().build(
-						new SimulationDummyListenerImpl());
-				// getFrame().restart();
-				getFrame().getSimulator().start(10);
+				final Thread sim = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						getFrame().getSimulator().build(
+								new SimulationListenerImpl(getFrame()),SimulatorImpl.SWITCH_STRATEGY);
+						getFrame().restart();
+						getFrame().getSimulator().start(10);
+					}
+				});
+				sim.start();
+			}
+		});
+		simulateWithStrategyFreelance.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				final Thread sim = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						getFrame().getSimulator().build(
+								new SimulationListenerImpl(getFrame()),SimulatorImpl.FREELANCE_STRATEGY);
+						getFrame().restart();
+						getFrame().getSimulator().start(10);
+					}
+				});
+				sim.start();
 			}
 		});
 
@@ -65,9 +88,11 @@ public class MenuBar extends JMenuBar {
 			}
 		});
 
-		simulatorMenu.add(newGame);
+		simulatorMenu.add(simulateWithStrategyIdle);
 		simulatorMenu.add(new JSeparator());
-		simulatorMenu.add(newGameWithNoFront);
+		simulatorMenu.add(simulateWithStrategySwitch);
+		simulatorMenu.add(new JSeparator());
+		simulatorMenu.add(simulateWithStrategyFreelance);
 		simulatorMenu.add(new JSeparator());
 		simulatorMenu.add(close);
 		menuBar.add(simulatorMenu);

@@ -6,6 +6,7 @@ import ss.api.Iteration;
 import ss.api.Project;
 import ss.api.ReasignationStrategy;
 import ss.apiImpl.DistributionManager;
+import ss.apiImpl.SimulatorImpl;
 import ss.gui.out.SimulationListener;
 
 public class ReasignationStrategyImpl implements ReasignationStrategy {
@@ -167,7 +168,28 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 	}
 
 	@Override
-	public boolean isSwitchStrategyOnly() {
-		return switchStrategy && !(idleStrategy || freelanceStrategy);
+	public boolean isSwitchStrategy() {
+		return switchStrategy;
 	}
+	
+	@Override
+	public boolean isFreelanceStrategy() {
+		return freelanceStrategy;
+	}
+	
+	@Override
+	public boolean isIdleStrategy() {
+		return idleStrategy;
+	}
+	
+	public int getStrategyID(){
+		if (idleStrategy) {
+			return SimulatorImpl.IDLE_STRATEGY;
+		}
+		if (switchStrategy) {
+			return SimulatorImpl.SWITCH_STRATEGY;
+		}
+		return SimulatorImpl.FREELANCE_STRATEGY;
+	}
+	
 }

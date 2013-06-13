@@ -13,8 +13,13 @@ public interface ReasignationStrategy {
 	 */
 	int reasing(Project to, List<Project> from, int idleProgrammers);
 	
-	boolean isSwitchStrategyOnly();
+	boolean isSwitchStrategy();
+	
+	boolean isFreelanceStrategy();
+	
+	boolean isIdleStrategy();
 	
 	String getStrategy();
+	public int getStrategyID();
 
 }

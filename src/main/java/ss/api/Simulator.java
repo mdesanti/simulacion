@@ -8,7 +8,7 @@ public interface Simulator {
 
 	void start(int times);
 
-	void build(SimulationListener listener);
+	void build(SimulationListener listener, int strategy);
 
 	List<Project> getProjects();
 
@@ -17,8 +17,6 @@ public interface Simulator {
 	int getTotalCost();
 
 	int getFinishedProjects();
-	
-	String getStrategy();
 	
 	int getSimulationDays();
 
