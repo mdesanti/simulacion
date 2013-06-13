@@ -103,9 +103,10 @@ public class StrategiesChart extends ApplicationFrame {
 				toRemove = tsp;
 			}
 		}
+		System.out.println("salgo del remove");
+		dataset.removeSeries(series.indexOf(toRemove.timeSeries));
 		series.remove(toRemove.timeSeries);
 		timeSeriesProject.remove(toRemove);
-		System.out.println("salgo del remove");
 	}
 
 	public void addProject(Project project) {
