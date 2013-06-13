@@ -131,11 +131,11 @@ public class StrategiesChart extends ApplicationFrame {
 					ts.getProject().getProgrammersWorking());
 		}
 		System.out.println("salgo for 1");
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(100);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 		dataset.removeAllSeries();
 		System.out.println("salgo remove all");
 		for (TimeSeriesProject ts : timeSeriesProject) {
@@ -153,12 +153,13 @@ public class StrategiesChart extends ApplicationFrame {
 		System.out.println("1");
 		frame.getContentPane().removeAll();
 		System.out.println("2");
+		frame.getContentPane().remove(label);
 		ChartPanel label = new ChartPanel(chart);
 		System.out.println("3");
 		frame.getContentPane().add(label);
+		frame.pack();
 		System.out.println("4");
 
-		frame.pack();
 		System.out.println("5");
 
 		day = (Day) day.next();
