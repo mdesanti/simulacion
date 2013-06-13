@@ -15,6 +15,7 @@ import ss.api.Iteration;
 import ss.api.Project;
 import ss.api.ReasignationStrategy;
 import ss.api.Simulator;
+import ss.apiImpl.charts.StrategiesChart;
 import ss.apiImpl.strategies.ReasignationStrategyImpl;
 import ss.gui.out.SimulationListener;
 
@@ -43,8 +44,7 @@ public class SimulatorImpl implements Simulator {
 		int totalProjects = projects.size();
 		int projectsId = totalProjects;
 		finishedProjects.put("idle", new LinkedList<Integer>());
-//		StrategiesChart chart = new StrategiesChart(projects);
-//		chart.start();
+		StrategiesChart chart = new StrategiesChart(projects);
 
 		while (--totalTimes >= 0) {
 			int today = 0;
@@ -93,7 +93,7 @@ public class SimulatorImpl implements Simulator {
 						}
 					} else {
 						projectIterator.remove();
-//						chart.removeProject(project);
+						chart.removeProject(project);
 						idleProgrammers += project.removeProgrammers();
 						listener.updateIdleProgrammers(idleProgrammers);
 						projectsFinished++;
@@ -108,11 +108,11 @@ public class SimulatorImpl implements Simulator {
 					Project p = buildProject(projectsId++);
 					projects.add(p);
 					listener.addProject(p);
-//					chart.addProject(p);
+					chart.addProject(p);
 				}
 				today++;
 				listener.updateTime(today);
-//				chart.updateTime();
+				chart.updateTime();
 				if ((today == simulationDays)) {
 					finishedProjects.get(strategy.getStrategy()).push(
 							projectsFinished);
@@ -120,8 +120,8 @@ public class SimulatorImpl implements Simulator {
 			}
 			listener.reset();
 			build(listener, strategy.getStrategyID());
-			// chart.restart(projects);
-//			chart = new StrategiesChart(projects);
+//			 chart.restart(projects);
+			chart = new StrategiesChart(projects);
 		}
 
 	}

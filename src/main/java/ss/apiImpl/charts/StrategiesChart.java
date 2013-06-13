@@ -21,14 +21,11 @@ import org.jfree.ui.RefineryUtilities;
 
 import ss.api.Project;
 
-import com.google.common.collect.Lists;
-
 public class StrategiesChart extends ApplicationFrame {
 
 	private List<TimeSeries> series;
 	private BlockingQueue<Project> projects;
 	private BlockingQueue<TimeSeriesProject> timeSeriesProject;
-	private List<TimeSeriesProject> backup = Lists.newArrayList();
 	
 	private Day day = new Day();
 	
@@ -57,11 +54,12 @@ public class StrategiesChart extends ApplicationFrame {
 	}
 
 	public StrategiesChart(List<Project> projects) {
-		super("SS");
+		super("Simulador");
 		initialize(projects);
 	}
 
 	private void initialize(List<Project> projects) {
+		System.out.println("entro al intialize");
 		this.series = new ArrayList<>();
 		this.projects = new LinkedBlockingQueue<>();
 		this.timeSeriesProject = new LinkedBlockingQueue<>();
@@ -89,35 +87,36 @@ public class StrategiesChart extends ApplicationFrame {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		label = new ChartPanel(chart);
 		frame.getContentPane().add(label);
-		// Suppose I add combo boxes and buttons here later
 
 		frame.pack();
 		RefineryUtilities.centerFrameOnScreen(frame);
 		frame.setVisible(true);
+		System.out.println("salgo del initialize");
 	}
 
-	public void start() {
-//		updater.start();
-	}
 	
 	public void removeProject(Project p) {
+		System.out.println("entro al remove");
 		TimeSeriesProject toRemove = null;
 		for(TimeSeriesProject tsp: timeSeriesProject) {
 			if(tsp.project.equals(p)) {
 				toRemove = tsp;
 			}
 		}
-		backup.add(toRemove);
+		series.remove(toRemove.timeSeries);
 		timeSeriesProject.remove(toRemove);
+		System.out.println("salgo del remove");
 	}
 
 	public void addProject(Project project) {
+		System.out.println("entro al add");
 		projects.add(project);
 		TimeSeries ts = new TimeSeries("Projecto " + project.getId(),
 				Day.class);
 		series.add(ts);
 		timeSeriesProject.add(new TimeSeriesProject(ts, project));
 		dataset.addSeries(ts);
+		System.out.println("salgo del add");
 		
 	}
 
@@ -126,62 +125,51 @@ public class StrategiesChart extends ApplicationFrame {
 	}
 	
 	public void updateTime() {
+		System.out.println("entro al update");
 		for (TimeSeriesProject ts : timeSeriesProject) {
 			ts.getTimeSeries().addOrUpdate(day,
 					ts.getProject().getProgrammersWorking());
 		}
+		System.out.println("salgo for 1");
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		dataset.removeAllSeries();
+		System.out.println("salgo remove all");
 		for (TimeSeriesProject ts : timeSeriesProject) {
 			dataset.addSeries(ts.getTimeSeries());
 		}
+		System.out.println("salgo for 2");
 		chart = ChartFactory.createTimeSeriesChart("Simulador",
 				"Tiempo", "Programadores", dataset, true, true, false);
 		final XYPlot plot = chart.getXYPlot();
 		ValueAxis axis = plot.getDomainAxis();
 		axis.setAutoRange(true);
 		axis.setFixedAutoRange(10);
-		
-		frame.revalidate();
+		System.out.println("pepe");
+//		frame.revalidate();
+		System.out.println("1");
 		frame.getContentPane().removeAll();
+		System.out.println("2");
 		ChartPanel label = new ChartPanel(chart);
+		System.out.println("3");
 		frame.getContentPane().add(label);
+		System.out.println("4");
 
 		frame.pack();
+		System.out.println("5");
 
 		day = (Day) day.next();
 		repaint();
+		System.out.println("jorge");
 		try {
-			Thread.sleep(750);
+			Thread.sleep(350);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println("salgo del update");
 	}
 	
-    /** Line style: line */
-    public static final String STYLE_LINE = "line";
-    /** Line style: dashed */
-    public static final String STYLE_DASH = "dash";
-    /** Line style: dotted */
-    public static final String STYLE_DOT = "dot";
-	private BasicStroke toStroke(String style) {
-        BasicStroke result = null;
-        
-        if (style != null) {
-            float lineWidth = 0.2f;
-            float dash[] = {5.0f};
-            float dot[] = {lineWidth};
-    
-            if (style.equalsIgnoreCase(STYLE_LINE)) {
-                result = new BasicStroke(lineWidth);
-            } else if (style.equalsIgnoreCase(STYLE_DASH)) {
-                result = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f);
-            } else if (style.equalsIgnoreCase(STYLE_DOT)) {
-                result = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 2.0f, dot, 0.0f);
-            }
-        }//else: input unavailable
-        
-        return result;
-    }//toStroke()
-
 }
