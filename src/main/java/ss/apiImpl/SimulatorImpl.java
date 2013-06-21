@@ -11,11 +11,14 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import org.jfree.ui.RefineryUtilities;
+
+import ss.BackupItem;
 import ss.api.Iteration;
 import ss.api.Project;
 import ss.api.ReasignationStrategy;
 import ss.api.Simulator;
-import ss.apiImpl.charts.Histogram;
+import ss.apiImpl.charts.BoxAndWhiskerDemo;
 import ss.apiImpl.charts.StrategiesChart;
 import ss.apiImpl.strategies.ReasignationStrategyImpl;
 import ss.gui.out.SimulationListener;
@@ -128,6 +131,10 @@ public class SimulatorImpl implements Simulator {
 		}
 		// Histogram h = new
 		// Histogram(finishedProjects.get(strategy.getStrategy()))
+		BoxAndWhiskerDemo demo = new BoxAndWhiskerDemo("title", finishedProjects);
+		demo.pack();
+        RefineryUtilities.centerFrameOnScreen(demo);
+        demo.setVisible(true);
 
 	}
 
@@ -230,24 +237,4 @@ public class SimulatorImpl implements Simulator {
 		return "Simulator simulationDays: " + simulationDays + " projectsQty: "
 				+ projects.size() + " idleProgrammers: " + idleProgrammers;
 	}
-
-	private class BackupItem {
-		private int finishedProjects;
-		private int cost;
-
-		public BackupItem(int finishedProjects, int cost) {
-			this.finishedProjects = finishedProjects;
-			this.cost = cost;
-		}
-
-		public int getFinishedProjects() {
-			return finishedProjects;
-		}
-
-		public int getCost() {
-			return cost;
-		}
-
-	}
-
 }
