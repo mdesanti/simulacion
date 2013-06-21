@@ -44,7 +44,7 @@ public class MenuBar extends JMenuBar {
 					@Override
 					public void run() {
 						getFrame().getSimulator().build(
-								new SimulationDummyListenerImpl(),ReasignationStrategyImpl.IDLE_STRATEGY);
+								new SimulationListenerImpl(getFrame()),ReasignationStrategyImpl.IDLE_STRATEGY);
 						getFrame().restart();
 						getFrame().getSimulator().start(10);
 					}

@@ -2,6 +2,7 @@ package ss.apiImpl;
 
 import java.util.Deque;
 import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import ss.api.Iteration;
@@ -27,6 +28,8 @@ public class ProjectImpl implements Project {
 
 	private Integer iterationsQty;
 
+	private double finalIterationProbability;
+
 	public ProjectImpl(Deque<Iteration> iterations, Integer maxCost, Integer id) {
 		super();
 		this.id = id;
@@ -36,6 +39,7 @@ public class ProjectImpl implements Project {
 		setDuration();
 		currentIteration = iterations.pop();
 		this.programmersWorking = 0;
+		finalIterationProbability = 0.2;
 	}
 
 	@Override
@@ -82,11 +86,17 @@ public class ProjectImpl implements Project {
 						IssueFactory.createBackendIssue(),
 						IssueFactory.createFrontEndIssue(), extraTime);
 			} else {
+				Random r = new Random();
+				double random = r.nextDouble();
+				if (random < finalIterationProbability) {
+					finalIterationProbability /= 1.3;
+					return false;
+				}
 				finished = true;
-				
+
 			}
 		}
-		
+
 		return finished;
 	}
 
