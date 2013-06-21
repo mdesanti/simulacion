@@ -51,6 +51,7 @@ public class SimulatorImpl implements Simulator {
 			int today = 0;
 			int projectsFinished = 0;
 			int totalCost = 0;
+			totalProjects = projects.size();
 			while (today < simulationDays) {
 				Collections.sort(projects, new ProjectComparator());
 				Iterator<Project> projectIterator = projects.iterator();
@@ -110,6 +111,7 @@ public class SimulatorImpl implements Simulator {
 				for (int i = 0; i < diff; i++) {
 					Project p = buildProject(projectsId++);
 					projects.add(p);
+					totalProjects++;
 					listener.addProject(p);
 					chart.addProject(p);
 				}
@@ -118,7 +120,8 @@ public class SimulatorImpl implements Simulator {
 				chart.updateTime();
 				if ((today == simulationDays)) {
 					finishedProjects.get(strategy.getStrategy()).push(
-							new BackupItem(projectsFinished, totalCost));
+							new BackupItem(projectsFinished, totalCost,
+									totalProjects));
 				}
 			}
 			listener.reset();
@@ -234,10 +237,12 @@ public class SimulatorImpl implements Simulator {
 	private class BackupItem {
 		private int finishedProjects;
 		private int cost;
+		private int totalProjects;
 
-		public BackupItem(int finishedProjects, int cost) {
+		public BackupItem(int finishedProjects, int cost, int totalProjects) {
 			this.finishedProjects = finishedProjects;
 			this.cost = cost;
+			this.totalProjects = 0;
 		}
 
 		public int getFinishedProjects() {
@@ -246,6 +251,10 @@ public class SimulatorImpl implements Simulator {
 
 		public int getCost() {
 			return cost;
+		}
+
+		public int getTotalProjects() {
+			return totalProjects;
 		}
 
 	}
