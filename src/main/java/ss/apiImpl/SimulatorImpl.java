@@ -38,7 +38,7 @@ public class SimulatorImpl implements Simulator {
 		this.listener = listener;
 		this.projects = buildProjects(5);
 		this.idleProgrammers = 12;
-		this.simulationDays = 40; // In days
+		this.simulationDays = 365; // In days
 		this.strategy = assignStrategy(strategy);
 		this.plotter = plotter;
 	}
