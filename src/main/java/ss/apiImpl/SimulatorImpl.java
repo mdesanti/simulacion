@@ -121,15 +121,15 @@ public class SimulatorImpl implements Simulator {
 				listener.updateTime(today);
 				// chart.updateTime();
 				if ((today == simulationDays)) {
-					finishedProjects.get(strategy.getStrategy()).push(
+					finishedProjects.get(strategy.getStrategy()).add(
 							new BackupItem(projectsFinished, totalCost,
 									totalProjects));
 				}
 			}
 			listener.reset();
-			if (times == 0 && strategiesFinished < 3) {
+			if (times == 0 && ++strategiesFinished < 3) {
 				// strategiesFinished es equal to the strategy id
-				strategy = assignStrategy(++strategiesFinished);
+				strategy = assignStrategy(strategiesFinished);
 				times = totalTimes;
 			}
 
@@ -150,13 +150,19 @@ public class SimulatorImpl implements Simulator {
 	private ReasignationStrategyImpl assignStrategy(int strategy) {
 		switch (strategy) {
 		case 0:
-			finishedProjects.put("idle", new LinkedList<BackupItem>());
+			if (finishedProjects.get("idle") == null) {
+				finishedProjects.put("idle", new LinkedList<BackupItem>());
+			}
 			return new ReasignationStrategyImpl(true, false, false, listener);
 		case 1:
-			finishedProjects.put("switch", new LinkedList<BackupItem>());
+			if (finishedProjects.get("switch") == null) {
+				finishedProjects.put("switch", new LinkedList<BackupItem>());
+			}
 			return new ReasignationStrategyImpl(true, true, false, listener);
 		default: // Case 2
-			finishedProjects.put("freelance", new LinkedList<BackupItem>());
+			if (finishedProjects.get("freelance") == null) {
+				finishedProjects.put("freelance", new LinkedList<BackupItem>());
+			}
 			return new ReasignationStrategyImpl(true, true, true, listener);
 		}
 	}

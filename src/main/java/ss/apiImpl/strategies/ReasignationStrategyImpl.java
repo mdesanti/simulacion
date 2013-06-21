@@ -45,13 +45,14 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 
 	@Override
 	public String getStrategy() {
-		if (idleStrategy) {
-			return "idle";
+		if (idleStrategy && switchStrategy && freelanceStrategy) {
+			return "freelance";
 		}
-		if (switchStrategy) {
+		if (idleStrategy && switchStrategy) {
 			return "switch";
 		}
-		return "freelance";
+
+		return "idle";
 	}
 
 	private int idleStrategyReasign(Project to, int idleProgrammers) {
@@ -188,10 +189,10 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 	}
 
 	public int getStrategyID() {
-		if (idleStrategy) {
+		if (getStrategy().equals("idle")) {
 			return IDLE_STRATEGY;
 		}
-		if (switchStrategy) {
+		if (getStrategy().equals("switch")) {
 			return SWITCH_STRATEGY;
 		}
 		return FREELANCE_STRATEGY;
