@@ -31,11 +31,12 @@ import com.google.common.collect.Lists;
 public class BoxAndWhiskerDemo extends ApplicationFrame {
 
     /**
-     * Creates a new demo.
-     *
-     * @param title  the frame title.
-     */
-    public BoxAndWhiskerDemo(Map<String, LinkedList<BackupItem>> backups) {
+	 * Creates a new demo.
+	 * 
+	 * @param title
+	 *            the frame title.
+	 */
+	public BoxAndWhiskerDemo(Map<String, LinkedList<BackupItem>> backups) {
 
         super("Resultados");
         
@@ -71,14 +72,15 @@ public class BoxAndWhiskerDemo extends ApplicationFrame {
         
         final DefaultBoxAndWhiskerCategoryDataset dataset 
             = new DefaultBoxAndWhiskerCategoryDataset();
+        int i = 1;
         for(String key: backups.keySet()) {
         	List<BackupItem> runs = backups.get(key);
-        	final List<Double> list = Lists.newArrayList();
+        	final List<Number> list = Lists.newArrayList();
             for (int j = 0; j < runs.size(); j++) {
             	list.add(runs.get(j).getFinishedProjects()/((double)runs.get(j).getTotalProjects()));
             }
-            dataset.add(list, key, key);
-            
+            dataset.add(list, key, "Estrategias");
+            i++;
         }
 
         return dataset;

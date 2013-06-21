@@ -143,8 +143,6 @@ public class SimulatorImpl implements Simulator {
 			listener.reset();
 			// plotter.restart(projects);
 		}
-		// Histogram h = new
-		// Histogram(finishedProjects.get(strategy.getStrategy()))
 		BoxAndWhiskerDemo demo = new BoxAndWhiskerDemo(finishedProjects);
 		demo.pack();
 		RefineryUtilities.centerFrameOnScreen(demo);
