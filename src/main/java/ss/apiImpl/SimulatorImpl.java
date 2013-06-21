@@ -18,7 +18,7 @@ import ss.api.Project;
 import ss.api.ReasignationStrategy;
 import ss.api.Simulator;
 import ss.apiImpl.charts.BoxAndWhiskerDemo;
-import ss.apiImpl.charts.StrategiesChart;
+import ss.apiImpl.charts.RealTimePlotter;
 import ss.apiImpl.strategies.ReasignationStrategyImpl;
 import ss.gui.out.SimulationListener;
 
@@ -32,13 +32,15 @@ public class SimulatorImpl implements Simulator {
 	private ReasignationStrategy strategy;
 	private SimulationListener listener;
 	private Map<String, LinkedList<BackupItem>> finishedProjects = new HashMap<>();
+	private RealTimePlotter plotter;
 
-	public void build(SimulationListener listener, int strategy) {
+	public void build(SimulationListener listener, int strategy, RealTimePlotter plotter) {
 		this.listener = listener;
 		this.projects = buildProjects(5);
 		this.idleProgrammers = 12;
 		this.simulationDays = 365; // In days
 		this.strategy = assignStrategy(strategy);
+		this.plotter = plotter;
 	}
 
 	public void start(int totalTimes) {
@@ -46,7 +48,8 @@ public class SimulatorImpl implements Simulator {
 
 		int totalProjects = projects.size();
 		int projectsId = totalProjects;
-		// StrategiesChart chart = new StrategiesChart(projects);
+//		 StrategiesChart chart = new StrategiesChart(projects);
+		plotter.setProjects(projects);
 		int strategiesFinished = 0;
 		int times = totalTimes;
 		while (--times >= 0 && strategiesFinished < 3) {
@@ -98,7 +101,7 @@ public class SimulatorImpl implements Simulator {
 						}
 					} else {
 						projectIterator.remove();
-						// chart.removeProject(project);
+						 plotter.removeProject(project);
 						totalCost += project.getTotalCost();
 						idleProgrammers += project.removeProgrammers();
 						listener.updateIdleProgrammers(idleProgrammers);
@@ -115,11 +118,11 @@ public class SimulatorImpl implements Simulator {
 					projects.add(p);
 					totalProjects++;
 					listener.addProject(p);
-					// chart.addProject(p);
+					 plotter.addProject(p);
 				}
 				today++;
 				listener.updateTime(today);
-				// chart.updateTime();
+				 plotter.updateTime();
 				if ((today == simulationDays)) {
 					finishedProjects.get(strategy.getStrategy()).add(
 							new BackupItem(projectsFinished, totalCost,
@@ -133,14 +136,13 @@ public class SimulatorImpl implements Simulator {
 				times = totalTimes;
 			}
 
-			build(listener, strategy.getStrategyID());
-			// chart.restart(projects);
-			// chart = new StrategiesChart(projects);
+			plotter = plotter.newInstance(projects);
+			build(listener, strategy.getStrategyID(), plotter);
+//			 plotter.restart(projects);
 		}
 		// Histogram h = new
 		// Histogram(finishedProjects.get(strategy.getStrategy()))
-		BoxAndWhiskerDemo demo = new BoxAndWhiskerDemo("title",
-				finishedProjects);
+		BoxAndWhiskerDemo demo = new BoxAndWhiskerDemo(finishedProjects);
 		demo.pack();
 		RefineryUtilities.centerFrameOnScreen(demo);
 		demo.setVisible(true);
@@ -253,4 +255,5 @@ public class SimulatorImpl implements Simulator {
 		return "Simulator simulationDays: " + simulationDays + " projectsQty: "
 				+ projects.size() + " idleProgrammers: " + idleProgrammers;
 	}
+
 }

@@ -37,9 +37,9 @@ public class BoxAndWhiskerDemo extends ApplicationFrame {
      *
      * @param title  the frame title.
      */
-    public BoxAndWhiskerDemo(final String title, Map<String, LinkedList<BackupItem>> backups) {
+    public BoxAndWhiskerDemo(Map<String, LinkedList<BackupItem>> backups) {
 
-        super(title);
+        super("Resultados");
         
         final BoxAndWhiskerCategoryDataset dataset = createSampleDataset(backups);
 
