@@ -34,7 +34,8 @@ public class SimulatorImpl implements Simulator {
 	private Map<String, LinkedList<BackupItem>> finishedProjects = new HashMap<>();
 	private RealTimePlotter plotter;
 
-	public void build(SimulationListener listener, int strategy, RealTimePlotter plotter) {
+	public void build(SimulationListener listener, int strategy,
+			RealTimePlotter plotter) {
 		this.listener = listener;
 		this.projects = buildProjects(5);
 		this.idleProgrammers = 12;
@@ -48,7 +49,7 @@ public class SimulatorImpl implements Simulator {
 
 		int totalProjects = projects.size();
 		int projectsId = totalProjects;
-//		 StrategiesChart chart = new StrategiesChart(projects);
+		// StrategiesChart chart = new StrategiesChart(projects);
 		plotter.setProjects(projects);
 		int strategiesFinished = 0;
 		int times = totalTimes;
@@ -101,7 +102,7 @@ public class SimulatorImpl implements Simulator {
 						}
 					} else {
 						projectIterator.remove();
-						 plotter.removeProject(project);
+						plotter.removeProject(project);
 						totalCost += project.getTotalCost();
 						idleProgrammers += project.removeProgrammers();
 						listener.updateIdleProgrammers(idleProgrammers);
@@ -118,11 +119,11 @@ public class SimulatorImpl implements Simulator {
 					projects.add(p);
 					totalProjects++;
 					listener.addProject(p);
-					 plotter.addProject(p);
+					plotter.addProject(p);
 				}
 				today++;
 				listener.updateTime(today);
-				 plotter.updateTime();
+				plotter.updateTime();
 				if ((today == simulationDays)) {
 					finishedProjects.get(strategy.getStrategy()).add(
 							new BackupItem(projectsFinished, totalCost,
@@ -136,10 +137,11 @@ public class SimulatorImpl implements Simulator {
 			}
 
 			build(listener, strategy.getStrategyID(), plotter);
-			projectsId = projects.size();;
+			projectsId = projects.size();
+			;
 			plotter = plotter.newInstance(projects);
 			listener.reset();
-//			 plotter.restart(projects);
+			// plotter.restart(projects);
 		}
 		// Histogram h = new
 		// Histogram(finishedProjects.get(strategy.getStrategy()))

@@ -1,6 +1,5 @@
 package ss.apiImpl.charts;
 
-import java.awt.BasicStroke;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -21,18 +20,20 @@ import org.jfree.ui.RefineryUtilities;
 
 import ss.api.Project;
 
-public class StrategiesChart extends ApplicationFrame implements RealTimePlotter {
+@SuppressWarnings("serial")
+public class StrategiesChart extends ApplicationFrame implements
+		RealTimePlotter {
 
 	private List<TimeSeries> series;
 	private BlockingQueue<Project> projects;
 	private BlockingQueue<TimeSeriesProject> timeSeriesProject;
-	
+
 	private Day day = new Day();
-	
+
 	private JFrame frame;
 	private ChartPanel label;
 	private JFreeChart chart;
-	
+
 	private TimeSeriesCollection dataset;
 
 	private class TimeSeriesProject {
@@ -56,7 +57,7 @@ public class StrategiesChart extends ApplicationFrame implements RealTimePlotter
 	public StrategiesChart() {
 		super("Simulador");
 	}
-	
+
 	@Override
 	public void setProjects(List<Project> projects) {
 		initialize(projects);
@@ -69,8 +70,7 @@ public class StrategiesChart extends ApplicationFrame implements RealTimePlotter
 		this.timeSeriesProject = new LinkedBlockingQueue<>();
 		for (Project project : projects) {
 			this.projects.add(project);
-			TimeSeries ts = new TimeSeries("Projecto " + project.getId(),
-					Day.class);
+			TimeSeries ts = new TimeSeries("Projecto " + project.getId(), Day.class);
 			series.add(ts);
 			timeSeriesProject.add(new TimeSeriesProject(ts, project));
 		}
@@ -79,8 +79,8 @@ public class StrategiesChart extends ApplicationFrame implements RealTimePlotter
 		for (TimeSeries serie : series) {
 			dataset.addSeries(serie);
 		}
-		chart = ChartFactory.createTimeSeriesChart("Simulador",
-				"Tiempo", "Programadores", dataset, true, true, false);
+		chart = ChartFactory.createTimeSeriesChart("Simulador", "Tiempo",
+				"Programadores", dataset, true, true, false);
 		final XYPlot plot = chart.getXYPlot();
 		ValueAxis axis = plot.getDomainAxis();
 		axis.setAutoRange(true);
@@ -98,12 +98,11 @@ public class StrategiesChart extends ApplicationFrame implements RealTimePlotter
 		System.out.println("salgo del initialize");
 	}
 
-	
 	public void removeProject(Project p) {
 		System.out.println("entro al remove");
 		TimeSeriesProject toRemove = null;
-		for(TimeSeriesProject tsp: timeSeriesProject) {
-			if(tsp.project.equals(p)) {
+		for (TimeSeriesProject tsp : timeSeriesProject) {
+			if (tsp.project.equals(p)) {
 				toRemove = tsp;
 			}
 		}
@@ -116,66 +115,54 @@ public class StrategiesChart extends ApplicationFrame implements RealTimePlotter
 	public void addProject(Project project) {
 		System.out.println("entro al add");
 		projects.add(project);
-		TimeSeries ts = new TimeSeries("Projecto " + project.getId(),
-				Day.class);
+		TimeSeries ts = new TimeSeries("Projecto " + project.getId(), Day.class);
 		series.add(ts);
 		timeSeriesProject.add(new TimeSeriesProject(ts, project));
 		dataset.addSeries(ts);
 		System.out.println("salgo del add");
-		
+
 	}
 
 	public void restart(List<Project> projects) {
 		initialize(projects);
 	}
-	
+
 	public void updateTime() {
-//		System.out.println("entro al update");
 		for (TimeSeriesProject ts : timeSeriesProject) {
 			ts.getTimeSeries().addOrUpdate(day,
 					ts.getProject().getProgrammersWorking());
 		}
-//		System.out.println("salgo for 1");
 		delay(100);
 		dataset.removeAllSeries();
-//		System.out.println("salgo remove all");
-		
+
 		for (TimeSeriesProject ts : timeSeriesProject) {
 			dataset.addSeries(ts.getTimeSeries());
 		}
-//		System.out.println("salgo for 2");
 		delay(100);
-		chart = ChartFactory.createTimeSeriesChart("Simulador",
-				"Tiempo", "Programadores", dataset, true, true, false);
+		chart = ChartFactory.createTimeSeriesChart("Simulador", "Tiempo",
+				"Programadores", dataset, true, true, false);
 		final XYPlot plot = chart.getXYPlot();
 		ValueAxis axis = plot.getDomainAxis();
 		axis.setAutoRange(true);
 		axis.setFixedAutoRange(10);
-//		System.out.println("pepe");
-//		frame.revalidate();
-//		System.out.println("1");
+		// frame.revalidate();
 		frame.getContentPane().removeAll();
-//		System.out.println("2");
 		frame.getContentPane().remove(label);
 		ChartPanel label = new ChartPanel(chart);
-//		System.out.println("3");
 		frame.getContentPane().add(label);
 		frame.pack();
 
 		day = (Day) day.next();
 		repaint();
-//		System.out.println("jorge");
 		delay(500);
-//		System.out.println("salgo del update");
 	}
-	
+
 	public RealTimePlotter newInstance(List<Project> projects) {
 		RealTimePlotter rtp = new StrategiesChart();
 		rtp.setProjects(projects);
 		return rtp;
 	}
-	
-	
+
 	private void delay(long t) {
 		try {
 			Thread.sleep(t);
@@ -183,5 +170,5 @@ public class StrategiesChart extends ApplicationFrame implements RealTimePlotter
 			e.printStackTrace();
 		}
 	}
-	
+
 }

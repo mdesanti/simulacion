@@ -27,10 +27,8 @@ import com.google.common.collect.Lists;
  *
  * @author David Browning
  */
+@SuppressWarnings("serial")
 public class BoxAndWhiskerDemo extends ApplicationFrame {
-
-    /** Access to logging facilities. */
-    private static final LogContext LOGGER = Log.createContext(BoxAndWhiskerDemo.class);
 
     /**
      * Creates a new demo.
@@ -48,12 +46,12 @@ public class BoxAndWhiskerDemo extends ApplicationFrame {
         yAxis.setAutoRangeIncludesZero(false);
         final BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
         renderer.setFillBox(false);
-        renderer.setMeanVisible(false);
+//        renderer.setMeanVisible(false);
         renderer.setToolTipGenerator(new BoxAndWhiskerToolTipGenerator());
         final CategoryPlot plot = new CategoryPlot(dataset, xAxis, yAxis, renderer);
 
         final JFreeChart chart = new JFreeChart(
-            "Box-and-Whisker Demo",
+            "Asignación de programadores",
             new Font("SansSerif", Font.BOLD, 14),
             plot,
             true
