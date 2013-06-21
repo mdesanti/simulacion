@@ -33,9 +33,11 @@ public class SimulatorImpl implements Simulator {
 	private SimulationListener listener;
 	private Map<String, LinkedList<BackupItem>> finishedProjects = new HashMap<>();
 	private RealTimePlotter plotter;
+	private int COST_MAX = 14;
+	private int COST_MIN = 10;
 
 	public static final int MAX_PROGRAMMER_PER_PROJECT = 8;
-	
+
 	public void build(SimulationListener listener, int strategy,
 			RealTimePlotter plotter) {
 		this.listener = listener;
@@ -55,97 +57,106 @@ public class SimulatorImpl implements Simulator {
 		plotter.setProjects(projects);
 		int strategiesFinished = 0;
 		int times = totalTimes;
-		while (--times >= 0 && strategiesFinished < 3) {
-			int today = 0;
-			int projectsFinished = 0;
-			int totalCost = 0;
-			totalProjects = projects.size();
-			while (today < simulationDays) {
-				Collections.sort(projects, new ProjectComparator());
-				Iterator<Project> projectIterator = projects.iterator();
-				int projectsQty = projects.size();
-				while (projectIterator.hasNext()) {
-					Project project = projectIterator.next();
-					if (!project.finished()) {
-						Iteration iteration = project.getCurrentIteration();
-						if (!iteration.finished()) {
-							if (iteration.isDelayed()) {
-								idleProgrammers -= strategy.reasing(project,
-										projects, idleProgrammers);
-								listener.updateWorkingProgrammers(project);
-								listener.updateIdleProgrammers(idleProgrammers);
-								listener.updateIterationEstimate(project);
-							}
-							if (project.getProgrammersWorking() > 0) {
-								iteration.decreaseLastingDays();
+		int boxTimes = 3;
+		LinkedList<Map<String, LinkedList<BackupItem>>> backupsList = new LinkedList<>();
+		while (boxTimes-- > 0) {
+			while (--times >= 0 && strategiesFinished < 3) {
+				int today = 0;
+				int projectsFinished = 0;
+				int totalCost = 0;
+				totalProjects = projects.size();
+				while (today < simulationDays) {
+					Collections.sort(projects, new ProjectComparator());
+					Iterator<Project> projectIterator = projects.iterator();
+					int projectsQty = projects.size();
+					while (projectIterator.hasNext()) {
+						Project project = projectIterator.next();
+						if (!project.finished()) {
+							Iteration iteration = project.getCurrentIteration();
+							if (!iteration.finished()) {
+								if (iteration.isDelayed()) {
+									idleProgrammers -= strategy.reasing(
+											project, projects, idleProgrammers);
+									listener.updateWorkingProgrammers(project);
+									listener.updateIdleProgrammers(idleProgrammers);
+									listener.updateIterationEstimate(project);
+								}
+								if (project.getProgrammersWorking() > 0) {
+									iteration.decreaseLastingDays();
+								}
+							} else {
+
+								// If iteration has pending days, adds them to
+								// the
+								// next iteration
+								int extraTime = iteration.getEstimate()
+										- iteration.getDuration();
+								extraTime = (extraTime > 0) ? extraTime : 0;
+								if (project.nextIteration(extraTime)) {
+									listener.finishProject(project);
+								} else {
+									listener.updateIterationDuration(project);
+								}
+
+								// If idle strategy only, programmers must be
+								// released in every iteration
+								if (strategy.isIdleStrategy()
+										&& !strategy.isFreelanceStrategy()
+										&& !strategy.isSwitchStrategy()) {
+									idleProgrammers += project
+											.removeProgrammers();
+									listener.updateIdleProgrammers(idleProgrammers);
+								}
+
 							}
 						} else {
-
-							// If iteration has pending days, adds them to the
-							// next iteration
-							int extraTime = iteration.getEstimate()
-									- iteration.getDuration();
-							extraTime = (extraTime > 0) ? extraTime : 0;
-							if (project.nextIteration(extraTime)) {
-								listener.finishProject(project);
-							} else {
-								listener.updateIterationDuration(project);
-							}
-
-							// If idle strategy only, programmers must be
-							// released in every iteration
-							if (strategy.isIdleStrategy()
-									&& !strategy.isFreelanceStrategy()
-									&& !strategy.isSwitchStrategy()) {
-								idleProgrammers += project.removeProgrammers();
-								listener.updateIdleProgrammers(idleProgrammers);
-							}
-
+							projectIterator.remove();
+							plotter.removeProject(project);
+							totalCost += project.getTotalCost();
+							idleProgrammers += project.removeProgrammers();
+							listener.updateIdleProgrammers(idleProgrammers);
+							projectsFinished++;
+							listener.updateFinishedProjects(projectsFinished);
 						}
-					} else {
-						projectIterator.remove();
-						plotter.removeProject(project);
-						totalCost += project.getTotalCost();
-						idleProgrammers += project.removeProgrammers();
-						listener.updateIdleProgrammers(idleProgrammers);
-						projectsFinished++;
-						listener.updateFinishedProjects(projectsFinished);
+					}
+
+					// If a project was removed, a new one must be created
+					int newProjectsQty = projects.size();
+					int diff = projectsQty - newProjectsQty;
+					for (int i = 0; i < diff; i++) {
+						Project p = buildProject(projectsId++);
+						projects.add(p);
+						totalProjects++;
+						listener.addProject(p);
+						plotter.addProject(p);
+					}
+					today++;
+					listener.updateTime(today);
+					plotter.updateTime();
+					if ((today == simulationDays)) {
+						finishedProjects.get(strategy.getStrategy()).add(
+								new BackupItem(projectsFinished, totalCost,
+										totalProjects));
 					}
 				}
-
-				// If a project was removed, a new one must be created
-				int newProjectsQty = projects.size();
-				int diff = projectsQty - newProjectsQty;
-				for (int i = 0; i < diff; i++) {
-					Project p = buildProject(projectsId++);
-					projects.add(p);
-					totalProjects++;
-					listener.addProject(p);
-					plotter.addProject(p);
+				if (times == 0 && ++strategiesFinished < 3) {
+					// strategiesFinished es equal to the strategy id
+					strategy = assignStrategy(strategiesFinished);
+					times = totalTimes;
 				}
-				today++;
-				listener.updateTime(today);
-				plotter.updateTime();
-				if ((today == simulationDays)) {
-					finishedProjects.get(strategy.getStrategy()).add(
-							new BackupItem(projectsFinished, totalCost,
-									totalProjects));
-				}
-			}
-			if (times == 0 && ++strategiesFinished < 3) {
-				// strategiesFinished es equal to the strategy id
-				strategy = assignStrategy(strategiesFinished);
-				times = totalTimes;
-			}
 
-			build(listener, strategy.getStrategyID(), plotter);
-			projectsId = projects.size();
-			;
-			plotter = plotter.newInstance(projects);
-			listener.reset();
-			// plotter.restart(projects);
+				build(listener, strategy.getStrategyID(), plotter);
+				projectsId = projects.size();
+				;
+				plotter = plotter.newInstance(projects);
+				listener.reset();
+				// plotter.restart(projects);
+			}
+			backupsList.add(finishedProjects);
+			COST_MAX+=5;
+			COST_MIN+=5;
 		}
-		BoxAndWhiskerDemo demo = new BoxAndWhiskerDemo(finishedProjects);
+		BoxAndWhiskerDemo demo = new BoxAndWhiskerDemo(backupsList);
 		demo.pack();
 		RefineryUtilities.centerFrameOnScreen(demo);
 		demo.setVisible(true);
@@ -234,7 +245,8 @@ public class SimulatorImpl implements Simulator {
 					IssueFactory.createFrontEndIssue(), duration);
 			iterations.push(it);
 		}
-		int maxCost = r.nextInt(18 - 12) + 12; // (12,18]
+		int maxCost = r.nextInt(COST_MAX - COST_MIN) + COST_MIN; // (COST_MIN,
+																	// COST_MAX]
 		return new ProjectImpl(iterations, maxCost, id);
 	}
 

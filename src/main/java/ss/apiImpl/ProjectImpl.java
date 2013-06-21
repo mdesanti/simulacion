@@ -86,7 +86,7 @@ public class ProjectImpl implements Project {
 						IssueFactory.createBackendIssue(),
 						IssueFactory.createFrontEndIssue(), extraTime);
 			} else {
-				Random r = new Random();
+				Random r = new Random(45);
 				double random = r.nextDouble();
 				if (random < finalIterationProbability) {
 					finalIterationProbability /= 1.3;

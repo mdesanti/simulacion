@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.Random;
 
 import ss.util.RandomGenerator;
 
@@ -54,5 +55,15 @@ public class DistributionManager {
 		return (int)RandomGenerator.triangular(Double.parseDouble(parameters[0]),
 				Double.parseDouble(parameters[2]),
 				Double.parseDouble(parameters[1]));
+	}
+	
+	double triangular(double a, double b, double c) {
+		Random rand = new Random(45);
+		double U = rand.nextDouble() / Integer.MAX_VALUE;
+		double F = (c - a) / (b - a);
+		if (U <= F)
+			return a + Math.sqrt(U * (b - a) * (c - a));
+		else
+			return b - Math.sqrt((1 - U) * (b - a) * (b - c));
 	}
 }
