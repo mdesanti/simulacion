@@ -15,6 +15,7 @@ import ss.api.Iteration;
 import ss.api.Project;
 import ss.api.ReasignationStrategy;
 import ss.api.Simulator;
+import ss.apiImpl.charts.Histogram;
 import ss.apiImpl.charts.StrategiesChart;
 import ss.apiImpl.strategies.ReasignationStrategyImpl;
 import ss.gui.out.SimulationListener;
@@ -123,6 +124,8 @@ public class SimulatorImpl implements Simulator {
 //			 chart.restart(projects);
 			chart = new StrategiesChart(projects);
 		}
+//		Histogram h = new Histogram(finishedProjects.get(strategy.getStrategy()))
+		
 
 	}
 
