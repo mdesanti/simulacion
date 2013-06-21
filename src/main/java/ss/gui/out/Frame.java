@@ -457,5 +457,9 @@ public class Frame extends JFrame {
 		}
 		
 	}
+	
+	public JPanel getSimulationPanel() {
+		return simulationPanel;
+	}
 
 }

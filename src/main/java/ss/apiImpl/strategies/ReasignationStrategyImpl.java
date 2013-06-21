@@ -6,6 +6,7 @@ import ss.api.Iteration;
 import ss.api.Project;
 import ss.api.ReasignationStrategy;
 import ss.apiImpl.DistributionManager;
+import ss.apiImpl.SimulatorImpl;
 import ss.gui.out.SimulationListener;
 
 public class ReasignationStrategyImpl implements ReasignationStrategy {
@@ -65,7 +66,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		int newFrontEstimation = 0;
 		int newIterationEstimation = 0;
 		while (newProgrammers < idleProgrammers && delayed
-				&& ((newProgrammers + projectProgrammers) < 4)) {
+				&& ((newProgrammers + projectProgrammers) < SimulatorImpl.MAX_PROGRAMMER_PER_PROJECT)) {
 			newProgrammers++;
 			newEstimateProgrammers = projectProgrammers + newProgrammers;
 			newBackEstimation = DistributionManager.getInstance()
@@ -106,8 +107,8 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		delayed = iteration.isDelayedWith(iteration.getEstimate());
 
 		// Iterates from minor priority to mayor
-		while (delayed && ((newProgrammers + projectProgrammers) < 4)) {
-			for (int i = from.size() - 1; i >= projectIndex && delayed && ((newProgrammers + projectProgrammers) < 4); i--) {
+		while (delayed && ((newProgrammers + projectProgrammers) < SimulatorImpl.MAX_PROGRAMMER_PER_PROJECT)) {
+			for (int i = from.size() - 1; i >= projectIndex && delayed && ((newProgrammers + projectProgrammers) < SimulatorImpl.MAX_PROGRAMMER_PER_PROJECT); i--) {
 				Project other = from.get(i);
 				int programmersQty = other.getProgrammersWorking();
 
@@ -154,7 +155,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		delayed = iteration.isDelayedWith(iteration.getEstimate());
 
 		while (newProgrammers < maxCost && delayed
-				&& ((newProgrammers + projectProgrammers) < 4)) {
+				&& ((newProgrammers + projectProgrammers) < SimulatorImpl.MAX_PROGRAMMER_PER_PROJECT)) {
 			newProgrammers++;
 			newEstimateProgrammers = projectProgrammers + newProgrammers;
 			newBackEstimation = DistributionManager.getInstance()

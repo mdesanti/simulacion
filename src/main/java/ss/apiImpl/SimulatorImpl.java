@@ -34,11 +34,13 @@ public class SimulatorImpl implements Simulator {
 	private Map<String, LinkedList<BackupItem>> finishedProjects = new HashMap<>();
 	private RealTimePlotter plotter;
 
+	public static final int MAX_PROGRAMMER_PER_PROJECT = 8;
+	
 	public void build(SimulationListener listener, int strategy,
 			RealTimePlotter plotter) {
 		this.listener = listener;
 		this.projects = buildProjects(5);
-		this.idleProgrammers = 12;
+		this.idleProgrammers = 25;
 		this.simulationDays = 365; // In days
 		this.strategy = assignStrategy(strategy);
 		this.plotter = plotter;
@@ -227,14 +229,14 @@ public class SimulatorImpl implements Simulator {
 	private Project buildProject(int id) {
 		Deque<ss.api.Iteration> iterations = new LinkedBlockingDeque<>();
 		Random r = new Random();
-		int iterationsQty = r.nextInt(7) + 1; // (0,7]
+		int iterationsQty = r.nextInt(6) + 1; // (0,6]
 		for (int j = 0; j < iterationsQty; j++) {
-			int duration = r.nextInt(27 - 20) + 20; // (20,27]
+			int duration = r.nextInt(22 - 17) + 17; // (17,22]
 			Iteration it = new IterationImpl(IssueFactory.createBackendIssue(),
 					IssueFactory.createFrontEndIssue(), duration);
 			iterations.push(it);
 		}
-		int maxCost = r.nextInt(10 - 5) + 5; // (5,10]
+		int maxCost = r.nextInt(18 - 12) + 12; // (12,18]
 		return new ProjectImpl(iterations, maxCost, id);
 	}
 
