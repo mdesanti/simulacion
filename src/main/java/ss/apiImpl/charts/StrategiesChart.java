@@ -132,13 +132,11 @@ public class StrategiesChart extends ApplicationFrame implements
 			ts.getTimeSeries().addOrUpdate(day,
 					ts.getProject().getProgrammersWorking());
 		}
-		delay(100);
 		dataset.removeAllSeries();
 
 		for (TimeSeriesProject ts : timeSeriesProject) {
 			dataset.addSeries(ts.getTimeSeries());
 		}
-		delay(100);
 		chart = ChartFactory.createTimeSeriesChart("Simulador", "Tiempo",
 				"Programadores", dataset, true, true, false);
 		final XYPlot plot = chart.getXYPlot();

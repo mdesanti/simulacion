@@ -15,8 +15,6 @@ import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.ui.ApplicationFrame;
-import org.jfree.util.Log;
-import org.jfree.util.LogContext;
 
 import ss.apiImpl.BackupItem;
 
