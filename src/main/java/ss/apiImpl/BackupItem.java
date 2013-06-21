@@ -23,4 +23,9 @@ public class BackupItem {
 		return totalProjects;
 	}
 
+	
+	@Override
+	public String toString() {
+		return "Finished: " + finishedProjects + ",, Cost: "+cost + ", Total: "+totalProjects;
+	}
 }

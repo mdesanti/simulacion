@@ -103,11 +103,11 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 
 		// Perhaps the idleStrategy already fixed the estimate, so this is
 		// calculated again
-		delayed = iteration.isDelayedWith(projectProgrammers);
+		delayed = iteration.isDelayedWith(iteration.getEstimate());
 
 		// Iterates from minor priority to mayor
 		while (delayed && ((newProgrammers + projectProgrammers) < 4)) {
-			for (int i = from.size() - 1; i >= projectIndex; i--) {
+			for (int i = from.size() - 1; i >= projectIndex && delayed && ((newProgrammers + projectProgrammers) < 4); i--) {
 				Project other = from.get(i);
 				int programmersQty = other.getProgrammersWorking();
 
@@ -150,7 +150,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		// Perhaps the idleStrategy and switchStrategy already fixed the
 		// estimate, so this is
 		// calculated again
-		delayed = iteration.isDelayedWith(projectProgrammers);
+		delayed = iteration.isDelayedWith(iteration.getEstimate());
 
 		while (newProgrammers < maxCost && delayed
 				&& ((newProgrammers + projectProgrammers) < 4)) {
