@@ -1,12 +1,14 @@
-package ss;
+package ss.apiImpl;
 
 public class BackupItem {
 	private int finishedProjects;
 	private int cost;
+	private int totalProjects;
 
-	public BackupItem(int finishedProjects, int cost) {
+	public BackupItem(int finishedProjects, int cost, int totalProjects) {
 		this.finishedProjects = finishedProjects;
 		this.cost = cost;
+		this.totalProjects = 0;
 	}
 
 	public int getFinishedProjects() {
@@ -15,6 +17,10 @@ public class BackupItem {
 
 	public int getCost() {
 		return cost;
+	}
+
+	public int getTotalProjects() {
+		return totalProjects;
 	}
 
 }

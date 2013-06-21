@@ -20,7 +20,7 @@ import org.jfree.ui.RefineryUtilities;
 import org.jfree.util.Log;
 import org.jfree.util.LogContext;
 
-import ss.BackupItem;
+import ss.apiImpl.BackupItem;
 
 /**
  * Demonstration of a box-and-whisker chart using a {@link CategoryPlot}.
@@ -69,10 +69,6 @@ public class BoxAndWhiskerDemo extends ApplicationFrame {
      * @return A sample dataset.
      */
     private BoxAndWhiskerCategoryDataset createSampleDataset(Map<String, LinkedList<BackupItem>> backups) {
-        
-        final int seriesCount = 3;
-        final int categoryCount = 4;
-        final int entityCount = 22;
         
         final DefaultBoxAndWhiskerCategoryDataset dataset 
             = new DefaultBoxAndWhiskerCategoryDataset();

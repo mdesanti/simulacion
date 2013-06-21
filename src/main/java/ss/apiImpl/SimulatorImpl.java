@@ -13,7 +13,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 import org.jfree.ui.RefineryUtilities;
 
-import ss.BackupItem;
 import ss.api.Iteration;
 import ss.api.Project;
 import ss.api.ReasignationStrategy;
@@ -54,6 +53,7 @@ public class SimulatorImpl implements Simulator {
 			int today = 0;
 			int projectsFinished = 0;
 			int totalCost = 0;
+			totalProjects = projects.size();
 			while (today < simulationDays) {
 				Collections.sort(projects, new ProjectComparator());
 				Iterator<Project> projectIterator = projects.iterator();
@@ -113,6 +113,7 @@ public class SimulatorImpl implements Simulator {
 				for (int i = 0; i < diff; i++) {
 					Project p = buildProject(projectsId++);
 					projects.add(p);
+					totalProjects++;
 					listener.addProject(p);
 					chart.addProject(p);
 				}
@@ -121,7 +122,8 @@ public class SimulatorImpl implements Simulator {
 				chart.updateTime();
 				if ((today == simulationDays)) {
 					finishedProjects.get(strategy.getStrategy()).push(
-							new BackupItem(projectsFinished, totalCost));
+							new BackupItem(projectsFinished, totalCost,
+									totalProjects));
 				}
 			}
 			listener.reset();
