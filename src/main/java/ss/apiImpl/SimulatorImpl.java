@@ -29,7 +29,7 @@ public class SimulatorImpl implements Simulator {
 	private int idleProgrammers;
 	private ReasignationStrategy strategy;
 	private SimulationListener listener;
-	private Map<String, LinkedList<Integer>> finishedProjects = new HashMap<>();
+	private Map<String, LinkedList<BackupItem>> finishedProjects = new HashMap<>();
 
 	public void build(SimulationListener listener, int strategy) {
 		this.listener = listener;
@@ -44,12 +44,13 @@ public class SimulatorImpl implements Simulator {
 
 		int totalProjects = projects.size();
 		int projectsId = totalProjects;
-		finishedProjects.put("idle", new LinkedList<Integer>());
+		finishedProjects.put("idle", new LinkedList<BackupItem>());
 		StrategiesChart chart = new StrategiesChart(projects);
 
 		while (--totalTimes >= 0) {
 			int today = 0;
 			int projectsFinished = 0;
+			int totalCost = 0;
 			while (today < simulationDays) {
 				Collections.sort(projects, new ProjectComparator());
 				Iterator<Project> projectIterator = projects.iterator();
@@ -76,9 +77,9 @@ public class SimulatorImpl implements Simulator {
 							int extraTime = iteration.getEstimate()
 									- iteration.getDuration();
 							extraTime = (extraTime > 0) ? extraTime : 0;
-							if(project.nextIteration(extraTime)){
+							if (project.nextIteration(extraTime)) {
 								listener.finishProject(project);
-							}else{
+							} else {
 								listener.updateIterationDuration(project);
 							}
 
@@ -95,6 +96,7 @@ public class SimulatorImpl implements Simulator {
 					} else {
 						projectIterator.remove();
 						chart.removeProject(project);
+						totalCost += project.getTotalCost();
 						idleProgrammers += project.removeProgrammers();
 						listener.updateIdleProgrammers(idleProgrammers);
 						projectsFinished++;
@@ -116,16 +118,16 @@ public class SimulatorImpl implements Simulator {
 				chart.updateTime();
 				if ((today == simulationDays)) {
 					finishedProjects.get(strategy.getStrategy()).push(
-							projectsFinished);
+							new BackupItem(projectsFinished, totalCost));
 				}
 			}
 			listener.reset();
 			build(listener, strategy.getStrategyID());
-//			 chart.restart(projects);
+			// chart.restart(projects);
 			chart = new StrategiesChart(projects);
 		}
-//		Histogram h = new Histogram(finishedProjects.get(strategy.getStrategy()))
-		
+		// Histogram h = new
+		// Histogram(finishedProjects.get(strategy.getStrategy()))
 
 	}
 
@@ -134,10 +136,10 @@ public class SimulatorImpl implements Simulator {
 		case 0:
 			return new ReasignationStrategyImpl(true, false, false, listener);
 		case 1:
-			finishedProjects.put("switch", new LinkedList<Integer>());
+			finishedProjects.put("switch", new LinkedList<BackupItem>());
 			return new ReasignationStrategyImpl(true, true, false, listener);
 		default: // Case 2
-			finishedProjects.put("freelance", new LinkedList<Integer>());
+			finishedProjects.put("freelance", new LinkedList<BackupItem>());
 			return new ReasignationStrategyImpl(true, true, true, listener);
 		}
 	}
@@ -227,6 +229,25 @@ public class SimulatorImpl implements Simulator {
 	public String toString() {
 		return "Simulator simulationDays: " + simulationDays + " projectsQty: "
 				+ projects.size() + " idleProgrammers: " + idleProgrammers;
+	}
+
+	private class BackupItem {
+		private int finishedProjects;
+		private int cost;
+
+		public BackupItem(int finishedProjects, int cost) {
+			this.finishedProjects = finishedProjects;
+			this.cost = cost;
+		}
+
+		public int getFinishedProjects() {
+			return finishedProjects;
+		}
+
+		public int getCost() {
+			return cost;
+		}
+
 	}
 
 }
