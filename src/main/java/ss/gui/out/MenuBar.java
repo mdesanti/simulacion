@@ -40,7 +40,7 @@ public class MenuBar extends JMenuBar {
 						getFrame().getSimulator().build(
 								new SimulationListenerImpl(getFrame()),ReasignationStrategyImpl.IDLE_STRATEGY, new StrategiesChart());
 						getFrame().restart();
-						getFrame().getSimulator().start(10);
+						getFrame().getSimulator().start(1);
 					}
 				});
 				sim.start();

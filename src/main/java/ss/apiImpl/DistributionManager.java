@@ -33,7 +33,7 @@ public class DistributionManager {
 	}
 
 	public int getLastingDaysForBackendIssue(int programmersQty) {
-		int qty = (programmersQty <= 4) ? programmersQty : 4;
+		int qty = (programmersQty <= SimulatorImpl.MAX_PROGRAMMER_PER_PROJECT) ? programmersQty : SimulatorImpl.MAX_PROGRAMMER_PER_PROJECT;
 		if(qty == 0) {
 			return Integer.MAX_VALUE;
 		}
@@ -45,7 +45,7 @@ public class DistributionManager {
 	}
 	
 	public int getLastingDaysForFrontendIssue(int programmersQty) {
-		int qty = (programmersQty <= 4) ? programmersQty : 4;
+		int qty = (programmersQty <= SimulatorImpl.MAX_PROGRAMMER_PER_PROJECT) ? programmersQty : SimulatorImpl.MAX_PROGRAMMER_PER_PROJECT;
 		if(qty == 0) {
 			return 0;
 		}
