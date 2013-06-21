@@ -46,10 +46,10 @@ public class SimulatorImpl implements Simulator {
 
 		int totalProjects = projects.size();
 		int projectsId = totalProjects;
-		finishedProjects.put("idle", new LinkedList<BackupItem>());
-//		StrategiesChart chart = new StrategiesChart(projects);
-
-		while (--totalTimes >= 0) {
+		// StrategiesChart chart = new StrategiesChart(projects);
+		int strategiesFinished = 0;
+		int times = totalTimes;
+		while (--times >= 0 && strategiesFinished < 3) {
 			int today = 0;
 			int projectsFinished = 0;
 			int totalCost = 0;
@@ -98,7 +98,7 @@ public class SimulatorImpl implements Simulator {
 						}
 					} else {
 						projectIterator.remove();
-//						chart.removeProject(project);
+						// chart.removeProject(project);
 						totalCost += project.getTotalCost();
 						idleProgrammers += project.removeProgrammers();
 						listener.updateIdleProgrammers(idleProgrammers);
@@ -115,11 +115,11 @@ public class SimulatorImpl implements Simulator {
 					projects.add(p);
 					totalProjects++;
 					listener.addProject(p);
-//					chart.addProject(p);
+					// chart.addProject(p);
 				}
 				today++;
 				listener.updateTime(today);
-//				chart.updateTime();
+				// chart.updateTime();
 				if ((today == simulationDays)) {
 					finishedProjects.get(strategy.getStrategy()).push(
 							new BackupItem(projectsFinished, totalCost,
@@ -127,22 +127,30 @@ public class SimulatorImpl implements Simulator {
 				}
 			}
 			listener.reset();
+			if (times == 0 && strategiesFinished < 3) {
+				// strategiesFinished es equal to the strategy id
+				strategy = assignStrategy(++strategiesFinished);
+				times = totalTimes;
+			}
+
 			build(listener, strategy.getStrategyID());
 			// chart.restart(projects);
-//			chart = new StrategiesChart(projects);
+			// chart = new StrategiesChart(projects);
 		}
 		// Histogram h = new
 		// Histogram(finishedProjects.get(strategy.getStrategy()))
-		BoxAndWhiskerDemo demo = new BoxAndWhiskerDemo("title", finishedProjects);
+		BoxAndWhiskerDemo demo = new BoxAndWhiskerDemo("title",
+				finishedProjects);
 		demo.pack();
-        RefineryUtilities.centerFrameOnScreen(demo);
-        demo.setVisible(true);
+		RefineryUtilities.centerFrameOnScreen(demo);
+		demo.setVisible(true);
 
 	}
 
 	private ReasignationStrategyImpl assignStrategy(int strategy) {
 		switch (strategy) {
 		case 0:
+			finishedProjects.put("idle", new LinkedList<BackupItem>());
 			return new ReasignationStrategyImpl(true, false, false, listener);
 		case 1:
 			finishedProjects.put("switch", new LinkedList<BackupItem>());

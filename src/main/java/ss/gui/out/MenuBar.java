@@ -25,54 +25,34 @@ public class MenuBar extends JMenuBar {
 		JMenu simulatorMenu = new JMenu("Simulador");
 		simulatorMenu.setMnemonic(KeyEvent.VK_S);
 
-		JMenuItem simulateWithStrategyIdle = new JMenuItem("Simular con estrategia Idle");
-		JMenuItem simulateWithStrategySwitch = new JMenuItem("Simular con estrategia Switch");
-		JMenuItem simulateWithStrategyFreelance = new JMenuItem("Simular con estrategia Freelance");
-		simulateWithStrategyIdle.setMnemonic(KeyEvent.VK_I);
-		simulateWithStrategyIdle.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,
+		JMenuItem simulateWithFront = new JMenuItem("Simular con front");
+		JMenuItem simulateWithoutFront = new JMenuItem("Simular sin front");
+		simulateWithFront.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F,
 				ActionEvent.CTRL_MASK));
-		simulateWithStrategySwitch.setMnemonic(KeyEvent.VK_S);
-		simulateWithStrategySwitch.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
+		simulateWithoutFront.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G,
 				ActionEvent.CTRL_MASK));
-		simulateWithStrategyFreelance.setMnemonic(KeyEvent.VK_F);
-		simulateWithStrategyFreelance.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F,
-				ActionEvent.CTRL_MASK));
+		simulateWithFront.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				final Thread sim = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						getFrame().getSimulator().build(
+								new SimulationListenerImpl(getFrame()),ReasignationStrategyImpl.IDLE_STRATEGY);
+						getFrame().restart();
+						getFrame().getSimulator().start(10);
+					}
+				});
+				sim.start();
+			}
+		});
 		
-		simulateWithStrategyIdle.addActionListener(new ActionListener() {
+		simulateWithoutFront.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				final Thread sim = new Thread(new Runnable() {
 					@Override
 					public void run() {
 						getFrame().getSimulator().build(
 								new SimulationDummyListenerImpl(),ReasignationStrategyImpl.IDLE_STRATEGY);
-						getFrame().restart();
-						getFrame().getSimulator().start(10);
-					}
-				});
-				sim.start();
-			}
-		});
-		simulateWithStrategySwitch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				final Thread sim = new Thread(new Runnable() {
-					@Override
-					public void run() {
-						getFrame().getSimulator().build(
-								new SimulationListenerImpl(getFrame()),ReasignationStrategyImpl.SWITCH_STRATEGY);
-						getFrame().restart();
-						getFrame().getSimulator().start(10);
-					}
-				});
-				sim.start();
-			}
-		});
-		simulateWithStrategyFreelance.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent event) {
-				final Thread sim = new Thread(new Runnable() {
-					@Override
-					public void run() {
-						getFrame().getSimulator().build(
-								new SimulationListenerImpl(getFrame()),ReasignationStrategyImpl.FREELANCE_STRATEGY);
 						getFrame().restart();
 						getFrame().getSimulator().start(10);
 					}
@@ -94,11 +74,9 @@ public class MenuBar extends JMenuBar {
 			}
 		});
 
-		simulatorMenu.add(simulateWithStrategyIdle);
+		simulatorMenu.add(simulateWithFront);
 		simulatorMenu.add(new JSeparator());
-		simulatorMenu.add(simulateWithStrategySwitch);
-		simulatorMenu.add(new JSeparator());
-		simulatorMenu.add(simulateWithStrategyFreelance);
+		simulatorMenu.add(simulateWithoutFront);
 		simulatorMenu.add(new JSeparator());
 		simulatorMenu.add(close);
 		menuBar.add(simulatorMenu);
