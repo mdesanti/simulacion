@@ -47,7 +47,7 @@ public class SimulatorImpl implements Simulator {
 		int totalProjects = projects.size();
 		int projectsId = totalProjects;
 		finishedProjects.put("idle", new LinkedList<BackupItem>());
-		StrategiesChart chart = new StrategiesChart(projects);
+//		StrategiesChart chart = new StrategiesChart(projects);
 
 		while (--totalTimes >= 0) {
 			int today = 0;
@@ -98,7 +98,7 @@ public class SimulatorImpl implements Simulator {
 						}
 					} else {
 						projectIterator.remove();
-						chart.removeProject(project);
+//						chart.removeProject(project);
 						totalCost += project.getTotalCost();
 						idleProgrammers += project.removeProgrammers();
 						listener.updateIdleProgrammers(idleProgrammers);
@@ -115,11 +115,11 @@ public class SimulatorImpl implements Simulator {
 					projects.add(p);
 					totalProjects++;
 					listener.addProject(p);
-					chart.addProject(p);
+//					chart.addProject(p);
 				}
 				today++;
 				listener.updateTime(today);
-				chart.updateTime();
+//				chart.updateTime();
 				if ((today == simulationDays)) {
 					finishedProjects.get(strategy.getStrategy()).push(
 							new BackupItem(projectsFinished, totalCost,
@@ -129,7 +129,7 @@ public class SimulatorImpl implements Simulator {
 			listener.reset();
 			build(listener, strategy.getStrategyID());
 			// chart.restart(projects);
-			chart = new StrategiesChart(projects);
+//			chart = new StrategiesChart(projects);
 		}
 		// Histogram h = new
 		// Histogram(finishedProjects.get(strategy.getStrategy()))

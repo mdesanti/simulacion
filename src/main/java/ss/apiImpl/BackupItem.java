@@ -8,7 +8,7 @@ public class BackupItem {
 	public BackupItem(int finishedProjects, int cost, int totalProjects) {
 		this.finishedProjects = finishedProjects;
 		this.cost = cost;
-		this.totalProjects = 0;
+		this.totalProjects = totalProjects;
 	}
 
 	public int getFinishedProjects() {

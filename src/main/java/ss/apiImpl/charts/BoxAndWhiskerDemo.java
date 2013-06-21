@@ -74,9 +74,9 @@ public class BoxAndWhiskerDemo extends ApplicationFrame {
             = new DefaultBoxAndWhiskerCategoryDataset();
         for(String key: backups.keySet()) {
         	List<BackupItem> runs = backups.get(key);
-        	final List list = new ArrayList();
+        	final List<Double> list = new ArrayList();
             for (int j = 0; j < runs.size(); j++) {
-            	list.add(runs.get(j).getFinishedProjects());
+            	list.add(runs.get(j).getFinishedProjects()/((double)runs.get(j).getTotalProjects()));
             }
             dataset.add(list, key, key);
             
