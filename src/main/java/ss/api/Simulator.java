@@ -16,5 +16,7 @@ public interface Simulator {
 	int getIdleProgrammers();
 
 	int getSimulationDays();
+	
+	int getStrategyID();
 
 }

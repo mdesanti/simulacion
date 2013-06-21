@@ -35,6 +35,7 @@ public class Frame extends JFrame {
 	private JTextArea idleProgrammers;
 	private JTextArea finishedProjects;
 	private JTextArea totalTime;
+	private JTextArea strategy;
 	private Simulator simulator;
 	private List<ProjectTimes> projectEstimationTimes = new ArrayList<>();
 	private List<ProjectTimes> projectDurationTimes = new ArrayList<>();
@@ -134,6 +135,7 @@ public class Frame extends JFrame {
 			projectCosts = new ArrayList<>();
 			iterations = new ArrayList<>();
 			programmers = new ArrayList<>();
+			
 			remove(simulationPanel);
 		}
 		simulationPanel = new SimulationPanel();
@@ -177,6 +179,18 @@ public class Frame extends JFrame {
 		area = new JTextArea("Proyectos terminados: ");
 		area.setBounds(270, FINAVALUETOP, 150, 20);
 		simulationPanel.add(area);
+		
+		finishedProjects = new JTextArea("0");
+		finishedProjects.setBounds(420, FINAVALUETOP, 30, 20);
+		simulationPanel.add(finishedProjects);
+		
+		area = new JTextArea("Estrategia: ");
+		area.setBounds(480, FINAVALUETOP, 80, 20);
+		simulationPanel.add(area);
+		
+		strategy = new JTextArea(String.valueOf(simulator.getStrategyID()+1));
+		strategy.setBounds(560, FINAVALUETOP, 30, 20);
+		simulationPanel.add(strategy);
 
 		// titulos de las columnas
 		area = new JTextArea("Proyecto");
@@ -207,9 +221,6 @@ public class Frame extends JFrame {
 		area.setBounds(1000, FINAVALUETOP + 30, 150, 20);
 		simulationPanel.add(area);
 
-		finishedProjects = new JTextArea("0");
-		finishedProjects.setBounds(420, FINAVALUETOP, 30, 20);
-		simulationPanel.add(finishedProjects);
 		initializeProjects(simulator.getProjects());
 	}
 

@@ -40,7 +40,7 @@ public class MenuBar extends JMenuBar {
 						getFrame().getSimulator().build(
 								new SimulationListenerImpl(getFrame()),ReasignationStrategyImpl.IDLE_STRATEGY, new DummyStrategiesChart());
 						getFrame().restart();
-						getFrame().getSimulator().start(10);
+						getFrame().getSimulator().start(1);
 					}
 				});
 				sim.start();
@@ -55,7 +55,7 @@ public class MenuBar extends JMenuBar {
 						getFrame().getSimulator().build(
 								new SimulationDummyListenerImpl(),ReasignationStrategyImpl.IDLE_STRATEGY, new DummyStrategiesChart());
 						getFrame().restart();
-						getFrame().getSimulator().start(10);
+						getFrame().getSimulator().start(500);
 					}
 				});
 				sim.start();
