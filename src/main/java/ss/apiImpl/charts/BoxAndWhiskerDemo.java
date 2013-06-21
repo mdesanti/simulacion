@@ -1,7 +1,6 @@
 package ss.apiImpl.charts;
 
 import java.awt.Font;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -16,11 +15,12 @@ import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.data.statistics.BoxAndWhiskerCategoryDataset;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
 import org.jfree.util.Log;
 import org.jfree.util.LogContext;
 
 import ss.apiImpl.BackupItem;
+
+import com.google.common.collect.Lists;
 
 /**
  * Demonstration of a box-and-whisker chart using a {@link CategoryPlot}.
@@ -48,6 +48,7 @@ public class BoxAndWhiskerDemo extends ApplicationFrame {
         yAxis.setAutoRangeIncludesZero(false);
         final BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
         renderer.setFillBox(false);
+        renderer.setMeanVisible(false);
         renderer.setToolTipGenerator(new BoxAndWhiskerToolTipGenerator());
         final CategoryPlot plot = new CategoryPlot(dataset, xAxis, yAxis, renderer);
 
@@ -74,7 +75,7 @@ public class BoxAndWhiskerDemo extends ApplicationFrame {
             = new DefaultBoxAndWhiskerCategoryDataset();
         for(String key: backups.keySet()) {
         	List<BackupItem> runs = backups.get(key);
-        	final List<Double> list = new ArrayList();
+        	final List<Double> list = Lists.newArrayList();
             for (int j = 0; j < runs.size(); j++) {
             	list.add(runs.get(j).getFinishedProjects()/((double)runs.get(j).getTotalProjects()));
             }
