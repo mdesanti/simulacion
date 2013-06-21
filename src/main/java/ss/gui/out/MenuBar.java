@@ -38,9 +38,9 @@ public class MenuBar extends JMenuBar {
 					@Override
 					public void run() {
 						getFrame().getSimulator().build(
-								new SimulationListenerImpl(getFrame()),ReasignationStrategyImpl.IDLE_STRATEGY, new StrategiesChart());
+								new SimulationListenerImpl(getFrame()),ReasignationStrategyImpl.IDLE_STRATEGY, new DummyStrategiesChart());
 						getFrame().restart();
-						getFrame().getSimulator().start(10);
+						getFrame().getSimulator().start(2);
 					}
 				});
 				sim.start();

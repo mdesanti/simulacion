@@ -129,11 +129,11 @@ public class Frame extends JFrame {
 	 */
 	public void initializePanel() throws IOException {
 		if (existsPanel()) {
-			projectEstimationTimes.clear();
-			projectDurationTimes.clear();
-			projectCosts.clear();
-			iterations.clear();
-			programmers.clear();
+			projectEstimationTimes = new ArrayList<>();
+			projectDurationTimes = new ArrayList<>();
+			projectCosts = new ArrayList<>();
+			iterations = new ArrayList<>();
+			programmers = new ArrayList<>();
 			remove(simulationPanel);
 		}
 		simulationPanel = new SimulationPanel();
@@ -274,8 +274,8 @@ public class Frame extends JFrame {
 	}
 
 	public void restart() {
-		repaint();
 
+		repaint();
 		try {
 			initializePanel();
 		} catch (IOException e) {

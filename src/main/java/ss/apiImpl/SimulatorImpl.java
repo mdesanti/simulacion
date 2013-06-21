@@ -38,7 +38,7 @@ public class SimulatorImpl implements Simulator {
 		this.listener = listener;
 		this.projects = buildProjects(5);
 		this.idleProgrammers = 12;
-		this.simulationDays = 365; // In days
+		this.simulationDays = 40; // In days
 		this.strategy = assignStrategy(strategy);
 		this.plotter = plotter;
 	}
@@ -129,15 +129,16 @@ public class SimulatorImpl implements Simulator {
 									totalProjects));
 				}
 			}
-			listener.reset();
 			if (times == 0 && ++strategiesFinished < 3) {
 				// strategiesFinished es equal to the strategy id
 				strategy = assignStrategy(strategiesFinished);
 				times = totalTimes;
 			}
 
-			plotter = plotter.newInstance(projects);
 			build(listener, strategy.getStrategyID(), plotter);
+			projectsId = projects.size();;
+			plotter = plotter.newInstance(projects);
+			listener.reset();
 //			 plotter.restart(projects);
 		}
 		// Histogram h = new

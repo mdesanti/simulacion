@@ -128,6 +128,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 					delayed = iteration.isDelayedWith(newIterationEstimation);
 				}
 			}
+			break;
 		}
 
 		if (newProgrammers > 0) {
