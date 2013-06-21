@@ -21,7 +21,7 @@ import org.jfree.ui.RefineryUtilities;
 
 import ss.api.Project;
 
-public class StrategiesChart extends ApplicationFrame {
+public class StrategiesChart extends ApplicationFrame implements RealTimePlotter {
 
 	private List<TimeSeries> series;
 	private BlockingQueue<Project> projects;
@@ -53,8 +53,12 @@ public class StrategiesChart extends ApplicationFrame {
 		}
 	}
 
-	public StrategiesChart(List<Project> projects) {
+	public StrategiesChart() {
 		super("Simulador");
+	}
+	
+	@Override
+	public void setProjects(List<Project> projects) {
 		initialize(projects);
 	}
 
@@ -132,13 +136,14 @@ public class StrategiesChart extends ApplicationFrame {
 					ts.getProject().getProgrammersWorking());
 		}
 		System.out.println("salgo for 1");
-//		try {
-//			Thread.sleep(100);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		dataset.removeAllSeries();
 		System.out.println("salgo remove all");
+		
 		for (TimeSeriesProject ts : timeSeriesProject) {
 			dataset.addSeries(ts.getTimeSeries());
 		}
@@ -167,11 +172,17 @@ public class StrategiesChart extends ApplicationFrame {
 		repaint();
 		System.out.println("jorge");
 		try {
-			Thread.sleep(350);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		System.out.println("salgo del update");
+	}
+	
+	public RealTimePlotter newInstance(List<Project> projects) {
+		RealTimePlotter rtp = new StrategiesChart();
+		rtp.setProjects(projects);
+		return rtp;
 	}
 	
 }
