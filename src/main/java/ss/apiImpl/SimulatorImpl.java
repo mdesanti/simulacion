@@ -23,6 +23,7 @@ import ss.apiImpl.strategies.ReasignationStrategyImpl;
 import ss.gui.out.SimulationListener;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 public class SimulatorImpl implements Simulator {
 
@@ -51,15 +52,18 @@ public class SimulatorImpl implements Simulator {
 	public void start(int totalTimes) {
 		// Build method must be called before
 
-		int totalProjects = projects.size();
-		int projectsId = totalProjects;
-		// StrategiesChart chart = new StrategiesChart(projects);
-		plotter.setProjects(projects);
-		int strategiesFinished = 0;
-		int times = totalTimes;
-		int boxTimes = 3;
 		LinkedList<Map<String, LinkedList<BackupItem>>> backupsList = new LinkedList<>();
+		int boxTimes = 3;
 		while (boxTimes-- > 0) {
+			build(listener, 0, plotter);
+			int totalProjects = projects.size();
+			int projectsId = totalProjects;
+			// StrategiesChart chart = new StrategiesChart(projects);
+			plotter.setProjects(projects);
+			int strategiesFinished = 0;
+			int times = totalTimes;
+			finishedProjects = Maps.newHashMap();
+			strategy = assignStrategy(0);
 			while (--times >= 0 && strategiesFinished < 3) {
 				int today = 0;
 				int projectsFinished = 0;
@@ -147,7 +151,6 @@ public class SimulatorImpl implements Simulator {
 
 				build(listener, strategy.getStrategyID(), plotter);
 				projectsId = projects.size();
-				;
 				plotter = plotter.newInstance(projects);
 				listener.reset();
 				// plotter.restart(projects);
