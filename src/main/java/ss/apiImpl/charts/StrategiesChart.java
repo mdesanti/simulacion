@@ -65,7 +65,6 @@ public class StrategiesChart extends ApplicationFrame implements
 	}
 
 	private void initialize(List<Project> projects) {
-		System.out.println("entro al intialize");
 		this.series = new ArrayList<>();
 		this.projects = new LinkedBlockingQueue<>();
 		this.timeSeriesProject = new LinkedBlockingQueue<>();
@@ -97,7 +96,6 @@ public class StrategiesChart extends ApplicationFrame implements
 		frame.pack();
 		RefineryUtilities.centerFrameOnScreen(frame);
 		frame.setVisible(true);
-		System.out.println("salgo del initialize");
 	}
 
 	public void removeProject(Project p) {
@@ -130,12 +128,11 @@ public class StrategiesChart extends ApplicationFrame implements
 	}
 
 	public void updateTime() {
+		dataset.removeAllSeries();
 		for (TimeSeriesProject ts : timeSeriesProject) {
-			ts.getTimeSeries().addOrUpdate(day,
+			ts.getTimeSeries().add(day,
 					ts.getProject().getProgrammersWorking());
 		}
-		dataset.removeAllSeries();
-
 		for (TimeSeriesProject ts : timeSeriesProject) {
 			dataset.addSeries(ts.getTimeSeries());
 		}
@@ -152,7 +149,6 @@ public class StrategiesChart extends ApplicationFrame implements
 		ChartPanel label = new ChartPanel(chart);
 		frame.getContentPane().add(label);
 		frame.pack();
-
 		day = (Day) day.next();
 		repaint();
 		delay(500);
