@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.Day;
@@ -85,6 +86,7 @@ public class StrategiesChart extends ApplicationFrame implements
 		ValueAxis axis = plot.getDomainAxis();
 		axis.setAutoRange(true);
 		axis.setFixedAutoRange(10);
+		plot.getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 
 		frame = new JFrame("Simulador");
 		frame.setSize(500, 500);
@@ -143,6 +145,7 @@ public class StrategiesChart extends ApplicationFrame implements
 		ValueAxis axis = plot.getDomainAxis();
 		axis.setAutoRange(true);
 		axis.setFixedAutoRange(10);
+		plot.getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 		// frame.revalidate();
 		frame.getContentPane().removeAll();
 		frame.getContentPane().remove(label);

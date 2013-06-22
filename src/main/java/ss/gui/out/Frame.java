@@ -205,11 +205,11 @@ public class Frame extends JFrame {
 		area.setBounds(300, FINAVALUETOP + 30, 150, 20);
 		simulationPanel.add(area);
 
-		area = new JTextArea("Costo permitido");
+		area = new JTextArea("Gasto permitido");
 		area.setBounds(470, FINAVALUETOP + 30, 150, 20);
 		simulationPanel.add(area);
 
-		area = new JTextArea("Costo actual");
+		area = new JTextArea("Gasto actual");
 		area.setBounds(690, FINAVALUETOP + 30, 150, 20);
 		simulationPanel.add(area);
 
