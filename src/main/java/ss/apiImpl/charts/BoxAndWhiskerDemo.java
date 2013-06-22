@@ -52,7 +52,7 @@ public class BoxAndWhiskerDemo extends ApplicationFrame {
 		final CategoryPlot plot = new CategoryPlot(dataset, xAxis, yAxis,
 				renderer);
 
-		final JFreeChart chart = new JFreeChart("Asignación de programadores",
+		final JFreeChart chart = new JFreeChart("Proyectos terminados",
 				new Font("SansSerif", Font.BOLD, 14), plot, true);
 		final ChartPanel chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(450, 270));

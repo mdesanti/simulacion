@@ -55,7 +55,7 @@ public class SimulatorImpl implements Simulator {
 		LinkedList<Map<String, LinkedList<BackupItem>>> backupsList = new LinkedList<>();
 		int boxTimes = 3;
 		while (boxTimes-- > 0) {
-			build(listener, 0, plotter);
+//			build(listener, 0, plotter);
 			int totalProjects = projects.size();
 			int projectsId = totalProjects;
 			// StrategiesChart chart = new StrategiesChart(projects);
@@ -156,6 +156,7 @@ public class SimulatorImpl implements Simulator {
 				// plotter.restart(projects);
 			}
 			backupsList.add(finishedProjects);
+			finishedProjects = new HashMap<>();
 			COST_MAX+=5;
 			COST_MIN+=5;
 		}
