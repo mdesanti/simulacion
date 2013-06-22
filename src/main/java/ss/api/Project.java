@@ -38,6 +38,6 @@ public interface Project {
 	
 	int getIterationsQty();
 	
-	int getIterationsLeft();
+	int getIterationNumber();
 	
 }

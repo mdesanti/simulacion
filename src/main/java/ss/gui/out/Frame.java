@@ -144,7 +144,7 @@ public class Frame extends JFrame {
 		simulationPanel.setBackground(Color.WHITE);
 		add(simulationPanel);
 
-		JTextArea area = new JTextArea("Programadores ociosos: ");
+		JTextArea area = new JTextArea("Programadores disponibles: ");
 		area.setBounds(50, INITIALVALUESTOP, 150, 20);
 		simulationPanel.add(area);
 		idleProgrammers = new JTextArea(String.valueOf(simulator
@@ -255,7 +255,7 @@ public class Frame extends JFrame {
 			actualCost.setBounds(730, margin * id + addition, 40, height);
 			simulationPanel.add(actualCost);
 
-			JTextArea iterationsQty = new JTextArea("0");
+			JTextArea iterationsQty = new JTextArea("1");
 			iterationsQty.setBounds(870, margin * id + addition, 10, height);
 			simulationPanel.add(iterationsQty);
 			JTextArea iterationsTotal = new JTextArea("/ "
@@ -362,7 +362,7 @@ public class Frame extends JFrame {
 		for (ProjectTimes projectTime : iterations) {
 			if (projectTime.getProject().equals(project)) {
 				projectTime.getArea().setText(
-						String.valueOf(project.getIterationsLeft()));
+						String.valueOf(project.getIterationNumber()));
 				return;
 			}
 

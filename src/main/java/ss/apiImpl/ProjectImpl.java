@@ -27,6 +27,8 @@ public class ProjectImpl implements Project {
 	private Integer id;
 
 	private Integer iterationsQty;
+	
+	private Integer iterationNumber;
 
 	private double finalIterationProbability;
 
@@ -35,11 +37,12 @@ public class ProjectImpl implements Project {
 		this.id = id;
 		this.iterations = iterations;
 		this.iterationsQty = iterations.size();
+		this.iterationNumber = 1;
 		this.maxCost = maxCost;
 		setDuration();
 		currentIteration = iterations.pop();
 		this.programmersWorking = 0;
-		finalIterationProbability = 0.2;
+		finalIterationProbability = 0.25;
 	}
 
 	@Override
@@ -48,8 +51,8 @@ public class ProjectImpl implements Project {
 	}
 
 	@Override
-	public int getIterationsLeft() {
-		return this.iterationsQty - iterations.size();
+	public int getIterationNumber() {
+		return this.iterationNumber;
 	}
 
 	@Override
@@ -80,16 +83,19 @@ public class ProjectImpl implements Project {
 			currentIteration = iterations.pop();
 			currentIteration.setDuration(currentIteration.getDuration()
 					+ extraTime);
+			iterationNumber++;
 		} catch (NoSuchElementException e) {
 			if (extraTime > 0) {
 				currentIteration = new IterationImpl(
 						IssueFactory.createBackendIssue(),
 						IssueFactory.createFrontEndIssue(), extraTime);
+				iterationNumber++;
 			} else {
-				Random r = new Random(45);
+				Random r = new Random();
 				double random = r.nextDouble();
 				if (random < finalIterationProbability) {
 					finalIterationProbability /= 1.3;
+					iterationNumber++;
 					return false;
 				}
 				finished = true;
