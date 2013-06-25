@@ -103,6 +103,7 @@ public class StrategiesChart extends ApplicationFrame implements
 		TimeSeriesProject toRemove = null;
 		for (TimeSeriesProject tsp : timeSeriesProject) {
 			if (tsp.project.equals(p)) {
+				System.out.println("remuevo");
 				toRemove = tsp;
 			}
 		}

@@ -34,8 +34,8 @@ public class SimulatorImpl implements Simulator {
 	private SimulationListener listener;
 	private Map<String, LinkedList<BackupItem>> finishedProjects = new HashMap<>();
 	private RealTimePlotter plotter;
-	private int COST_MAX = 14;
-	private int COST_MIN = 10;
+	private int COST_MAX = 2;
+	private int COST_MIN = 1;
 
 	public static final int MAX_PROGRAMMER_PER_PROJECT = 8;
 
@@ -43,7 +43,7 @@ public class SimulatorImpl implements Simulator {
 			RealTimePlotter plotter) {
 		this.listener = listener;
 		this.projects = buildProjects(5);
-		this.idleProgrammers = 25;
+		this.idleProgrammers = 20;
 		this.simulationDays = 365; // In days
 		this.strategy = assignStrategy(strategy);
 		this.plotter = plotter;
@@ -157,8 +157,8 @@ public class SimulatorImpl implements Simulator {
 			}
 			backupsList.add(finishedProjects);
 			finishedProjects = new HashMap<>();
-			COST_MAX+=5;
-			COST_MIN+=5;
+			COST_MAX*=Math.pow(3, 3-boxTimes);
+			COST_MIN*=Math.pow(3, 3-boxTimes);
 		}
 		BoxAndWhiskerDemo demo = new BoxAndWhiskerDemo(backupsList);
 		demo.pack();
