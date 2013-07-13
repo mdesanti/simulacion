@@ -134,12 +134,18 @@ public class ProjectImpl implements Project {
 	@Override
 	public void decreaseInvestment() {
 		if (freelanceWorkers > 0) {
-			int availableInvestment = maxInvestment - totalInvestment;
+			int availableInvestment = maxInvestment - totalInvestment < 0 ? maxInvestment
+					: maxInvestment - totalInvestment;
+			System.out.println("total: " + totalInvestment);
+			System.out.println("max: " + maxInvestment);
+			System.out.println("avail: " + availableInvestment);
+			System.out.println("free: " + freelanceWorkers);
 			if (availableInvestment < freelanceWorkers) {
 				totalInvestment += availableInvestment;
 				maxInvestment -= availableInvestment;
-				int diff = freelanceWorkers - availableInvestment;
-				freelanceWorkers = diff;
+				freelanceWorkers = maxInvestment - totalInvestment < 0 ? maxInvestment
+						: maxInvestment - totalInvestment;
+				;
 			} else {
 				totalInvestment += freelanceWorkers;
 				maxInvestment -= freelanceWorkers;
@@ -169,7 +175,7 @@ public class ProjectImpl implements Project {
 			currentIteration.setEstimate(Integer.MAX_VALUE);
 			return;
 		}
-			
+
 		int newBackEstimation = DistributionManager.getInstance()
 				.getLastingDaysForBackendIssue(
 						programmersWorking + freelanceWorkers);
@@ -179,8 +185,8 @@ public class ProjectImpl implements Project {
 		int newIterationEstimation = newBackEstimation + newFrontEstimation;
 		currentIteration.setEstimate(newIterationEstimation);
 	}
-	
-@Override
+
+	@Override
 	public int getFreelanceProgrammersWorking() {
 		return freelanceWorkers;
 	}
