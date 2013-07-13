@@ -33,6 +33,8 @@ public class ProjectImpl implements Project {
 	private Integer iterationNumber;
 
 	private double finalIterationProbability;
+	
+	private Integer realDuration = 0;
 
 	public ProjectImpl(Deque<Iteration> iterations, Integer maxInvestment,
 			Integer id) {
@@ -49,6 +51,15 @@ public class ProjectImpl implements Project {
 		this.freelanceWorkers = 0;
 	}
 
+	@Override
+	public boolean finishedInTime() {
+		return duration <= realDuration;
+	}
+	@Override
+	public void increaseRealDuration() {
+		realDuration++;
+	}
+	
 	@Override
 	public int getIterationsQty() {
 		return this.iterationsQty;

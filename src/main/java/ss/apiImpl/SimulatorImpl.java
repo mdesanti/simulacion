@@ -88,6 +88,7 @@ public class SimulatorImpl implements Simulator {
 								}
 								if (project.getProgrammersWorking() > 0) {
 									iteration.decreaseLastingDays();
+									project.increaseRealDuration();
 								}
 							} else {
 								if (strategy.isFreelanceStrategy()) {
@@ -117,12 +118,14 @@ public class SimulatorImpl implements Simulator {
 
 							}
 						} else {
+							if (project.finishedInTime()) {
+								projectsFinished++;
+							}
 							projectIterator.remove();
 							plotter.removeProject(project);
 							totalCost += project.getTotalInvestment();
 							idleProgrammers += project.removeProgrammers();
 							listener.updateIdleProgrammers(idleProgrammers);
-							projectsFinished++;
 							listener.updateFinishedProjects(projectsFinished);
 						}
 					}
@@ -132,12 +135,12 @@ public class SimulatorImpl implements Simulator {
 					int diff = projectsQty - newProjectsQty;
 					for (int i = 0; i < diff; i++) {
 						Project p = buildProject(projectsId++);
-						// if(p.getDuration() > (simulationDays - today)) {
-						projects.add(p);
-						totalProjects++;
-						listener.addProject(p);
-						plotter.addProject(p);
-						// }
+						if (p.getDuration() < (simulationDays - today)) {
+							projects.add(p);
+							totalProjects++;
+							listener.addProject(p);
+							plotter.addProject(p);
+						}
 					}
 					today++;
 					listener.updateTime(today);
@@ -161,8 +164,8 @@ public class SimulatorImpl implements Simulator {
 			}
 			backupsList.add(finishedProjects);
 			finishedProjects = new HashMap<>();
-			INV_MAX *= 5;
-			INV_MIN *= 5;
+			INV_MAX *= 4;
+			INV_MIN *= 2;
 		}
 		BoxStrategiesChart demo = new BoxStrategiesChart(backupsList);
 		demo.pack();

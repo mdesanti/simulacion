@@ -45,4 +45,8 @@ public interface Project {
 	
 	int getFreelanceProgrammersWorking();
 	
+	void increaseRealDuration();
+	
+	boolean finishedInTime();
+	
 }
