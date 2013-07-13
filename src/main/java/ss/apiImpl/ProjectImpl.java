@@ -169,9 +169,6 @@ public class ProjectImpl implements Project {
 			currentIteration.setEstimate(Integer.MAX_VALUE);
 			return;
 		}
-		if(programmersWorking<0){
-			System.out.println(programmersWorking);
-		}
 			
 		int newBackEstimation = DistributionManager.getInstance()
 				.getLastingDaysForBackendIssue(

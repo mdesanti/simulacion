@@ -33,8 +33,8 @@ public class SimulatorImpl implements Simulator {
 	private SimulationListener listener;
 	private Map<String, LinkedList<BackupItem>> finishedProjects = new HashMap<>();
 	private RealTimePlotter plotter;
-	private int INV_MAX = 60;
-	private int INV_MIN = 30;
+	private int INV_MAX = 5;
+	private int INV_MIN = 3;
 
 	public static final int MAX_PROGRAMMER_PER_PROJECT = 8;
 
@@ -161,8 +161,8 @@ public class SimulatorImpl implements Simulator {
 			}
 			backupsList.add(finishedProjects);
 			finishedProjects = new HashMap<>();
-			INV_MAX *= Math.exp(3 - boxTimes);
-			INV_MIN *= Math.exp(3 - boxTimes);
+			INV_MAX *= 5;
+			INV_MIN *= 5;
 		}
 		BoxStrategiesChart demo = new BoxStrategiesChart(backupsList);
 		demo.pack();
