@@ -14,9 +14,9 @@ public class ProjectImpl implements Project {
 
 	private Iteration currentIteration = null;
 
-	private Integer maxCost;
+	private Integer maxInvestment;
 
-	private Integer totalCost = 0;
+	private Integer totalInvestment = 0;
 
 	private Integer duration = 0;
 
@@ -24,25 +24,29 @@ public class ProjectImpl implements Project {
 
 	private Integer programmersWorking;
 
+	private Integer freelanceWorkers = 0;
+
 	private Integer id;
 
 	private Integer iterationsQty;
-	
+
 	private Integer iterationNumber;
 
 	private double finalIterationProbability;
 
-	public ProjectImpl(Deque<Iteration> iterations, Integer maxCost, Integer id) {
+	public ProjectImpl(Deque<Iteration> iterations, Integer maxInvestment,
+			Integer id) {
 		super();
 		this.id = id;
 		this.iterations = iterations;
 		this.iterationsQty = iterations.size();
 		this.iterationNumber = 1;
-		this.maxCost = maxCost;
+		this.maxInvestment = maxInvestment;
 		setDuration();
-		currentIteration = iterations.pop();
+		this.currentIteration = iterations.pop();
 		this.programmersWorking = 0;
-		finalIterationProbability = 0.25;
+		this.finalIterationProbability = 0.25;
+		this.freelanceWorkers = 0;
 	}
 
 	@Override
@@ -53,6 +57,16 @@ public class ProjectImpl implements Project {
 	@Override
 	public int getIterationNumber() {
 		return this.iterationNumber;
+	}
+
+	@Override
+	public void removeFreelanceProgrammers() {
+		freelanceWorkers = 0;
+	}
+
+	@Override
+	public void addFreelanceProgrammers(int qty) {
+		freelanceWorkers += qty;
 	}
 
 	@Override
@@ -70,8 +84,8 @@ public class ProjectImpl implements Project {
 		return duration;
 	}
 
-	public Integer getMaxCost() {
-		return maxCost;
+	public Integer getMaxInvestment() {
+		return maxInvestment;
 	}
 
 	public void addIteration(Iteration iteration) {
@@ -97,7 +111,8 @@ public class ProjectImpl implements Project {
 					finalIterationProbability /= 1.3;
 					currentIteration = new IterationImpl(
 							IssueFactory.createBackendIssue(),
-							IssueFactory.createFrontEndIssue(), r.nextInt(22 - 17) + 17); // (17,22]);
+							IssueFactory.createFrontEndIssue(),
+							r.nextInt(22 - 17) + 17); // (17,22]);
 					iterationNumber++;
 					return false;
 				}
@@ -117,9 +132,19 @@ public class ProjectImpl implements Project {
 	}
 
 	@Override
-	public void decreaseCost(int qty) {
-		totalCost += qty;
-		maxCost -= qty;
+	public void decreaseInvestment() {
+		if (freelanceWorkers > 0) {
+			int availableInvestment = maxInvestment - totalInvestment;
+			if (availableInvestment < freelanceWorkers) {
+				totalInvestment += availableInvestment;
+				maxInvestment -= availableInvestment;
+				int diff = freelanceWorkers - availableInvestment;
+				freelanceWorkers = diff;
+			} else {
+				totalInvestment += freelanceWorkers;
+				maxInvestment -= freelanceWorkers;
+			}
+		}
 	}
 
 	@Override
@@ -129,7 +154,7 @@ public class ProjectImpl implements Project {
 
 	@Override
 	public Integer getProgrammersWorking() {
-		return programmersWorking;
+		return programmersWorking + freelanceWorkers;
 	}
 
 	@Override
@@ -140,16 +165,27 @@ public class ProjectImpl implements Project {
 	@Override
 	public void removeProgrammer() {
 		programmersWorking--;
-		if (programmersWorking == 0) {
+		if (programmersWorking + freelanceWorkers == 0) {
 			currentIteration.setEstimate(Integer.MAX_VALUE);
 			return;
 		}
+		if(programmersWorking<0){
+			System.out.println(programmersWorking);
+		}
+			
 		int newBackEstimation = DistributionManager.getInstance()
-				.getLastingDaysForBackendIssue(programmersWorking);
+				.getLastingDaysForBackendIssue(
+						programmersWorking + freelanceWorkers);
 		int newFrontEstimation = DistributionManager.getInstance()
-				.getLastingDaysForFrontendIssue(programmersWorking);
+				.getLastingDaysForFrontendIssue(
+						programmersWorking + freelanceWorkers);
 		int newIterationEstimation = newBackEstimation + newFrontEstimation;
 		currentIteration.setEstimate(newIterationEstimation);
+	}
+	
+@Override
+	public int getFreelanceProgrammersWorking() {
+		return freelanceWorkers;
 	}
 
 	@Override
@@ -161,13 +197,13 @@ public class ProjectImpl implements Project {
 
 	@Override
 	public int getTotalCost() {
-		return totalCost;
+		return totalInvestment;
 	}
 
 	@Override
 	public String toString() {
-		return "Project It: " + iterations.size() + " maxCost: " + maxCost
-				+ " duration: " + getDuration() + " progQty: "
+		return "Project It: " + iterations.size() + " maxCost: "
+				+ maxInvestment + " duration: " + getDuration() + " progQty: "
 				+ programmersWorking + " It:[" + currentIteration + "]";
 	}
 

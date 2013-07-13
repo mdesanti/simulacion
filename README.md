@@ -1,4 +1,4 @@
-Simulator: Distribution of programmers in a Sofware Factory.
+Distribution of programmers in a Sofware Factory.
 =============================================================
 
 Systems Simulation - ITBA - 2013
@@ -14,6 +14,7 @@ Systems Simulation - ITBA - 2013
 	`Without Front` Real time chart will not be seen and the simulator will run quicker. Usefull for seeing the final results.
 	
 - The simulator will run the three `strategies`.
-- Parameters can be set in `SimulatorImpl` and `MenuBar` files.
+- Parameters can be set in `SimulatorImpl`, `MenuBar` and `distribution.properties` files.
+- In `Video` some videos of the simulator running are found.
 	
 	

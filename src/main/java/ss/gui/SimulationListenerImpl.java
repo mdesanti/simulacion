@@ -36,7 +36,7 @@ public class SimulationListenerImpl implements SimulationListener {
 	}
 
 	@Override
-	public void updateCost(Project project) {
+	public void updateInvestment(Project project) {
 		frame.updateCost(project);
 		repaint();
 

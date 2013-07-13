@@ -15,11 +15,11 @@ public interface Project {
 
 	void addIteration(Iteration iteration);
 
-	Integer getMaxCost();
+	Integer getMaxInvestment();
 
 	Integer getDuration();
 
-	void decreaseCost(int qty);
+	void decreaseInvestment();
 
 	boolean finished();
 
@@ -38,5 +38,11 @@ public interface Project {
 	int getIterationsQty();
 	
 	int getIterationNumber();
+	
+	void removeFreelanceProgrammers();
+	
+	void addFreelanceProgrammers(int qty);
+	
+	int getFreelanceProgrammersWorking();
 	
 }

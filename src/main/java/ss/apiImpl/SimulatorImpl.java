@@ -33,8 +33,8 @@ public class SimulatorImpl implements Simulator {
 	private SimulationListener listener;
 	private Map<String, LinkedList<BackupItem>> finishedProjects = new HashMap<>();
 	private RealTimePlotter plotter;
-	private int COST_MAX = 2;
-	private int COST_MIN = 1;
+	private int INV_MAX = 60;
+	private int INV_MIN = 30;
 
 	public static final int MAX_PROGRAMMER_PER_PROJECT = 8;
 
@@ -76,17 +76,23 @@ public class SimulatorImpl implements Simulator {
 							Iteration iteration = project.getCurrentIteration();
 							if (!iteration.finished()) {
 								if (iteration.isDelayed()) {
+									if (strategy.isFreelanceStrategy()) {
+										project.decreaseInvestment();
+									}
 									idleProgrammers -= strategy.reasing(
 											project, projects, idleProgrammers);
 									listener.updateWorkingProgrammers(project);
 									listener.updateIdleProgrammers(idleProgrammers);
 									listener.updateIterationEstimate(project);
+									listener.updateInvestment(project);
 								}
 								if (project.getProgrammersWorking() > 0) {
 									iteration.decreaseLastingDays();
 								}
 							} else {
-
+								if (strategy.isFreelanceStrategy()) {
+									project.removeFreelanceProgrammers();
+								}
 								// If iteration has pending days, adds them to
 								// the
 								// next iteration
@@ -126,12 +132,12 @@ public class SimulatorImpl implements Simulator {
 					int diff = projectsQty - newProjectsQty;
 					for (int i = 0; i < diff; i++) {
 						Project p = buildProject(projectsId++);
-//						if(p.getDuration() > (simulationDays - today)) {
-							projects.add(p);
-							totalProjects++;
-							listener.addProject(p);
-							plotter.addProject(p);
-//						}
+						// if(p.getDuration() > (simulationDays - today)) {
+						projects.add(p);
+						totalProjects++;
+						listener.addProject(p);
+						plotter.addProject(p);
+						// }
 					}
 					today++;
 					listener.updateTime(today);
@@ -155,8 +161,8 @@ public class SimulatorImpl implements Simulator {
 			}
 			backupsList.add(finishedProjects);
 			finishedProjects = new HashMap<>();
-			COST_MAX*=Math.exp(3-boxTimes);
-			COST_MIN*=Math.exp(3-boxTimes);
+			INV_MAX *= Math.exp(3 - boxTimes);
+			INV_MIN *= Math.exp(3 - boxTimes);
 		}
 		BoxStrategiesChart demo = new BoxStrategiesChart(backupsList);
 		demo.pack();
@@ -171,17 +177,17 @@ public class SimulatorImpl implements Simulator {
 			if (finishedProjects.get("available") == null) {
 				finishedProjects.put("available", new LinkedList<BackupItem>());
 			}
-			return new ReasignationStrategyImpl(true, false, false, listener);
+			return new ReasignationStrategyImpl(true, false, false);
 		case 1:
 			if (finishedProjects.get("switch") == null) {
 				finishedProjects.put("switch", new LinkedList<BackupItem>());
 			}
-			return new ReasignationStrategyImpl(true, true, false, listener);
+			return new ReasignationStrategyImpl(true, true, false);
 		default: // Case 2
 			if (finishedProjects.get("freelance") == null) {
 				finishedProjects.put("freelance", new LinkedList<BackupItem>());
 			}
-			return new ReasignationStrategyImpl(true, true, true, listener);
+			return new ReasignationStrategyImpl(true, true, true);
 		}
 	}
 
@@ -247,9 +253,9 @@ public class SimulatorImpl implements Simulator {
 					IssueFactory.createFrontEndIssue(), duration);
 			iterations.push(it);
 		}
-		int maxCost = r.nextInt(COST_MAX - COST_MIN) + COST_MIN; // (COST_MIN,
+		int maxInvestment = r.nextInt(INV_MAX - INV_MIN) + INV_MIN; // (COST_MIN,
 																	// COST_MAX]
-		return new ProjectImpl(iterations, maxCost, id);
+		return new ProjectImpl(iterations, maxInvestment, id);
 	}
 
 	@Override

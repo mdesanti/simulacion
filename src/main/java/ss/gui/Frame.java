@@ -236,7 +236,7 @@ public class Frame extends JFrame {
 			simulationPanel.add(estimation);
 
 			JTextArea permittedCost = new JTextArea(String.valueOf(project
-					.getMaxCost()));
+					.getMaxInvestment()));
 			permittedCost.setBounds(520, margin * id + addition, 40, height);
 			simulationPanel.add(permittedCost);
 

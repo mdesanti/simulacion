@@ -10,7 +10,7 @@ public interface SimulationListener {
 
 	public void updateWorkingProgrammers(Project project);
 
-	public void updateCost(Project project);
+	public void updateInvestment(Project project);
 
 	public void updateIterationEstimate(Project project);
 

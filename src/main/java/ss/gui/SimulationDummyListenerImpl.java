@@ -23,7 +23,7 @@ public class SimulationDummyListenerImpl implements SimulationListener {
 	}
 
 	@Override
-	public void updateCost(Project project) {
+	public void updateInvestment(Project project) {
 		// TODO Auto-generated method stub
 
 	}

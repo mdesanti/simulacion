@@ -5,26 +5,22 @@ import java.util.List;
 import ss.api.Iteration;
 import ss.api.Project;
 import ss.api.ReasignationStrategy;
-import ss.gui.SimulationListener;
 
 public class ReasignationStrategyImpl implements ReasignationStrategy {
 
 	private boolean idleStrategy;
 	private boolean switchStrategy;
 	private boolean freelanceStrategy;
-	private SimulationListener listener;
 
 	public final static int IDLE_STRATEGY = 0;
 	public final static int SWITCH_STRATEGY = 1;
 	public final static int FREELANCE_STRATEGY = 2;
 
 	public ReasignationStrategyImpl(boolean idleStrategy,
-			boolean switchStrategy, boolean freelanceStrategy,
-			SimulationListener listener) {
+			boolean switchStrategy, boolean freelanceStrategy) {
 		this.idleStrategy = idleStrategy;
 		this.switchStrategy = switchStrategy;
 		this.freelanceStrategy = freelanceStrategy;
-		this.listener = listener;
 	}
 
 	@Override
@@ -63,7 +59,8 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		int newBackEstimation = 0;
 		int newFrontEstimation = 0;
 		int newIterationEstimation = 0;
-		while (newProgrammers < idleProgrammers && delayed
+		while (newProgrammers < idleProgrammers
+				&& delayed
 				&& ((newProgrammers + projectProgrammers) < SimulatorImpl.MAX_PROGRAMMER_PER_PROJECT)) {
 			newProgrammers++;
 			newEstimateProgrammers = projectProgrammers + newProgrammers;
@@ -105,10 +102,16 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		delayed = iteration.isDelayedWith(iteration.getEstimate());
 
 		// Iterates from minor priority to mayor
-		while (delayed && ((newProgrammers + projectProgrammers) < SimulatorImpl.MAX_PROGRAMMER_PER_PROJECT)) {
-			for (int i = from.size() - 1; i >= projectIndex && delayed && ((newProgrammers + projectProgrammers) < SimulatorImpl.MAX_PROGRAMMER_PER_PROJECT); i--) {
+		while (delayed
+				&& ((newProgrammers + projectProgrammers) < SimulatorImpl.MAX_PROGRAMMER_PER_PROJECT)) {
+			for (int i = from.size() - 1; i >= projectIndex
+					&& delayed
+					&& ((newProgrammers + projectProgrammers) < SimulatorImpl.MAX_PROGRAMMER_PER_PROJECT); i--) {
 				Project other = from.get(i);
-				int programmersQty = other.getProgrammersWorking();
+				
+				//Only swith non freelance programmers
+				int programmersQty = other.getProgrammersWorking()
+						- other.getFreelanceProgrammersWorking();
 
 				if (programmersQty > 0) {
 					other.removeProgrammer();
@@ -137,7 +140,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 	}
 
 	private void freelanceStrategyReasign(Project to) {
-		int maxCost = to.getMaxCost();
+		int maxInvestment = to.getMaxInvestment();
 		boolean delayed = true;
 		int newProgrammers = 0;
 		int newEstimateProgrammers = 0;
@@ -146,13 +149,12 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		int newIterationEstimation = 0;
 		Iteration iteration = to.getCurrentIteration();
 		int projectProgrammers = to.getProgrammersWorking();
-
 		// Perhaps the idleStrategy and switchStrategy already fixed the
 		// estimate, so this is
 		// calculated again
 		delayed = iteration.isDelayedWith(iteration.getEstimate());
-
-		while (newProgrammers < maxCost && delayed
+		while (newProgrammers < maxInvestment
+				&& delayed
 				&& ((newProgrammers + projectProgrammers) < SimulatorImpl.MAX_PROGRAMMER_PER_PROJECT)) {
 			newProgrammers++;
 			newEstimateProgrammers = projectProgrammers + newProgrammers;
@@ -166,10 +168,8 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		}
 
 		if (newProgrammers > 0) {
-			to.addProgrammers(newProgrammers);
+			to.addFreelanceProgrammers(newProgrammers);
 			iteration.setEstimate(newIterationEstimation);
-			to.decreaseCost(newProgrammers);
-			listener.updateCost(to);
 		}
 	}
 
