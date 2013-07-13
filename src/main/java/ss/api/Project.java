@@ -1,6 +1,5 @@
 package ss.api;
 
-import java.util.Deque;
 
 public interface Project {
 

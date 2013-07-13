@@ -1,13 +1,11 @@
-package ss.apiImpl.strategies;
+package ss.apiImpl;
 
 import java.util.List;
 
 import ss.api.Iteration;
 import ss.api.Project;
 import ss.api.ReasignationStrategy;
-import ss.apiImpl.DistributionManager;
-import ss.apiImpl.SimulatorImpl;
-import ss.gui.out.SimulationListener;
+import ss.gui.SimulationListener;
 
 public class ReasignationStrategyImpl implements ReasignationStrategy {
 

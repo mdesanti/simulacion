@@ -3,7 +3,7 @@ package ss.api;
 import java.util.List;
 
 import ss.apiImpl.charts.RealTimePlotter;
-import ss.gui.out.SimulationListener;
+import ss.gui.SimulationListener;
 
 public interface Simulator {
 

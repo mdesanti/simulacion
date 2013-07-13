@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 
 import org.jfree.ui.RefineryUtilities;
 
-import ss.gui.out.Frame;
+import ss.gui.Frame;
 
 public class Start {
 

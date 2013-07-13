@@ -1,4 +1,4 @@
-package ss.gui.out;
+package ss.gui;
 
 import ss.api.Project;
 

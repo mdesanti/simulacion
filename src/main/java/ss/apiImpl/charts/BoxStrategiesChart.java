@@ -1,5 +1,6 @@
 package ss.apiImpl.charts;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,13 +21,8 @@ import ss.apiImpl.BackupItem;
 
 import com.google.common.collect.Lists;
 
-/**
- * Demonstration of a box-and-whisker chart using a {@link CategoryPlot}.
- * 
- * @author David Browning
- */
 @SuppressWarnings("serial")
-public class BoxAndWhiskerDemo extends ApplicationFrame {
+public class BoxStrategiesChart extends ApplicationFrame {
 
 	/**
 	 * Creates a new demo.
@@ -34,10 +30,10 @@ public class BoxAndWhiskerDemo extends ApplicationFrame {
 	 * @param title
 	 *            the frame title.
 	 */
-	public BoxAndWhiskerDemo(
+	public BoxStrategiesChart(
 			LinkedList<Map<String, LinkedList<BackupItem>>> backups) {
 
-		super("Resultados");
+		super("Simulador: Distribución de programadores en una Software Factory");
 
 		final BoxAndWhiskerCategoryDataset dataset = createSampleDataset(backups);
 
@@ -47,7 +43,6 @@ public class BoxAndWhiskerDemo extends ApplicationFrame {
 		yAxis.setAutoRangeIncludesZero(false);
 		final BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
 		renderer.setFillBox(false);
-//		 renderer.setMeanVisible(false);
 		renderer.setToolTipGenerator(new BoxAndWhiskerToolTipGenerator());
 		final CategoryPlot plot = new CategoryPlot(dataset, xAxis, yAxis,
 				renderer);
@@ -55,7 +50,7 @@ public class BoxAndWhiskerDemo extends ApplicationFrame {
 		final JFreeChart chart = new JFreeChart("Proyectos terminados",
 				new Font("SansSerif", Font.BOLD, 14), plot, true);
 		final ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setPreferredSize(new java.awt.Dimension(450, 270));
+		chartPanel.setPreferredSize(new Dimension(1000, 700));
 		setContentPane(chartPanel);
 
 	}
@@ -72,7 +67,6 @@ public class BoxAndWhiskerDemo extends ApplicationFrame {
 		int k = 1;
 		for (Map<String, LinkedList<BackupItem>> backups : backupsList) {
 
-			int i = 1;
 			for (String key : backups.keySet()) {
 				List<BackupItem> runs = backups.get(key);
 				final List<Number> list = Lists.newArrayList();
@@ -81,7 +75,6 @@ public class BoxAndWhiskerDemo extends ApplicationFrame {
 							/ ((double) runs.get(j).getTotalProjects()));
 				}
 				dataset.add(list, key + " " + k, "Estrategias");
-				i++;
 			}
 			k++;
 		}

@@ -1,4 +1,4 @@
-package ss.gui.out;
+package ss.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,8 +10,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
-import ss.apiImpl.charts.StrategiesChart;
-import ss.apiImpl.strategies.ReasignationStrategyImpl;
+import ss.apiImpl.ReasignationStrategyImpl;
+import ss.apiImpl.charts.ProgrammersRealTimeChart;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
@@ -38,7 +38,7 @@ public class MenuBar extends JMenuBar {
 					@Override
 					public void run() {
 						getFrame().getSimulator().build(
-								new SimulationListenerImpl(getFrame()),ReasignationStrategyImpl.IDLE_STRATEGY, new StrategiesChart());
+								new SimulationListenerImpl(getFrame()),ReasignationStrategyImpl.IDLE_STRATEGY, new ProgrammersRealTimeChart());
 						getFrame().restart();
 						getFrame().getSimulator().start(1);
 					}

@@ -1,6 +1,5 @@
 package ss.apiImpl;
 
-import java.security.acl.LastOwnerException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
@@ -18,10 +17,9 @@ import ss.api.Iteration;
 import ss.api.Project;
 import ss.api.ReasignationStrategy;
 import ss.api.Simulator;
-import ss.apiImpl.charts.BoxAndWhiskerDemo;
+import ss.apiImpl.charts.BoxStrategiesChart;
 import ss.apiImpl.charts.RealTimePlotter;
-import ss.apiImpl.strategies.ReasignationStrategyImpl;
-import ss.gui.out.SimulationListener;
+import ss.gui.SimulationListener;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -56,10 +54,8 @@ public class SimulatorImpl implements Simulator {
 		LinkedList<Map<String, LinkedList<BackupItem>>> backupsList = new LinkedList<>();
 		int boxTimes = 3;
 		while (boxTimes-- > 0) {
-//			build(listener, 0, plotter);
 			int totalProjects = projects.size();
 			int projectsId = totalProjects;
-			// StrategiesChart chart = new StrategiesChart(projects);
 			plotter.setProjects(projects);
 			int strategiesFinished = 0;
 			int times = totalTimes;
@@ -156,14 +152,13 @@ public class SimulatorImpl implements Simulator {
 				projectsId = projects.size();
 				plotter = plotter.newInstance(projects);
 				listener.reset();
-				// plotter.restart(projects);
 			}
 			backupsList.add(finishedProjects);
 			finishedProjects = new HashMap<>();
 			COST_MAX*=Math.exp(3-boxTimes);
 			COST_MIN*=Math.exp(3-boxTimes);
 		}
-		BoxAndWhiskerDemo demo = new BoxAndWhiskerDemo(backupsList);
+		BoxStrategiesChart demo = new BoxStrategiesChart(backupsList);
 		demo.pack();
 		RefineryUtilities.centerFrameOnScreen(demo);
 		demo.setVisible(true);

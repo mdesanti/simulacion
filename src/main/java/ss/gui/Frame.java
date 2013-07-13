@@ -1,4 +1,4 @@
-package ss.gui.out;
+package ss.gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -31,7 +31,6 @@ public class Frame extends JFrame {
 	private int rows = 25;
 	private int cols = 40;
 	private JPanel simulationPanel;
-	private Sprite sprite;
 	private JTextArea idleProgrammers;
 	private JTextArea finishedProjects;
 	private JTextArea totalTime;
@@ -75,20 +74,10 @@ public class Frame extends JFrame {
 
 	}
 
-	/**
-	 * Returns the player's sprite
-	 * 
-	 * @return Sprite
-	 */
-	public Sprite getPlayerSprite() {
-		return this.sprite;
-	}
-
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
 	}
-
 
 	/*
 	 * Initializes the Frame according to a column and a row and positions it in
@@ -135,7 +124,7 @@ public class Frame extends JFrame {
 			projectCosts = new ArrayList<>();
 			iterations = new ArrayList<>();
 			programmers = new ArrayList<>();
-			
+
 			remove(simulationPanel);
 		}
 		simulationPanel = new SimulationPanel();
@@ -179,16 +168,16 @@ public class Frame extends JFrame {
 		area = new JTextArea("Proyectos terminados: ");
 		area.setBounds(270, FINAVALUETOP, 150, 20);
 		simulationPanel.add(area);
-		
+
 		finishedProjects = new JTextArea("0");
 		finishedProjects.setBounds(420, FINAVALUETOP, 30, 20);
 		simulationPanel.add(finishedProjects);
-		
+
 		area = new JTextArea("Estrategia: ");
 		area.setBounds(480, FINAVALUETOP, 80, 20);
 		simulationPanel.add(area);
-		
-		strategy = new JTextArea(String.valueOf(simulator.getStrategyID()+1));
+
+		strategy = new JTextArea(String.valueOf(simulator.getStrategyID() + 1));
 		strategy.setBounds(560, FINAVALUETOP, 30, 20);
 		simulationPanel.add(strategy);
 
@@ -209,7 +198,7 @@ public class Frame extends JFrame {
 		area.setBounds(470, FINAVALUETOP + 30, 150, 20);
 		simulationPanel.add(area);
 
-		area = new JTextArea("Gasto actual");
+		area = new JTextArea("Inversión actual");
 		area.setBounds(690, FINAVALUETOP + 30, 150, 20);
 		simulationPanel.add(area);
 
@@ -396,7 +385,6 @@ public class Frame extends JFrame {
 	private class SimulationPanel extends JPanel {
 		@Override
 		public void paint(Graphics g) {
-			// TODO Auto-generated method stub
 			super.paint(g);
 			for (ProjectTimes projectTime : programmers) {
 				Project project = projectTime.project;
@@ -427,7 +415,6 @@ public class Frame extends JFrame {
 		List<Project> projects = new ArrayList<>();
 		projects.add(project);
 		initializeProjects(projects);
-		
 
 	}
 
@@ -439,7 +426,7 @@ public class Frame extends JFrame {
 			}
 
 		}
-		
+
 		for (ProjectTimes projectTime : projectEstimationTimes) {
 			if (projectTime.getProject().equals(project)) {
 				projectTime.getArea().setText("0");
@@ -447,7 +434,7 @@ public class Frame extends JFrame {
 			}
 
 		}
-		
+
 		for (ProjectTimes projectTime : programmers) {
 			if (projectTime.getProject().equals(project)) {
 				projectTime.getArea().setText("0");
@@ -455,9 +442,9 @@ public class Frame extends JFrame {
 			}
 
 		}
-		
+
 	}
-	
+
 	public JPanel getSimulationPanel() {
 		return simulationPanel;
 	}
