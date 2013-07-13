@@ -47,7 +47,7 @@ public class BoxAndWhiskerDemo extends ApplicationFrame {
 		yAxis.setAutoRangeIncludesZero(false);
 		final BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
 		renderer.setFillBox(false);
-		// renderer.setMeanVisible(false);
+//		 renderer.setMeanVisible(false);
 		renderer.setToolTipGenerator(new BoxAndWhiskerToolTipGenerator());
 		final CategoryPlot plot = new CategoryPlot(dataset, xAxis, yAxis,
 				renderer);

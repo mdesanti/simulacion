@@ -53,7 +53,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 			return "switch";
 		}
 
-		return "idle";
+		return "available";
 	}
 
 	private int idleStrategyReasign(Project to, int idleProgrammers) {
@@ -191,7 +191,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 	}
 
 	public int getStrategyID() {
-		if (getStrategy().equals("idle")) {
+		if (getStrategy().equals("available")) {
 			return IDLE_STRATEGY;
 		}
 		if (getStrategy().equals("switch")) {

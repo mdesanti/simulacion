@@ -1,5 +1,6 @@
 package ss.apiImpl;
 
+import java.security.acl.LastOwnerException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
@@ -43,7 +44,7 @@ public class SimulatorImpl implements Simulator {
 			RealTimePlotter plotter) {
 		this.listener = listener;
 		this.projects = buildProjects(5);
-		this.idleProgrammers = 20;
+		this.idleProgrammers = 15;
 		this.simulationDays = 365; // In days
 		this.strategy = assignStrategy(strategy);
 		this.plotter = plotter;
@@ -129,10 +130,12 @@ public class SimulatorImpl implements Simulator {
 					int diff = projectsQty - newProjectsQty;
 					for (int i = 0; i < diff; i++) {
 						Project p = buildProject(projectsId++);
-						projects.add(p);
-						totalProjects++;
-						listener.addProject(p);
-						plotter.addProject(p);
+//						if(p.getDuration() > (simulationDays - today)) {
+							projects.add(p);
+							totalProjects++;
+							listener.addProject(p);
+							plotter.addProject(p);
+//						}
 					}
 					today++;
 					listener.updateTime(today);
@@ -157,8 +160,8 @@ public class SimulatorImpl implements Simulator {
 			}
 			backupsList.add(finishedProjects);
 			finishedProjects = new HashMap<>();
-			COST_MAX*=Math.pow(3, 3-boxTimes);
-			COST_MIN*=Math.pow(3, 3-boxTimes);
+			COST_MAX*=Math.exp(3-boxTimes);
+			COST_MIN*=Math.exp(3-boxTimes);
 		}
 		BoxAndWhiskerDemo demo = new BoxAndWhiskerDemo(backupsList);
 		demo.pack();
@@ -170,8 +173,8 @@ public class SimulatorImpl implements Simulator {
 	private ReasignationStrategyImpl assignStrategy(int strategy) {
 		switch (strategy) {
 		case 0:
-			if (finishedProjects.get("idle") == null) {
-				finishedProjects.put("idle", new LinkedList<BackupItem>());
+			if (finishedProjects.get("available") == null) {
+				finishedProjects.put("available", new LinkedList<BackupItem>());
 			}
 			return new ReasignationStrategyImpl(true, false, false, listener);
 		case 1:

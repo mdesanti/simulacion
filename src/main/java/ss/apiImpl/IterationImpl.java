@@ -18,7 +18,7 @@ public class IterationImpl implements Iteration {
 	public IterationImpl(Issue backendIssue, Issue frontendIssue, int duration) {
 		this.backendIssue = backendIssue;
 		this.frontendIssue = frontendIssue;
-		this.duration = duration;
+		this.setDuration(duration);
 	}
 
 	@Override
@@ -29,7 +29,6 @@ public class IterationImpl implements Iteration {
 	@Override
 	public void setEstimate(int estimate) {
 		this.estimate = estimate;
-		this.lastingDays = estimate;
 	}
 
 	public int getDuration() {
@@ -96,6 +95,7 @@ public class IterationImpl implements Iteration {
 	
 	public void setDuration(int duration) {
 		this.duration = duration;
+		this.lastingDays = duration;
 	}
 
 }

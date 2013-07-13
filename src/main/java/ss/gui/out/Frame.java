@@ -145,11 +145,11 @@ public class Frame extends JFrame {
 		add(simulationPanel);
 
 		JTextArea area = new JTextArea("Programadores disponibles: ");
-		area.setBounds(50, INITIALVALUESTOP, 150, 20);
+		area.setBounds(50, INITIALVALUESTOP, 175, 20);
 		simulationPanel.add(area);
 		idleProgrammers = new JTextArea(String.valueOf(simulator
 				.getIdleProgrammers()));
-		idleProgrammers.setBounds(210, INITIALVALUESTOP, 30, 20);
+		idleProgrammers.setBounds(235, INITIALVALUESTOP, 30, 20);
 		simulationPanel.add(idleProgrammers);
 
 		area = new JTextArea("Tiempo de simulación: ");
@@ -205,7 +205,7 @@ public class Frame extends JFrame {
 		area.setBounds(300, FINAVALUETOP + 30, 150, 20);
 		simulationPanel.add(area);
 
-		area = new JTextArea("Gasto permitido");
+		area = new JTextArea("Inversión permitida");
 		area.setBounds(470, FINAVALUETOP + 30, 150, 20);
 		simulationPanel.add(area);
 

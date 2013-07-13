@@ -95,6 +95,9 @@ public class ProjectImpl implements Project {
 				double random = r.nextDouble();
 				if (random < finalIterationProbability) {
 					finalIterationProbability /= 1.3;
+					currentIteration = new IterationImpl(
+							IssueFactory.createBackendIssue(),
+							IssueFactory.createFrontEndIssue(), r.nextInt(22 - 17) + 17); // (17,22]);
 					iterationNumber++;
 					return false;
 				}

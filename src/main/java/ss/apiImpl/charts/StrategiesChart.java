@@ -1,5 +1,7 @@
 package ss.apiImpl.charts;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -83,6 +85,7 @@ public class StrategiesChart extends ApplicationFrame implements
 		chart = ChartFactory.createTimeSeriesChart("Simulador", "Tiempo",
 				"Programadores", dataset, true, false, false);
 		final XYPlot plot = chart.getXYPlot();
+		plot.setBackgroundPaint(new Color(0X000000));
 		ValueAxis axis = plot.getDomainAxis();
 		axis.setAutoRange(true);
 		axis.setFixedAutoRange(10);
@@ -92,6 +95,7 @@ public class StrategiesChart extends ApplicationFrame implements
 		frame.setSize(500, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		label = new ChartPanel(chart);
+		label.setPreferredSize(new Dimension(800, 400));
 		frame.getContentPane().add(label);
 
 		frame.pack();
@@ -141,6 +145,7 @@ public class StrategiesChart extends ApplicationFrame implements
 		chart = ChartFactory.createTimeSeriesChart("Simulador", "Tiempo",
 				"Programadores", dataset, true, false, false);
 		final XYPlot plot = chart.getXYPlot();
+		plot.setBackgroundPaint(new Color(0X000000));
 		ValueAxis axis = plot.getDomainAxis();
 		axis.setAutoRange(true);
 		axis.setFixedAutoRange(10);
@@ -149,11 +154,12 @@ public class StrategiesChart extends ApplicationFrame implements
 		frame.getContentPane().removeAll();
 		frame.getContentPane().remove(label);
 		ChartPanel label = new ChartPanel(chart);
+		label.setPreferredSize(new Dimension(800, 400));
 		frame.getContentPane().add(label);
 		frame.pack();
 		day = (Day) day.next();
 		repaint();
-		delay(50);
+//		delay(50);
 	}
 
 	public RealTimePlotter newInstance(List<Project> projects) {
