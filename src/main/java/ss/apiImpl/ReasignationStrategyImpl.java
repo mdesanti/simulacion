@@ -153,7 +153,7 @@ public class ReasignationStrategyImpl implements ReasignationStrategy {
 		// estimate, so this is
 		// calculated again
 		delayed = iteration.isDelayedWith(iteration.getEstimate());
-		while (newProgrammers < maxInvestment
+		while (to.getFreelanceProgrammersWorking()+newProgrammers < maxInvestment
 				&& delayed
 				&& ((newProgrammers + projectProgrammers) < SimulatorImpl.MAX_PROGRAMMER_PER_PROJECT)) {
 			newProgrammers++;

@@ -33,8 +33,8 @@ public class SimulatorImpl implements Simulator {
 	private SimulationListener listener;
 	private Map<String, LinkedList<BackupItem>> finishedProjects = new HashMap<>();
 	private RealTimePlotter plotter;
-	private int INV_MAX = 5;
-	private int INV_MIN = 3;
+	private int INV_MAX = 2;
+	private int INV_MIN = 1;
 
 	public static final int MAX_PROGRAMMER_PER_PROJECT = 8;
 
@@ -119,7 +119,7 @@ public class SimulatorImpl implements Simulator {
 						} else {
 							projectIterator.remove();
 							plotter.removeProject(project);
-							totalCost += project.getTotalCost();
+							totalCost += project.getTotalInvestment();
 							idleProgrammers += project.removeProgrammers();
 							listener.updateIdleProgrammers(idleProgrammers);
 							projectsFinished++;

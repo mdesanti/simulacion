@@ -134,22 +134,12 @@ public class ProjectImpl implements Project {
 	@Override
 	public void decreaseInvestment() {
 		if (freelanceWorkers > 0) {
-			int availableInvestment = maxInvestment - totalInvestment < 0 ? maxInvestment
-					: maxInvestment - totalInvestment;
-			System.out.println("total: " + totalInvestment);
-			System.out.println("max: " + maxInvestment);
-			System.out.println("avail: " + availableInvestment);
-			System.out.println("free: " + freelanceWorkers);
-			if (availableInvestment < freelanceWorkers) {
-				totalInvestment += availableInvestment;
-				maxInvestment -= availableInvestment;
-				freelanceWorkers = maxInvestment - totalInvestment < 0 ? maxInvestment
-						: maxInvestment - totalInvestment;
-				;
-			} else {
-				totalInvestment += freelanceWorkers;
-				maxInvestment -= freelanceWorkers;
-			}
+			totalInvestment += freelanceWorkers + totalInvestment > maxInvestment ? maxInvestment
+					- totalInvestment
+					: freelanceWorkers;
+			freelanceWorkers = freelanceWorkers + totalInvestment > maxInvestment ? maxInvestment
+					- totalInvestment
+					: freelanceWorkers;
 		}
 	}
 
@@ -199,13 +189,13 @@ public class ProjectImpl implements Project {
 	}
 
 	@Override
-	public int getTotalCost() {
+	public int getTotalInvestment() {
 		return totalInvestment;
 	}
 
 	@Override
 	public String toString() {
-		return "Project It: " + iterations.size() + " maxCost: "
+		return "Project It: " + iterations.size() + " maxInvest: "
 				+ maxInvestment + " duration: " + getDuration() + " progQty: "
 				+ programmersWorking + " It:[" + currentIteration + "]";
 	}

@@ -31,7 +31,7 @@ public interface Project {
 
 	int removeProgrammers();
 
-	int getTotalCost();
+	int getTotalInvestment();
 
 	int getId();
 	

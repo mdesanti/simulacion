@@ -38,7 +38,7 @@ public class Frame extends JFrame {
 	private Simulator simulator;
 	private List<ProjectTimes> projectEstimationTimes = new ArrayList<>();
 	private List<ProjectTimes> projectDurationTimes = new ArrayList<>();
-	private List<ProjectTimes> projectCosts = new ArrayList<>();
+	private List<ProjectTimes> projectInvestments = new ArrayList<>();
 	private List<ProjectTimes> iterations = new ArrayList<>();
 	private List<ProjectTimes> programmers = new ArrayList<>();
 	private List<Color> colors = Lists.newArrayList();
@@ -121,7 +121,7 @@ public class Frame extends JFrame {
 		if (existsPanel()) {
 			projectEstimationTimes = new ArrayList<>();
 			projectDurationTimes = new ArrayList<>();
-			projectCosts = new ArrayList<>();
+			projectInvestments = new ArrayList<>();
 			iterations = new ArrayList<>();
 			programmers = new ArrayList<>();
 
@@ -240,9 +240,9 @@ public class Frame extends JFrame {
 			permittedCost.setBounds(520, margin * id + addition, 40, height);
 			simulationPanel.add(permittedCost);
 
-			JTextArea actualCost = new JTextArea("0");
-			actualCost.setBounds(730, margin * id + addition, 40, height);
-			simulationPanel.add(actualCost);
+			JTextArea actualInvestment = new JTextArea("0");
+			actualInvestment.setBounds(730, margin * id + addition, 40, height);
+			simulationPanel.add(actualInvestment);
 
 			JTextArea iterationsQty = new JTextArea("1");
 			iterationsQty.setBounds(870, margin * id + addition, 10, height);
@@ -258,7 +258,7 @@ public class Frame extends JFrame {
 
 			projectEstimationTimes.add(new ProjectTimes(estimation, project));
 			projectDurationTimes.add(new ProjectTimes(duration, project));
-			projectCosts.add(new ProjectTimes(actualCost, project));
+			projectInvestments.add(new ProjectTimes(actualInvestment, project));
 			iterations.add(new ProjectTimes(iterationsQty, project));
 			programmers.add(new ProjectTimes(programmersQty, project));
 		}
@@ -370,11 +370,11 @@ public class Frame extends JFrame {
 		}
 	}
 
-	public void updateCost(Project project) {
-		for (ProjectTimes projectTime : projectCosts) {
+	public void updateInvestment(Project project) {
+		for (ProjectTimes projectTime : projectInvestments) {
 			if (projectTime.getProject().equals(project)) {
 				projectTime.getArea().setText(
-						String.valueOf(project.getTotalCost()));
+						String.valueOf(project.getTotalInvestment()));
 				return;
 			}
 
